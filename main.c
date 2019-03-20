@@ -11,10 +11,20 @@ int main(int argc, char *argv[])
     mat3_t yaw_matrix;
     vec2_t mouse_delta;
 
+    vec3_t tris[6] = {vec3_t(-1.0, 0.0, 1.0), vec3_t(1.0, 0.0, 1.0), vec3_t(1.0, 0.0, -1.0),
+                      vec3_t(1.0, 0.0, -1.0), vec3_t(-1.0, 0.0, -1.0), vec3_t(-1.0, 0.0, 1.0)};
+
     float f = 0.0;
 
     float pitch = 0.0;
     float yaw = 0.0;
+
+    int x_count = 8;
+    int y_count = 8;
+    int y;
+    int x;
+    int v;
+    vec3_t *verts;
 
     int player_index;
 
@@ -40,6 +50,24 @@ int main(int argc, char *argv[])
     in_RegisterKey(SDL_SCANCODE_D);
     in_RegisterKey(SDL_SCANCODE_SPACE);
 
+    verts = (vec3_t *)calloc(sizeof(tris), x_count * y_count);
+
+    for(y = 0; y < y_count; y++)
+    {
+        for(x = 0; x < x_count; x++)
+        {
+            for(v = 0; v < 6; v++)
+            {
+                verts[y * x_count * 6 + x * 6 + v] = tris[v] + vec3_t(-x_count / 2 + x * 2, 0.0, -y_count / 2 + y * 2);
+            }
+        }
+    }
+
+    phy_BuildBvh(verts, 6 * (x_count * y_count));
+
+    glEnable(GL_POINT_SMOOTH);
+    glPointSize(8.0);
+
     while(1)
     {
         in_UpdateInput();
@@ -49,6 +77,7 @@ int main(int argc, char *argv[])
         player_PostUpdatePlayers();
 
         r_UpdateActiveView();
+
         r_DrawFrame();
     }
 

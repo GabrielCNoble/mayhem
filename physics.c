@@ -2,6 +2,8 @@
 #include "stack_list.h"
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#include <float.h>
 
 #include <stdio.h>
 
@@ -173,15 +175,144 @@ void phy_Move(struct collider_handle_t collider, vec3_t acceleration)
 }
 
 
-void phy_ClearBvh()
+void phy_ClearBvh(struct bvh_node_t *node)
 {
+    if(node)
+    {
+        phy_ClearBvh(node->left);
+        phy_ClearBvh(node->right);
+        free(node);
+    }
+}
 
+struct bvh_node_t *phy_BuildBvhRecursive(struct bvh_node_t *nodes)
+{
+    struct bvh_node_t *new_nodes = NULL;
+    struct bvh_node_t *new_node = NULL;
+    struct bvh_node_t *prev_node;
+    struct bvh_node_t *next_node;
+    struct bvh_node_t *node = NULL;
+
+    int i;
+
+    vec3_t max;
+    vec3_t min;
+    vec3_t bounding_box;
+
+    float volume;
+    float min_volume;
+
+    if(nodes->parent)
+    {
+        while(nodes)
+        {
+            new_node = (struct bvh_node_t *)calloc(sizeof(struct bvh_node_t), 1);
+            new_node->left = nodes;
+            nodes = nodes->parent;
+            new_node->left->parent = new_node;
+
+            new_node->max = new_node->left->max;
+            new_node->min = new_node->left->min;
+
+            if(nodes)
+            {
+                prev_node = NULL;
+                node = nodes;
+                min_volume = FLT_MAX;
+
+                while(node)
+                {
+                    max = new_node->max;
+                    min = new_node->min;
+
+                    for(i = 0; i < 3; i++)
+                    {
+                        if(node->max[i] > max[i]) max[i] = node->max[i];
+                        if(node->min[i] < min[i]) min[i] = node->min[i];
+                    }
+
+                    bounding_box = max - min;
+                    volume = fabs(bounding_box.x * bounding_box.y * bounding_box.z);
+
+                    if(volume < min_volume)
+                    {
+                        /* this node forms the smaller bounding volume so far... */
+                        min_volume = volume;
+
+                        next_node = node->parent;
+
+                        if(prev_node)
+                        {
+                            prev_node->parent = node->parent;
+
+                            /* make this node point to the start of the nodes list... */
+                            node->parent = nodes;
+                            /* make this node the beginning of the nodes list... */
+                            nodes = node;
+                        }
+
+                        node = next_node;
+
+                        continue;
+                    }
+
+                    prev_node = node;
+                    node = node->parent;
+                }
+
+                /* the first element of the nodes list forms the smallest
+                bounding volume, so we make it one of the children of new_node... */
+                new_node->right = nodes;
+
+                /* advance one node forward, given that nodes as is still points to
+                the right child of the new_node... */
+                nodes = nodes->parent;
+                new_node->right->parent = new_node;
+
+                node = new_node->right;
+
+                for(i = 0; i < 3; i++)
+                {
+                    if(node->max[i] > new_node->max[i]) new_node->max[i] = node->max[i];
+                    if(node->min[i] < new_node->min[i]) new_node->min[i] = node->min[i];
+                }
+            }
+            else
+            {
+                /* this new_node doesn't have two children, which means it will
+                actually make the search slower, given that it has the same volume
+                as it's left child. To avoid the unnecessary indirection, we get
+                rid of it here, and use its left child as the new node... */
+                node = new_node->left;
+                free(new_node);
+                new_node = node;
+            }
+
+            /* use the parent pointer to link the new nodes, so they can be
+            used by the next recursive call... */
+            new_node->parent = new_nodes;
+            new_nodes = new_node;
+        }
+
+        /* take the volumes generated here and group then into volumes... */
+        return phy_BuildBvhRecursive(new_nodes);
+    }
+    else
+    {
+        return nodes;
+    }
 }
 
 
 void phy_BuildBvh(vec3_t *vertices, int vertice_count)
 {
     int i;
+    int j;
+
+    struct bvh_node_t *bvh_tree = NULL;
+
+    struct bvh_node_t *nodes = NULL;
+    struct bvh_node_t *new_node = NULL;
 
     vertice_count -= vertice_count % 3;
 
@@ -193,17 +324,43 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count)
 
         for(i = 0; i < vertice_count;)
         {
-            collision_triangles[collision_triangle_count].normal = cross(vertices[i + 2] - vertices[i + 1], vertices[i + 1] - vertices[i]);
+            collision_triangles[collision_triangle_count].normal = normalize(cross(vertices[i + 2] - vertices[i + 1], vertices[i + 1] - vertices[i]));
 
-            collision_triangles[collision_triangle_count].verts[0] = vertices[i];
-            i++;
-            collision_triangles[collision_triangle_count].verts[1] = vertices[i];
-            i++;
-            collision_triangles[collision_triangle_count].verts[2] = vertices[i];
-            i++;
+            new_node = (struct bvh_node_t *)calloc(sizeof(struct bvh_node_t ), 1);
+            new_node->left = NULL;
+            new_node->right = NULL;
+
+            new_node->max = vec3_t(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+            new_node->min = vec3_t(FLT_MAX, FLT_MAX, FLT_MAX);
+
+            for(j = 0; j < 3; j++, i++)
+            {
+                collision_triangles[collision_triangle_count].verts[j] = vertices[i];
+
+                if(vertices[i].x > new_node->max.x) new_node->max.x = vertices[i].x;
+                if(vertices[i].x < new_node->min.x) new_node->min.x = vertices[i].x;
+
+                if(vertices[i].y > new_node->max.y) new_node->max.y = vertices[i].y;
+                if(vertices[i].y < new_node->min.y) new_node->min.y = vertices[i].y;
+
+                if(vertices[i].z > new_node->max.z) new_node->max.z = vertices[i].z;
+                if(vertices[i].z < new_node->min.z) new_node->min.z = vertices[i].z;
+            }
+
+            for(j = 0; j < 3; j++)
+            {
+                if(new_node->max[j] == 0.0) new_node->max[j] = 0.005;
+                if(new_node->min[j] == 0.0) new_node->min[j] = -0.005;
+            }
+
+
+            new_node->parent = nodes;
+            nodes = new_node;
 
             collision_triangle_count++;
         }
+
+        collision_bvh = phy_BuildBvhRecursive(nodes);
     }
 }
 

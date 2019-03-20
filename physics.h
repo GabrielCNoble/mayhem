@@ -17,6 +17,7 @@ struct bvh_node_t
 {
     struct bvh_node_t *left;
     struct bvh_node_t *right;
+    struct bvh_node_t *parent;
 
     vec3_t max;
     vec3_t min;
