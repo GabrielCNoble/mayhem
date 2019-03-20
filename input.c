@@ -81,6 +81,7 @@ void in_UpdateInput()
     normalized_mouse_dy = normalized_mouse_y;
 
     SDL_WarpMouseInWindow(r_renderer.window, r_renderer.window_width / 2, r_renderer.window_height / 2);
+    SDL_ShowCursor(0);
 }
 
 vec2_t in_GetMouseDelta()

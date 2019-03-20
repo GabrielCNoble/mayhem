@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
     {
-        printf("oh shit...\n");
+        printf("SDL initialization has failed! reason\n%s", SDL_GetError());
         return -1;
     }
 
@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
     in_RegisterKey(SDL_SCANCODE_A);
     in_RegisterKey(SDL_SCANCODE_D);
     in_RegisterKey(SDL_SCANCODE_SPACE);
+    in_RegisterKey(SDL_SCANCODE_ESCAPE);
 
     verts = (vec3_t *)calloc(sizeof(tris), x_count * y_count);
 
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
         {
             for(v = 0; v < 6; v++)
             {
-                verts[y * x_count * 6 + x * 6 + v] = tris[v] + vec3_t(-x_count / 2 + x * 2, 0.0, -y_count / 2 + y * 2);
+                verts[y * x_count * 6 + x * 6 + v] = tris[v] + vec3_t(-x_count / 2 + x * 2 + y, y, -y_count / 2 + y * 2);
             }
         }
     }
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
     glEnable(GL_POINT_SMOOTH);
     glPointSize(8.0);
 
-    while(1)
+    while(!(in_GetKeyStatus(SDL_SCANCODE_ESCAPE) & KEY_STATUS_PRESSED))
     {
         in_UpdateInput();
 

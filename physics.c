@@ -353,6 +353,8 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count)
                 if(new_node->min[j] == 0.0) new_node->min[j] = -0.005;
             }
 
+            new_node->triangle = collision_triangles + collision_triangle_count;
+
 
             new_node->parent = nodes;
             nodes = new_node;
@@ -365,6 +367,13 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count)
 }
 
 
+
+#define MAX_COLLISION_TRIANGLES 512
+
+void phy_TraverseBvh(vec3_t &aabb_max, vec3_t &aabb_min)
+{
+
+}
 
 
 

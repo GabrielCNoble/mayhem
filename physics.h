@@ -4,7 +4,7 @@
 
 
 #include "vector.h"
-
+#include "list.h"
 
 struct collision_triangle_t
 {
@@ -23,6 +23,18 @@ struct bvh_node_t
     vec3_t min;
 
     struct collision_triangle_t *triangle;
+};
+
+struct collision_pair_t
+{
+    struct base_collider_t *collider_a;
+    struct base_collider_t *collider_b;
+};
+
+struct collision_triangle_list_t
+{
+    struct base_collider_t *collider;
+    struct list_t triangles;
 };
 
 
@@ -93,9 +105,18 @@ void phy_Move(struct collider_handle_t collider, vec3_t acceleration);
 
 
 
+
 void phy_ClearBvh();
 
 void phy_BuildBvh(vec3_t *vertices, int vertice_count);
+
+
+
+
+void phy_TraverseBvh(vec3_t &aabb_max, vec3_t &aabb_min);
+
+
+
 
 
 #endif // PHYSICS_H
