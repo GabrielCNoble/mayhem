@@ -8,7 +8,7 @@ extern struct renderer_t r_renderer;
 
 vec3_t *verts = NULL;
 
-extern struct bvh_node_t *collision_bvh;
+extern struct bvh_node_t *phy_collision_bvh;
 
 void r_DrawBvh(struct bvh_node_t *node)
 {
@@ -82,7 +82,7 @@ void r_DrawFrame()
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDisable(GL_CULL_FACE);
 
-    r_DrawBvh(collision_bvh);
+    r_DrawBvh(phy_collision_bvh);
 
 
     SDL_GL_SwapWindow(r_renderer.window);

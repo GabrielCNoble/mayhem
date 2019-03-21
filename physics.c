@@ -13,17 +13,17 @@
 
 
 
-struct stack_list_t colliders[PHY_COLLIDER_TYPE_NONE];
+struct stack_list_t phy_colliders[PHY_COLLIDER_TYPE_NONE];
 
-struct bvh_node_t *collision_bvh = NULL;
-int collision_triangle_count = 0;
-struct collision_triangle_t *collision_triangles = NULL;
+struct bvh_node_t *phy_collision_bvh = NULL;
+int phy_collision_triangle_count = 0;
+struct collision_triangle_t *phy_collision_triangles = NULL;
 
 
 
 void phy_Init()
 {
-    colliders[PHY_COLLIDER_TYPE_PLAYER].init(sizeof(struct player_collider_t), 32);
+    phy_colliders[PHY_COLLIDER_TYPE_PLAYER].init(sizeof(struct player_collider_t), 32);
 }
 
 void phy_Shutdown()
@@ -40,9 +40,9 @@ struct collider_handle_t phy_CreateCollider(int type)
     if(type >= PHY_COLLIDER_TYPE_PLAYER && type < PHY_COLLIDER_TYPE_NONE)
     {
         handle.type = type;
-        handle.index = colliders[type].add(NULL);
+        handle.index = phy_colliders[type].add(NULL);
 
-        collider = (struct base_collider_t *)colliders[type].get(handle.index);
+        collider = (struct base_collider_t *)phy_colliders[type].get(handle.index);
         collider->type = type;
         collider->position = vec3_t(0.0, 0.0, 0.0);
         collider->linear_velocity = vec3_t(0.0, 0.0, 0.0);
@@ -59,9 +59,9 @@ struct base_collider_t *phy_GetColliderPointer(struct collider_handle_t collider
     {
         if(collider.index != INVALID_COLLIDER_INDEX)
         {
-            if(collider.index < colliders[collider.type].cursor)
+            if(collider.index < phy_colliders[collider.type].cursor)
             {
-                collider_ptr = (struct base_collider_t *)colliders[collider.type].get(collider.index);
+                collider_ptr = (struct base_collider_t *)phy_colliders[collider.type].get(collider.index);
 
                 if(collider.type != collider_ptr->type)
                 {
@@ -101,9 +101,9 @@ void phy_UpdateColliders()
         switch(type)
         {
             case PHY_COLLIDER_TYPE_PLAYER:
-                player_colliders = (struct player_collider_t *)colliders[type].buffer;
+                player_colliders = (struct player_collider_t *)phy_colliders[type].buffer;
 
-                c = colliders[type].cursor;
+                c = phy_colliders[type].cursor;
 
                 for(i = 0; i < c; i++)
                 {
@@ -309,22 +309,20 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count)
     int i;
     int j;
 
-    struct bvh_node_t *bvh_tree = NULL;
-
     struct bvh_node_t *nodes = NULL;
     struct bvh_node_t *new_node = NULL;
 
     vertice_count -= vertice_count % 3;
 
-    collision_triangle_count = 0;
+    phy_collision_triangle_count = 0;
 
     if(vertice_count)
     {
-        collision_triangles = (struct collision_triangle_t *)calloc(sizeof(collision_triangle_t), vertice_count / 3);
+        phy_collision_triangles = (struct collision_triangle_t *)calloc(sizeof(collision_triangle_t), vertice_count / 3);
 
         for(i = 0; i < vertice_count;)
         {
-            collision_triangles[collision_triangle_count].normal = normalize(cross(vertices[i + 2] - vertices[i + 1], vertices[i + 1] - vertices[i]));
+            phy_collision_triangles[phy_collision_triangle_count].normal = normalize(cross(vertices[i + 2] - vertices[i + 1], vertices[i + 1] - vertices[i]));
 
             new_node = (struct bvh_node_t *)calloc(sizeof(struct bvh_node_t ), 1);
             new_node->left = NULL;
@@ -335,7 +333,7 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count)
 
             for(j = 0; j < 3; j++, i++)
             {
-                collision_triangles[collision_triangle_count].verts[j] = vertices[i];
+                phy_collision_triangles[phy_collision_triangle_count].verts[j] = vertices[i];
 
                 if(vertices[i].x > new_node->max.x) new_node->max.x = vertices[i].x;
                 if(vertices[i].x < new_node->min.x) new_node->min.x = vertices[i].x;
@@ -353,26 +351,78 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count)
                 if(new_node->min[j] == 0.0) new_node->min[j] = -0.005;
             }
 
-            new_node->triangle = collision_triangles + collision_triangle_count;
+            new_node->triangle = phy_collision_triangles + phy_collision_triangle_count;
 
 
             new_node->parent = nodes;
             nodes = new_node;
 
-            collision_triangle_count++;
+            phy_collision_triangle_count++;
         }
 
-        collision_bvh = phy_BuildBvhRecursive(nodes);
+        phy_collision_bvh = phy_BuildBvhRecursive(nodes);
     }
 }
 
 
-
-#define MAX_COLLISION_TRIANGLES 512
-
-void phy_TraverseBvh(vec3_t &aabb_max, vec3_t &aabb_min)
+void phy_TraverseBvhRecursive(vec3_t &aabb_max, vec3_t &aabb_min, struct bvh_node_t *node, struct list_t *triangle_list)
 {
+    struct bvh_node_t *child;
+    vec3_t box_center;
+    vec3_t box_extents;
+    vec3_t box_triangle_vec;
+    int i;
 
+
+    child = node->left;
+
+    for(i = 0; i < 2; i++)
+    {
+        if(aabb_max.x >= child->min.x && aabb_min.x <= child->max.x)
+        {
+            if(aabb_max.y >= child->min.y && aabb_min.y <= child->max.y)
+            {
+                if(aabb_max.z >= child->min.z && aabb_min.z <= child->max.z)
+                {
+                    if(node->triangle)
+                    {
+                        triangle_list->add(node->triangle);
+                    }
+                    else
+                    {
+                        phy_TraverseBvhRecursive(aabb_max, aabb_min, child, triangle_list);
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        child = node->right;
+    }
+
+}
+
+
+#define MAX_COLLISION_TRIANGLES 2048
+struct collision_triangle_t *collision_triangles_buffer[MAX_COLLISION_TRIANGLES];
+struct list_t collision_triangles;
+
+struct list_t *phy_TraverseBvh(vec3_t &aabb_max, vec3_t &aabb_min)
+{
+    if(phy_collision_bvh)
+    {
+        collision_triangles.buffer = collision_triangles_buffer;
+        collision_triangles.cursor = 0;
+        collision_triangles.elem_size = sizeof(struct collision_triangle_t *);
+        collision_triangles.size = sizeof(struct collision_triangle_t *) * MAX_COLLISION_TRIANGLES;
+
+        phy_TraverseBvhRecursive(aabb_max, aabb_min, phy_collision_bvh, &collision_triangles);
+
+        return &collision_triangles;
+    }
+
+    return NULL;
 }
 
 

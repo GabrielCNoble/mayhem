@@ -113,7 +113,9 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count);
 
 
 
-void phy_TraverseBvh(vec3_t &aabb_max, vec3_t &aabb_min);
+struct list_t *phy_TraverseBvh(vec3_t &aabb_max, vec3_t &aabb_min);
+
+
 
 
 
