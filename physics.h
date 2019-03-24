@@ -31,12 +31,12 @@ struct collision_pair_t
     struct base_collider_t *collider_b;
 };
 
-struct collision_triangle_list_t
+struct contact_point_t
 {
-    struct base_collider_t *collider;
-    struct list_t triangles;
+    vec3_t position;
+    vec3_t normal;
+    float penetration;
 };
-
 
 enum PHY_COLLIDER_TYPE
 {
@@ -113,7 +113,11 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count);
 
 
 
-struct list_t *phy_TraverseBvh(vec3_t &aabb_max, vec3_t &aabb_min);
+struct list_t *phy_BoxOnBvh(vec3_t &aabb_max, vec3_t &aabb_min);
+
+struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_collider);
+
+void phy_CollidePlayerWorld(struct collider_handle_t player_collider);
 
 
 

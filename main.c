@@ -14,6 +14,9 @@ int main(int argc, char *argv[])
     vec3_t tris[6] = {vec3_t(-1.0, 0.0, 1.0), vec3_t(1.0, 0.0, 1.0), vec3_t(1.0, 0.0, -1.0),
                       vec3_t(1.0, 0.0, -1.0), vec3_t(-1.0, 0.0, -1.0), vec3_t(-1.0, 0.0, 1.0)};
 
+    vec3_t wall[6] = {vec3_t(-1.0, 0.6, -1.0), vec3_t(-1.0, 0.0, -1.0), vec3_t(1.0, 0.0, -1.0),
+                      vec3_t(1.0, 0.0, -1.0), vec3_t(1.0, 0.6, -1.0), vec3_t(-1.0, 0.6, -1.0)};
+
     float f = 0.0;
 
     float pitch = 0.0;
@@ -41,7 +44,7 @@ int main(int argc, char *argv[])
     r_SetWindowSize(800, 600);
     r_SetRendererResolution(800, 600);
 
-    player_index = player_CreatePlayer("default", vec3_t(0.0, 0.0, 0.0));
+    player_index = player_CreatePlayer("default", vec3_t(0.0, 0.22, 0.0));
     player_SetActivePlayer(player_index);
 
     in_RegisterKey(SDL_SCANCODE_W);
@@ -53,18 +56,42 @@ int main(int argc, char *argv[])
 
     verts = (vec3_t *)calloc(sizeof(tris), x_count * y_count);
 
-    for(y = 0; y < y_count; y++)
-    {
-        for(x = 0; x < x_count; x++)
-        {
-            for(v = 0; v < 6; v++)
-            {
-                verts[y * x_count * 6 + x * 6 + v] = tris[v] + vec3_t(-x_count / 2 + x * 2 + y, y, -y_count / 2 + y * 2);
-            }
-        }
-    }
+    verts[0] = tris[0];
+    verts[1] = tris[1];
+    verts[2] = tris[2];
 
-    phy_BuildBvh(verts, 6 * (x_count * y_count));
+    verts[3] = tris[3];
+    verts[4] = tris[4];
+    verts[5] = tris[5];
+
+    verts[6] = wall[0];
+    verts[7] = wall[1];
+    verts[8] = wall[2];
+
+    verts[9] = wall[3];
+    verts[10] = wall[4];
+    verts[11] = wall[5];
+
+//    for(y = 0; y < y_count; y++)
+//    {
+//        for(x = 0; x < x_count; x++)
+//        {
+//            for(v = 0; v < 6; v++)
+//            {
+//                verts[y * x_count * 6 + x * 6 + v] = tris[v] + vec3_t(-x_count / 2 + x * 2, -1.0 + y * 0.5, -y_count / 2 + y * 2);
+//            }
+//        }
+//    }
+//
+//    phy_BuildBvh(verts, 6 * (x_count * y_count));
+
+//    verts = (vec3_t *)calloc(sizeof(vec3_t), 3);
+//
+//    verts[0] = vec3_t(5.0, -1.0, -5.0);
+//    verts[1] = vec3_t(-5.0, -1.0, -5.0);
+//    verts[2] = vec3_t(0.0, -1.0, 5.0);
+//
+    phy_BuildBvh(verts, 12);
 
     glEnable(GL_POINT_SMOOTH);
     glPointSize(8.0);

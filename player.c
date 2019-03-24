@@ -44,6 +44,8 @@ int player_CreatePlayer(char *name, vec3_t position)
         collider = (struct player_collider_t *)phy_GetColliderPointer(player->collider);
 
         collider->height = 0.5;
+        collider->radius = 0.2;
+        collider->base.position = position;
     }
 
     return player_index;
@@ -62,7 +64,6 @@ void player_PostUpdatePlayers()
 void player_UpdateActivePlayer()
 {
     struct player_t *player;
-    struct player_collider_t *collider;
     struct view_t *view;
     vec2_t mouse_delta;
     mat3_t pitch_matrix;
@@ -121,7 +122,7 @@ void player_UpdateActivePlayer()
                 phy_Jump(player->collider);
             }
 
-            translation = (normalize(translation) * yaw_matrix) * 0.05;
+            translation = (normalize(translation) * yaw_matrix) * 0.015;
 
             phy_Move(player->collider, translation);
 

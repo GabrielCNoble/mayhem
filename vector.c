@@ -263,14 +263,19 @@ vec3_t normalize(const vec3_t &vec)
     return vec3_t(0.0, 0.0, 0.0);
 }
 
-float dot(vec3_t &a, vec3_t &b)
+float length(const vec3_t &vec)
+{
+    return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+}
+
+float dot(const vec3_t &a, const vec3_t &b)
 {
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
 vec3_t cross(const vec3_t &a, const vec3_t &b)
 {
-    return vec3_t(a.y * b.z - a.z * b.y, a.x * b.z - a.z * b.x, a.y * b.x - a.x * b.y);
+    return vec3_t(a.z * b.y - a.y * b.z, a.x * b.z - a.z * b.x, a.y * b.x - a.x * b.y);
 }
 
 

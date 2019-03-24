@@ -107,6 +107,8 @@ vec3_t operator / (float s, const vec3_t &vec);
 
 vec3_t normalize(const vec3_t &vec);
 
+float length(const vec3_t &vec);
+
 float dot(const vec3_t &a, const vec3_t &b);
 
 vec3_t cross(const vec3_t &a, const vec3_t &b);

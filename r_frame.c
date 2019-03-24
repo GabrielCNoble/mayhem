@@ -84,6 +84,5 @@ void r_DrawFrame()
 
     r_DrawBvh(phy_collision_bvh);
 
-
     SDL_GL_SwapWindow(r_renderer.window);
 }

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1553057403 source:d:\files\gabriel noble\compiler\mayhem\main.c
+1553386259 source:d:\files\gabriel noble\compiler\mayhem\main.c
 	"main.h"
 	<stdio.h>
 	<math.h>
@@ -13,12 +13,12 @@
 	"player.h"
 	"physics.h"
 
-1552957949 source:d:\files\gabriel noble\compiler\mayhem\vector.c
+1553376038 source:d:\files\gabriel noble\compiler\mayhem\vector.c
 	"vector.h"
 	"matrix.h"
 	<math.h>
 
-1552963187 d:\files\gabriel noble\compiler\mayhem\vector.h
+1553365761 d:\files\gabriel noble\compiler\mayhem\vector.h
 
 1552887208 source:d:\files\gabriel noble\compiler\mayhem\matrix.c
 	"matrix.h"
@@ -393,7 +393,7 @@
 	<OpenGL/glu.h>
 	<GL/glu.h>
 
-1552956347 source:d:\files\gabriel noble\compiler\mayhem\stack_list.c
+1553385403 source:d:\files\gabriel noble\compiler\mayhem\stack_list.c
 	"stack_list.h"
 	<stdlib.h>
 	<string.h>
@@ -413,7 +413,7 @@
 	"r_common.h"
 	"r_view.h"
 
-1553128434 source:d:\files\gabriel noble\compiler\mayhem\r_frame.c
+1553382546 source:d:\files\gabriel noble\compiler\mayhem\r_frame.c
 	"r_frame.h"
 	"matrix.h"
 	"physics.h"
@@ -433,7 +433,7 @@
 	"vector.h"
 	"physics.h"
 
-1552963482 source:d:\files\gabriel noble\compiler\mayhem\player.c
+1553385906 source:d:\files\gabriel noble\compiler\mayhem\player.c
 	"player.h"
 	"stack_list.h"
 	"input.h"
@@ -441,7 +441,7 @@
 	<stdlib.h>
 	<string.h>
 
-1552956366 source:d:\files\gabriel noble\compiler\mayhem\list.c
+1553385395 source:d:\files\gabriel noble\compiler\mayhem\list.c
 	"list.h"
 	"stack_list.h"
 	<stdlib.h>
@@ -449,16 +449,18 @@
 
 1552956354 d:\files\gabriel noble\compiler\mayhem\list.h
 
-1553129613 source:d:\files\gabriel noble\compiler\mayhem\physics.c
+1553385891 source:d:\files\gabriel noble\compiler\mayhem\physics.c
 	"physics.h"
 	"stack_list.h"
 	<stdlib.h>
 	<string.h>
 	<math.h>
 	<float.h>
+	"r_common.h"
+	"r_view.h"
 	<stdio.h>
 
-1553131765 d:\files\gabriel noble\compiler\mayhem\physics.h
+1553382760 d:\files\gabriel noble\compiler\mayhem\physics.h
 	"vector.h"
 	"list.h"
 

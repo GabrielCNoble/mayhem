@@ -5,10 +5,13 @@
 #include <math.h>
 #include <float.h>
 
+#include "r_common.h"
+#include "r_view.h"
+
 #include <stdio.h>
 
-#define GRAVITY 0.0098
-#define MAX_HORIZONTAL_VELOCITY 2.0
+#define GRAVITY 0.009
+#define MAX_HORIZONTAL_VELOCITY 3.0
 #define GROUND_FRICTION 0.9
 
 
@@ -111,13 +114,7 @@ void phy_UpdateColliders()
 
                     player_collider->base.position += player_collider->base.linear_velocity;
 
-                    if(player_collider->base.position.y - player_collider->height * 0.5 < 0.0)
-                    {
-                        player_collider->base.position.y = player_collider->height * 0.5;
-                        player_collider->base.linear_velocity.y = 0.0;
-
-                        player_collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_FLYING;
-                    }
+                    phy_CollidePlayerWorld(COLLIDER_HANDLE(PHY_COLLIDER_TYPE_PLAYER, i));
 
                     if(!(player_collider->flags & PHY_PLAYER_COLLIDER_FLAG_FLYING))
                     {
@@ -125,7 +122,25 @@ void phy_UpdateColliders()
                         player_collider->base.linear_velocity.z *= GROUND_FRICTION;
                     }
 
+                    //phy_FindContactPointsPlayerWorld(COLLIDER_HANDLE(PHY_COLLIDER_TYPE_PLAYER, i));
+
+//                    if(player_collider->base.position.y - player_collider->height * 0.5 < 0.0)
+//                    {
+//                        player_collider->base.position.y = player_collider->height * 0.5;
+//                        player_collider->base.linear_velocity.y = 0.0;
+//
+//                        player_collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_FLYING;
+//                    }
+//
+//                    if(!(player_collider->flags & PHY_PLAYER_COLLIDER_FLAG_FLYING))
+//                    {
+//                        player_collider->base.linear_velocity.x *= GROUND_FRICTION;
+//                        player_collider->base.linear_velocity.z *= GROUND_FRICTION;
+//                    }
+
                     player_collider->base.linear_velocity.y -= GRAVITY;
+
+
                 }
             break;
         }
@@ -143,7 +158,7 @@ void phy_Jump(struct collider_handle_t collider)
 
         if(collider_ptr)
         {
-            collider_ptr->base.linear_velocity.y += 0.5;
+            collider_ptr->base.linear_velocity.y += 0.2;
         }
     }
 }
@@ -208,6 +223,7 @@ struct bvh_node_t *phy_BuildBvhRecursive(struct bvh_node_t *nodes)
         {
             new_node = (struct bvh_node_t *)calloc(sizeof(struct bvh_node_t), 1);
             new_node->left = nodes;
+            new_node->triangle = NULL;
             nodes = nodes->parent;
             new_node->left->parent = new_node;
 
@@ -347,8 +363,13 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count)
 
             for(j = 0; j < 3; j++)
             {
-                if(new_node->max[j] == 0.0) new_node->max[j] = 0.005;
-                if(new_node->min[j] == 0.0) new_node->min[j] = -0.005;
+                if(fabs(new_node->max[j] - new_node->min[j]) < 0.001)
+                {
+                    new_node->max[j] += 0.05;
+                    new_node->min[j] -= 0.05;
+                }
+//                if(new_node->max[j] == 0.0) new_node->max[j] = 0.01;
+//                if(new_node->min[j] == 0.0) new_node->min[j] = -0.01;
             }
 
             new_node->triangle = phy_collision_triangles + phy_collision_triangle_count;
@@ -365,42 +386,35 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count)
 }
 
 
-void phy_TraverseBvhRecursive(vec3_t &aabb_max, vec3_t &aabb_min, struct bvh_node_t *node, struct list_t *triangle_list)
+void phy_BoxOnBvhRecursive(vec3_t &aabb_max, vec3_t &aabb_min, struct bvh_node_t *node, struct list_t *triangle_list)
 {
     struct bvh_node_t *child;
-    vec3_t box_center;
-    vec3_t box_extents;
-    vec3_t box_triangle_vec;
     int i;
 
-
-    child = node->left;
-
-    for(i = 0; i < 2; i++)
+    if(node->triangle)
     {
-        if(aabb_max.x >= child->min.x && aabb_min.x <= child->max.x)
-        {
-            if(aabb_max.y >= child->min.y && aabb_min.y <= child->max.y)
-            {
-                if(aabb_max.z >= child->min.z && aabb_min.z <= child->max.z)
-                {
-                    if(node->triangle)
-                    {
-                        triangle_list->add(node->triangle);
-                    }
-                    else
-                    {
-                        phy_TraverseBvhRecursive(aabb_max, aabb_min, child, triangle_list);
-                    }
+        triangle_list->add(&node->triangle);
+    }
+    else
+    {
+        child = node->left;
 
-                    return;
+        for(i = 0; i < 2; i++)
+        {
+            if(aabb_max.x >= child->min.x && aabb_min.x <= child->max.x)
+            {
+                if(aabb_max.y >= child->min.y && aabb_min.y <= child->max.y)
+                {
+                    if(aabb_max.z >= child->min.z && aabb_min.z <= child->max.z)
+                    {
+                        phy_BoxOnBvhRecursive(aabb_max, aabb_min, child, triangle_list);
+                    }
                 }
             }
+
+            child = node->right;
         }
-
-        child = node->right;
     }
-
 }
 
 
@@ -408,22 +422,229 @@ void phy_TraverseBvhRecursive(vec3_t &aabb_max, vec3_t &aabb_min, struct bvh_nod
 struct collision_triangle_t *collision_triangles_buffer[MAX_COLLISION_TRIANGLES];
 struct list_t collision_triangles;
 
-struct list_t *phy_TraverseBvh(vec3_t &aabb_max, vec3_t &aabb_min)
+struct list_t *phy_BoxOnBvh(vec3_t &aabb_max, vec3_t &aabb_min)
 {
     if(phy_collision_bvh)
     {
         collision_triangles.buffer = collision_triangles_buffer;
         collision_triangles.cursor = 0;
-        collision_triangles.elem_size = sizeof(struct collision_triangle_t *);
-        collision_triangles.size = sizeof(struct collision_triangle_t *) * MAX_COLLISION_TRIANGLES;
+        collision_triangles.elem_size = sizeof(struct collision_triangle_t **);
+        collision_triangles.size = sizeof(struct collision_triangle_t **) * MAX_COLLISION_TRIANGLES;
 
-        phy_TraverseBvhRecursive(aabb_max, aabb_min, phy_collision_bvh, &collision_triangles);
+        phy_BoxOnBvhRecursive(aabb_max, aabb_min, phy_collision_bvh, &collision_triangles);
 
         return &collision_triangles;
     }
 
     return NULL;
 }
+
+#define MAX_CONTACT_POINTS 2048
+struct contact_point_t contact_points_buffer[MAX_CONTACT_POINTS];
+struct list_t contact_points;
+
+struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_collider)
+{
+    int i;
+    int j;
+    struct player_collider_t *collider;
+    struct list_t *triangles;
+    struct collision_triangle_t *triangle;
+    struct contact_point_t contact;
+    vec3_t collider_top;
+    vec3_t capsule_vec;
+    vec3_t closest_on_capsule;
+    vec3_t closest_on_plane;
+    vec3_t closest_on_triangle;
+
+    vec3_t planes[3];
+    vec3_t edge;
+    vec3_t dists;
+
+    vec3_t baricenter;
+
+    vec3_t aabb_max;
+    vec3_t aabb_min;
+
+    vec3_t col_tri_vec;
+    float col_t;
+    float edge_t;
+    float tri_dist;
+
+    float area;
+
+
+    collider = phy_GetPlayerColliderPointer(player_collider);
+
+    struct view_t *view = r_GetActiveView();
+
+    if(collider)
+    {
+        contact_points.buffer = contact_points_buffer;
+        contact_points.cursor = 0;
+        contact_points.elem_size = sizeof(struct contact_point_t);
+        contact_points.size = sizeof(struct contact_point_t) * MAX_CONTACT_POINTS;
+
+        collider_top = collider->base.position + vec3_t(0.0, collider->height * 0.5 - collider->radius, 0.0);
+        capsule_vec = (collider->base.position - vec3_t(0.0, collider->height * 0.5 - collider->radius, 0.0)) - collider_top;
+
+        aabb_max = collider_top + vec3_t(collider->radius, collider->radius, collider->radius);
+        aabb_min = collider_top + capsule_vec - vec3_t(collider->radius, collider->radius, collider->radius);
+
+        triangles = phy_BoxOnBvh(aabb_max, aabb_min);
+
+        for(i = 0; i < triangles->cursor; i++)
+        {
+            triangle = *(struct collision_triangle_t **)triangles->get(i);
+
+            col_tri_vec = triangle->verts[0] - collider_top;
+            col_t = dot(triangle->normal, col_tri_vec) / dot(triangle->normal, capsule_vec);
+
+            if(col_t > 1.0)
+            {
+                col_t = 1.0;
+            }
+            else if(col_t < 0.0)
+            {
+                col_t = 0.0;
+            }
+
+            closest_on_capsule = collider_top + capsule_vec * col_t;
+
+            /* project the closest point to the capsule onto the triangle's plane... */
+            closest_on_plane = closest_on_capsule - triangle->normal * dot(closest_on_capsule - triangle->verts[0], triangle->normal);
+
+            /* build the edge planes' normals... */
+            planes[0] = cross(triangle->normal, triangle->verts[1] - triangle->verts[0]);
+            planes[1] = cross(triangle->normal, triangle->verts[2] - triangle->verts[1]);
+            planes[2] = cross(triangle->normal, triangle->verts[0] - triangle->verts[2]);
+
+            /* calculate the distance between the projected point and the edge planes... */
+            dists[0] = dot(closest_on_plane - triangle->verts[0], planes[0]);
+            dists[1] = dot(closest_on_plane - triangle->verts[1], planes[1]);
+            dists[2] = dot(closest_on_plane - triangle->verts[2], planes[2]);
+
+            if(dists[0] <= 0.0 && dists[1] <= 0.0 && dists[2] <= 0.0)
+            {
+                col_tri_vec = closest_on_capsule - closest_on_plane;
+                tri_dist = length(col_tri_vec);
+
+                if(tri_dist < collider->radius)
+                {
+                    contact.position = closest_on_plane;
+                    contact.normal = col_tri_vec / tri_dist;
+                    contact.penetration = collider->radius - tri_dist;
+                    contact_points.add(&contact);
+                }
+            }
+
+
+//
+//            if(dists[0] > 0.0 || dists[1] > 0.0 || dists[2] > 0.0)
+//            {
+//                /* the closest point on the triangle's plane has a positive distance
+//                to one of the edge planes, which means the point on the plane lies
+//                outside the triangle... */
+//
+//                dists[0] = dists[0];
+//                dists[1] = dists[1];
+//                dists[2] = dists[2];
+//
+//                /* find to which edge the point on the plane is closer to...*/
+//                if(dists[0] > dists[1])
+//                {
+//                    if(dists[0] > dists[2])
+//                    {
+//                        j = 0;
+//                    }
+//                    else
+//                    {
+//                        j = 2;
+//                    }
+//                }
+//                else
+//                {
+//                    if(dists[1] > dists[2])
+//                    {
+//                        j = 1;
+//                    }
+//                    else
+//                    {
+//                        j = 2;
+//                    }
+//                }
+//
+//                edge = triangle->verts[(j + 1) % 3] - triangle->verts[j];
+//
+//                /* project the point in the plane onto the closest edge... */
+//                edge_t = dot(closest_on_plane - triangle->verts[j], edge) / dot(edge, edge);
+//
+//                /* make sure the projection lies within the edge... */
+//                if(edge_t > 1.0)
+//                {
+//                    edge_t = 1.0;
+//                }
+//                else if(edge_t < 0.0)
+//                {
+//                    edge_t = 0.0;
+//                }
+//
+//                closest_on_plane = triangle->verts[j] + edge * edge_t;
+//            }
+
+            //phy_closest_point = closest_on_plane;
+        }
+
+        return &contact_points;
+    }
+
+    return NULL;
+}
+
+void phy_CollidePlayerWorld(struct collider_handle_t player_collider)
+{
+    struct list_t *contacts;
+    int i;
+    struct contact_point_t *contact;
+    struct player_collider_t *collider;
+
+    vec3_t correction;
+
+
+    collider = phy_GetPlayerColliderPointer(player_collider);
+
+    if(collider)
+    {
+        contacts = phy_FindContactPointsPlayerWorld(player_collider);
+        correction = vec3_t(0.0, 0.0, 0.0);
+
+        collider->flags |= PHY_PLAYER_COLLIDER_FLAG_FLYING;
+
+        if(contacts->cursor)
+        {
+            for(i = 0; i < contacts->cursor; i++)
+            {
+                contact = (struct contact_point_t *)contacts->get(i);
+                correction = contact->normal * contact->penetration;
+
+                if(dot(contact->normal, vec3_t(0.0, 1.0, 0.0)) > 0.7)
+                {
+                    collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_FLYING;
+                }
+
+                collider->base.position += correction;
+
+                /* clip the linear velocity to make it go parallel to the contact plane... */
+                collider->base.linear_velocity = collider->base.linear_velocity - contact->normal *
+                                                dot(collider->base.linear_velocity, contact->normal);
+            }
+        }
+    }
+
+}
+
+
+
 
 
 

@@ -74,7 +74,7 @@ int list_t::add(void *data)
 
     if(index >= 0 && data)
     {
-        memcpy((char *)this->buffer + index, data, this->elem_size);
+        memcpy((char *)this->buffer + index * this->elem_size, data, this->elem_size);
     }
 
     return index;
@@ -101,7 +101,7 @@ void *list_t::get(int index)
 
     if(index >= 0 && index < this->cursor)
     {
-        ret = (char *)this->buffer + index;
+        ret = (char *)this->buffer + index * this->elem_size;
     }
 
     return ret;
