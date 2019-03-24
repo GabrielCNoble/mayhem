@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 #define GRAVITY 0.009
-#define MAX_HORIZONTAL_VELOCITY 3.0
+#define MAX_HORIZONTAL_VELOCITY 0.15
 #define GROUND_FRICTION 0.9
 
 
@@ -22,6 +22,10 @@ struct bvh_node_t *phy_collision_bvh = NULL;
 int phy_collision_triangle_count = 0;
 struct collision_triangle_t *phy_collision_triangles = NULL;
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 
 void phy_Init()
@@ -156,9 +160,9 @@ void phy_Jump(struct collider_handle_t collider)
     {
         collider_ptr = (struct player_collider_t *)phy_GetColliderPointer(collider);
 
-        if(collider_ptr)
+        if(collider_ptr && !(collider_ptr->flags & PHY_PLAYER_COLLIDER_FLAG_FLYING))
         {
-            collider_ptr->base.linear_velocity.y += 0.2;
+            collider_ptr->base.linear_velocity.y += 0.18;
         }
     }
 }
@@ -520,77 +524,91 @@ struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_
             planes[2] = cross(triangle->normal, triangle->verts[0] - triangle->verts[2]);
 
             /* calculate the distance between the projected point and the edge planes... */
-            dists[0] = dot(closest_on_plane - triangle->verts[0], planes[0]);
-            dists[1] = dot(closest_on_plane - triangle->verts[1], planes[1]);
-            dists[2] = dot(closest_on_plane - triangle->verts[2], planes[2]);
+            dists[0] = dot(closest_on_plane - triangle->verts[0], planes[0]) - collider->radius;
+            dists[1] = dot(closest_on_plane - triangle->verts[1], planes[1]) - collider->radius;
+            dists[2] = dot(closest_on_plane - triangle->verts[2], planes[2]) - collider->radius;
 
-            if(dists[0] <= 0.0 && dists[1] <= 0.0 && dists[2] <= 0.0)
+
+            if(dists[0] > 0.0 || dists[1] > 0.0 || dists[2] > 0.0)
             {
-                col_tri_vec = closest_on_capsule - closest_on_plane;
-                tri_dist = length(col_tri_vec);
+                /* the closest point on the triangle's plane has a positive distance
+                to one of the edge planes, which means the point on the plane lies
+                outside the triangle... */
 
-                if(tri_dist < collider->radius)
+                dists[0] = dists[0];
+                dists[1] = dists[1];
+                dists[2] = dists[2];
+
+                /* find to which edge the point on the plane is closer to...*/
+                if(dists[0] > dists[1])
                 {
-                    contact.position = closest_on_plane;
-                    contact.normal = col_tri_vec / tri_dist;
-                    contact.penetration = collider->radius - tri_dist;
-                    contact_points.add(&contact);
+                    if(dists[0] > dists[2])
+                    {
+                        j = 0;
+                    }
+                    else
+                    {
+                        j = 2;
+                    }
                 }
+                else
+                {
+                    if(dists[1] > dists[2])
+                    {
+                        j = 1;
+                    }
+                    else
+                    {
+                        j = 2;
+                    }
+                }
+
+                edge = triangle->verts[(j + 1) % 3] - triangle->verts[j];
+
+                /* project the point in the plane onto the closest edge... */
+                edge_t = dot(closest_on_plane - triangle->verts[j], edge) / dot(edge, edge);
+
+                /* make sure the projection lies within the edge... */
+                if(edge_t > 1.0)
+                {
+                    edge_t = 1.0;
+                }
+                else if(edge_t < 0.0)
+                {
+                    edge_t = 0.0;
+                }
+
+                closest_on_plane = triangle->verts[j] + edge * edge_t;
+
+                dists = vec3_t(-1.0, -1.0, -1.0);
             }
 
 
-//
-//            if(dists[0] > 0.0 || dists[1] > 0.0 || dists[2] > 0.0)
-//            {
-//                /* the closest point on the triangle's plane has a positive distance
-//                to one of the edge planes, which means the point on the plane lies
-//                outside the triangle... */
-//
-//                dists[0] = dists[0];
-//                dists[1] = dists[1];
-//                dists[2] = dists[2];
-//
-//                /* find to which edge the point on the plane is closer to...*/
-//                if(dists[0] > dists[1])
-//                {
-//                    if(dists[0] > dists[2])
-//                    {
-//                        j = 0;
-//                    }
-//                    else
-//                    {
-//                        j = 2;
-//                    }
-//                }
-//                else
-//                {
-//                    if(dists[1] > dists[2])
-//                    {
-//                        j = 1;
-//                    }
-//                    else
-//                    {
-//                        j = 2;
-//                    }
-//                }
-//
-//                edge = triangle->verts[(j + 1) % 3] - triangle->verts[j];
-//
-//                /* project the point in the plane onto the closest edge... */
-//                edge_t = dot(closest_on_plane - triangle->verts[j], edge) / dot(edge, edge);
-//
-//                /* make sure the projection lies within the edge... */
-//                if(edge_t > 1.0)
-//                {
-//                    edge_t = 1.0;
-//                }
-//                else if(edge_t < 0.0)
-//                {
-//                    edge_t = 0.0;
-//                }
-//
-//                closest_on_plane = triangle->verts[j] + edge * edge_t;
-//            }
+
+            //if(dists[0] <= 0.0 && dists[1] <= 0.0 && dists[2] <= 0.0)
+            //{
+
+            col_tri_vec = closest_on_capsule - closest_on_plane;
+            tri_dist = length(col_tri_vec);
+
+            if(tri_dist == 0.0)
+            {
+                col_tri_vec = triangle->normal;
+            }
+            else
+            {
+                col_tri_vec /= tri_dist;
+            }
+
+            if(tri_dist < collider->radius)
+            {
+                contact.position = closest_on_plane;
+                contact.normal = col_tri_vec;
+                contact.penetration = collider->radius - tri_dist;
+                contact_points.add(&contact);
+            }
+
+            //}
 
             //phy_closest_point = closest_on_plane;
         }
@@ -608,7 +626,8 @@ void phy_CollidePlayerWorld(struct collider_handle_t player_collider)
     struct contact_point_t *contact;
     struct player_collider_t *collider;
 
-    vec3_t correction;
+    vec3_t pos_correction;
+    vec3_t vel_correction;
 
 
     collider = phy_GetPlayerColliderPointer(player_collider);
@@ -616,34 +635,51 @@ void phy_CollidePlayerWorld(struct collider_handle_t player_collider)
     if(collider)
     {
         contacts = phy_FindContactPointsPlayerWorld(player_collider);
-        correction = vec3_t(0.0, 0.0, 0.0);
+        pos_correction = vec3_t(0.0, 0.0, 0.0);
+        vel_correction = vec3_t(0.0, 0.0, 0.0);
 
         collider->flags |= PHY_PLAYER_COLLIDER_FLAG_FLYING;
 
         if(contacts->cursor)
         {
+            glBegin(GL_POINTS);
+            glColor3f(1.0, 0.0, 0.0);
+
             for(i = 0; i < contacts->cursor; i++)
             {
                 contact = (struct contact_point_t *)contacts->get(i);
-                correction = contact->normal * contact->penetration;
+                pos_correction += contact->normal * contact->penetration;
 
                 if(dot(contact->normal, vec3_t(0.0, 1.0, 0.0)) > 0.7)
                 {
                     collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_FLYING;
                 }
 
-                collider->base.position += correction;
-
-                /* clip the linear velocity to make it go parallel to the contact plane... */
-                collider->base.linear_velocity = collider->base.linear_velocity - contact->normal *
+                if(dot(collider->base.linear_velocity, contact->normal) < 0.0)
+                {
+                    /* clip the linear velocity to make it go parallel to the contact plane... */
+                    collider->base.linear_velocity = collider->base.linear_velocity - contact->normal *
                                                 dot(collider->base.linear_velocity, contact->normal);
+                }
+
+                glVertex3f(contact->position.x, contact->position.y, contact->position.z);
             }
+
+            glEnd();
+
+          //  printf("[%f %f %f]\n", pos_correction.x, pos_correction.y, pos_correction.z);
+
+            pos_correction /= contacts->cursor;
+
+            collider->base.position += pos_correction;
         }
     }
 
 }
 
-
+#ifdef __cplusplus
+}
+#endif
 
 
 

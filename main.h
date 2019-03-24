@@ -7,10 +7,12 @@
 #include "matrix.h"
 
 #include "r_main.h"
-
+#include "w_main.h"
 #include "input.h"
 #include "player.h"
 #include "physics.h"
+#include "s_aux.h"
+
 
 
 #endif // MAIN_H

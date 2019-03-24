@@ -83,6 +83,10 @@ struct player_collider_t
 };
 
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void phy_Init();
 
@@ -106,7 +110,7 @@ void phy_Move(struct collider_handle_t collider, vec3_t acceleration);
 
 
 
-void phy_ClearBvh();
+void phy_ClearBvh(struct bvh_node_t *node);
 
 void phy_BuildBvh(vec3_t *vertices, int vertice_count);
 
@@ -121,7 +125,9 @@ void phy_CollidePlayerWorld(struct collider_handle_t player_collider);
 
 
 
-
+#ifdef __cplusplus
+}
+#endif
 
 
 

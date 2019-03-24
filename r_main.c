@@ -32,6 +32,8 @@ void r_Init()
 
     init_status = glewInit();
 
+    glEnable(GL_DEPTH_TEST);
+
     if(init_status != GLEW_NO_ERROR)
     {
         printf("oh shit...\n");

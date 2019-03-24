@@ -70,6 +70,10 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="r_view.h" />
+		<Unit filename="s_aux.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="s_aux.h" />
 		<Unit filename="stack_list.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -78,6 +82,10 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="vector.h" />
+		<Unit filename="w_main.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="w_main.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

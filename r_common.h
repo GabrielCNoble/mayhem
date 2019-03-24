@@ -18,6 +18,13 @@ struct frustum_t
     float bottom;
 };
 
+struct draw_batch_t
+{
+    int start;
+    int count;
+    int material;
+};
+
 
 struct view_t
 {

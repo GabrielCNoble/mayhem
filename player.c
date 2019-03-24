@@ -122,7 +122,7 @@ void player_UpdateActivePlayer()
                 phy_Jump(player->collider);
             }
 
-            translation = (normalize(translation) * yaw_matrix) * 0.015;
+            translation = (normalize(translation) * yaw_matrix) * 0.016;
 
             phy_Move(player->collider, translation);
 
