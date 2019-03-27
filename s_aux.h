@@ -7,13 +7,21 @@
 #include "r_common.h"
 #include "r_surf.h"
 
-struct geometry_material_t
-{
-    vec4_t color;
-    char *name;
-    char *diffuse_texture;
-    char *normal_texture;
-};
+//struct geometry_material_t
+//{
+//    vec4_t color;
+//    char *name;
+//    char *diffuse_texture;
+//    char *normal_texture;
+//};
+
+//
+//struct geometry_batch_t
+//{
+//    unsigned int start;
+//    unsigned int count;
+//    char *material_name;
+//};
 
 struct geometry_data_t
 {

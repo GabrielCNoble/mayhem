@@ -16,40 +16,121 @@ struct list_t r_texture_names(sizeof(struct texture_name_t), 32);
 
 
 
-unsigned short r_CreateMaterial(vec4_t color, unsigned short diffuse_tex, unsigned short normal_tex, char *name)
+void r_SetMaterialColor(short material, vec4_t color)
 {
-    unsigned short index;
+    if(material != R_DEFAULT_MATERIAL_HANDLE)
+    {
+        r_SetMaterialColorPointer(r_GetMaterialPointer(material), color);
+    }
+}
+
+void r_SetMaterialColorPointer(struct material_t *material, vec4_t color)
+{
     int i;
+
+    if(material)
+    {
+        if(material != r_GetMaterialPointer(R_DEFAULT_MATERIAL_HANDLE))
+        {
+            for(i = 0; i < 4; i++)
+            {
+                if(color[i] > 1.0) color[i] = 1.0;
+                else if(color[i] < 0.0) color[i] = 0.0;
+                material->color[i] = 0xff * color[i];
+            }
+        }
+    }
+}
+
+/*
+    primarily to be used by loaders...
+*/
+short r_CreateEmptyMaterial()
+{
+    short material_handle;
     struct material_t *material;
 
-    index = (unsigned short) r_materials.add(NULL);
-    material = (struct material_t *)r_materials.get(index);
+    material_handle = r_materials.add(NULL);
+    material = (struct material_t *)r_materials.get(material_handle);
 
-    for(i = 0; i < 4; i++)
+    material->flags = 0;
+
+    return material_handle;
+}
+
+short r_CreateMaterial(vec4_t color, short diffuse_tex, short normal_tex, char *name)
+{
+    short material_handle = R_DEFAULT_MATERIAL_HANDLE;
+    struct material_t *material;
+
+    if(strcmp(name, "default_material") || (!r_materials.cursor))
     {
-        if(color[i] < 0.0)
-        {
-            color[i] = 0.0;
-        }
-        else if(color[i] > 1.0)
-        {
-            color[i] = 1.0;
-        }
+        material_handle = r_CreateEmptyMaterial();
+        material = r_GetMaterialPointer(material_handle);
 
-        material->color[i] = 0xff * color[i];
+        r_SetMaterialColorPointer(material, color);
+
+        material->diffuse_texture = diffuse_tex;
+        material->normal_texture = normal_tex;
+        material->name = strdup(name);
     }
 
-    material->diffuse_texture = diffuse_tex;
-    material->normal_texture = normal_tex;
-    material->name = strdup(name);
-
-    return index;
+    return material_handle;
 }
 
 
-void r_DestroyMaterial(unsigned short material_handle)
+void r_DestroyMaterial(short material_handle)
 {
+    struct material_t *material;
 
+    if(material_handle != R_DEFAULT_MATERIAL_HANDLE)
+    {
+        material = r_GetMaterialPointer(material_handle);
+
+        material->flags |= R_MATERIAL_FLAG_INVALID;
+
+        r_materials.remove(material_handle);
+    }
+}
+
+short r_GetMaterialHandle(char *material_name)
+{
+    int i;
+    struct material_t *materials;
+
+    materials = (struct material_t *)r_materials.buffer;
+
+    for(i = 0; i < r_materials.cursor; i++)
+    {
+        if(materials[i].flags & R_MATERIAL_FLAG_INVALID)
+        {
+            continue;
+        }
+
+        if(!strcmp(material_name, materials[i].name))
+        {
+            return i;
+        }
+    }
+
+    return R_DEFAULT_MATERIAL_HANDLE;
+}
+
+struct material_t *r_GetMaterialPointer(short material_handle)
+{
+    struct material_t *material;
+
+    material = (struct material_t *)r_materials.get(material_handle);
+
+    if(material)
+    {
+        if(material->flags & R_MATERIAL_FLAG_INVALID)
+        {
+            material = NULL;
+        }
+    }
+
+    return material;
 }
 
 

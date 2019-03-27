@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
     //phy_BuildBvh(verts, x * sizeof(tris));
 
 
-    aux_LoadWavefront("test2.obj", &level_data);
+    aux_LoadWavefront("test3.obj", &level_data);
 
     phy_BuildBvh((vec3_t *)level_data.vertices.buffer, level_data.vertices.cursor);
 

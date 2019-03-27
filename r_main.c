@@ -1,4 +1,5 @@
 #include "r_main.h"
+#include "r_surf.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,6 +47,8 @@ void r_Init()
 
     view = r_CreateView();
     r_SetView(view);
+
+    r_CreateMaterial(vec4_t(1.0, 1.0, 1.0, 1.0), R_INVALID_TEXTURE_HANDLE, R_INVALID_TEXTURE_HANDLE, "default_material");
 }
 
 void r_Shutdown()

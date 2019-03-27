@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1553561100 source:d:\files\gabriel noble\compiler\mayhem\main.c
+1553657800 source:d:\files\gabriel noble\compiler\mayhem\main.c
 	"main.h"
 	<stdio.h>
 	<math.h>
@@ -371,8 +371,9 @@
 	"begin_code.h"
 	"close_code.h"
 
-1553405566 source:d:\files\gabriel noble\compiler\mayhem\r_main.c
+1553657497 source:d:\files\gabriel noble\compiler\mayhem\r_main.c
 	"r_main.h"
+	"r_surf.h"
 	<stdio.h>
 	<stdlib.h>
 
@@ -471,12 +472,12 @@
 1553401511 source:d:\files\gabriel noble\compiler\mayhem\w_main.c
 	"w_main.h"
 
-1553649690 source:d:\files\gabriel noble\compiler\mayhem\s_aux.c
+1553658089 source:d:\files\gabriel noble\compiler\mayhem\s_aux.c
 	"s_aux.h"
 	<stdlib.h>
 	<string.h>
 
-1553649617 d:\files\gabriel noble\compiler\mayhem\s_aux.h
+1553653420 d:\files\gabriel noble\compiler\mayhem\s_aux.h
 	<stdio.h>
 	"vector.h"
 	"list.h"
@@ -494,7 +495,7 @@
 1553475469 d:\files\gabriel noble\compiler\mayhem\r_material.h
 	"vector.h"
 
-1553571524 source:d:\files\gabriel noble\compiler\mayhem\r_surf.c
+1553657647 source:d:\files\gabriel noble\compiler\mayhem\r_surf.c
 	"r_surf.h"
 	"stack_list.h"
 	"list.h"
@@ -503,6 +504,6 @@
 	<stdlib.h>
 	<string.h>
 
-1553571502 d:\files\gabriel noble\compiler\mayhem\r_surf.h
+1553657601 d:\files\gabriel noble\compiler\mayhem\r_surf.h
 	"vector.h"
 
