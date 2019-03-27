@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 
-#define GRAVITY 0.009
+#define GRAVITY (0.98 * 0.016 * 0.5)
 #define MAX_HORIZONTAL_VELOCITY 0.15
 #define GROUND_FRICTION 0.9
 
@@ -120,7 +120,7 @@ void phy_UpdateColliders()
 
                     phy_CollidePlayerWorld(COLLIDER_HANDLE(PHY_COLLIDER_TYPE_PLAYER, i));
 
-                    if(!(player_collider->flags & PHY_PLAYER_COLLIDER_FLAG_FLYING))
+                    if(player_collider->flags & PHY_PLAYER_COLLIDER_FLAG_ON_GROUND)
                     {
                         player_collider->base.linear_velocity.x *= GROUND_FRICTION;
                         player_collider->base.linear_velocity.z *= GROUND_FRICTION;
@@ -160,7 +160,7 @@ void phy_Jump(struct collider_handle_t collider)
     {
         collider_ptr = (struct player_collider_t *)phy_GetColliderPointer(collider);
 
-        if(collider_ptr && !(collider_ptr->flags & PHY_PLAYER_COLLIDER_FLAG_FLYING))
+        if(collider_ptr && (collider_ptr->flags & PHY_PLAYER_COLLIDER_FLAG_ON_GROUND))
         {
             collider_ptr->base.linear_velocity.y += 0.18;
         }
@@ -535,10 +535,6 @@ struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_
                 to one of the edge planes, which means the point on the plane lies
                 outside the triangle... */
 
-                dists[0] = dists[0];
-                dists[1] = dists[1];
-                dists[2] = dists[2];
-
                 /* find to which edge the point on the plane is closer to...*/
                 if(dists[0] > dists[1])
                 {
@@ -580,7 +576,7 @@ struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_
 
                 closest_on_plane = triangle->verts[j] + edge * edge_t;
 
-                dists = vec3_t(-1.0, -1.0, -1.0);
+                //dists = vec3_t(-1.0, -1.0, -1.0);
             }
 
 
@@ -591,17 +587,17 @@ struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_
             col_tri_vec = closest_on_capsule - closest_on_plane;
             tri_dist = length(col_tri_vec);
 
-            if(tri_dist == 0.0)
-            {
-                col_tri_vec = triangle->normal;
-            }
-            else
-            {
-                col_tri_vec /= tri_dist;
-            }
-
             if(tri_dist < collider->radius)
             {
+                if(tri_dist == 0.0)
+                {
+                    col_tri_vec = triangle->normal;
+                }
+                else
+                {
+                    col_tri_vec /= tri_dist;
+                }
+
                 contact.position = closest_on_plane;
                 contact.normal = col_tri_vec;
                 contact.penetration = collider->radius - tri_dist;
@@ -619,40 +615,69 @@ struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_
     return NULL;
 }
 
+#define MAX_ITERATIONS 8
+
 void phy_CollidePlayerWorld(struct collider_handle_t player_collider)
 {
     struct list_t *contacts;
     int i;
+    int j;
+    int deepest_index;
     struct contact_point_t *contact;
     struct player_collider_t *collider;
 
     vec3_t pos_correction;
     vec3_t vel_correction;
 
+    /* hmm... */
+    float deepest;
+
 
     collider = phy_GetPlayerColliderPointer(player_collider);
 
     if(collider)
     {
-        contacts = phy_FindContactPointsPlayerWorld(player_collider);
-        pos_correction = vec3_t(0.0, 0.0, 0.0);
-        vel_correction = vec3_t(0.0, 0.0, 0.0);
+        collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_ON_GROUND;
 
-        collider->flags |= PHY_PLAYER_COLLIDER_FLAG_FLYING;
-
-        if(contacts->cursor)
+        for(j = 0; j < MAX_ITERATIONS; j++)
         {
-            glBegin(GL_POINTS);
-            glColor3f(1.0, 0.0, 0.0);
+            contacts = phy_FindContactPointsPlayerWorld(player_collider);
+            pos_correction = vec3_t(0.0, 0.0, 0.0);
 
-            for(i = 0; i < contacts->cursor; i++)
+            deepest = -FLT_MAX;
+
+            if(contacts->cursor)
             {
-                contact = (struct contact_point_t *)contacts->get(i);
-                pos_correction += contact->normal * contact->penetration;
+                for(i = 0; i < contacts->cursor; i++)
+                {
+                    contact = (struct contact_point_t *)contacts->get(i);
+
+                    if(contact->penetration > deepest)
+                    {
+                        deepest = contact->penetration;
+                        deepest_index = i;
+                    }
+//                    contact = (struct contact_point_t *)contacts->get(i);
+//                    pos_correction += contact->normal * contact->penetration;
+//
+//                    if(dot(contact->normal, vec3_t(0.0, 1.0, 0.0)) > 0.7)
+//                    {
+//                        collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_FLYING;
+//                    }
+//
+//                    if(dot(collider->base.linear_velocity, contact->normal) < 0.0)
+//                    {
+//                        /* clip the linear velocity to make it go parallel to the contact plane... */
+//                        collider->base.linear_velocity = collider->base.linear_velocity - contact->normal *
+//                                                    dot(collider->base.linear_velocity, contact->normal);
+//                    }
+                }
+
+                contact = (struct contact_point_t *)contacts->get(deepest_index);
 
                 if(dot(contact->normal, vec3_t(0.0, 1.0, 0.0)) > 0.7)
                 {
-                    collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_FLYING;
+                    collider->flags |= PHY_PLAYER_COLLIDER_FLAG_ON_GROUND;
                 }
 
                 if(dot(collider->base.linear_velocity, contact->normal) < 0.0)
@@ -662,16 +687,17 @@ void phy_CollidePlayerWorld(struct collider_handle_t player_collider)
                                                 dot(collider->base.linear_velocity, contact->normal);
                 }
 
-                glVertex3f(contact->position.x, contact->position.y, contact->position.z);
+                collider->base.position += contact->normal * contact->penetration;
+
+                //pos_correction /= contacts->cursor;
+
+                //collider->base.position += pos_correction;
             }
-
-            glEnd();
-
-          //  printf("[%f %f %f]\n", pos_correction.x, pos_correction.y, pos_correction.z);
-
-            pos_correction /= contacts->cursor;
-
-            collider->base.position += pos_correction;
+            else
+            {
+                /* probably flying... */
+                break;
+            }
         }
     }
 

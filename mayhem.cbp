@@ -65,6 +65,10 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="r_main.h" />
+		<Unit filename="r_surf.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_surf.h" />
 		<Unit filename="r_verts.h" />
 		<Unit filename="r_view.c">
 			<Option compilerVar="CPP" />

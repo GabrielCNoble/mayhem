@@ -70,7 +70,7 @@ struct base_collider_t
 
 enum PHY_PLAYER_COLLIDER_FLAGS
 {
-    PHY_PLAYER_COLLIDER_FLAG_FLYING = 1,
+    PHY_PLAYER_COLLIDER_FLAG_ON_GROUND = 1,
 };
 
 struct player_collider_t

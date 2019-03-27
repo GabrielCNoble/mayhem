@@ -106,6 +106,8 @@ struct view_t *r_CreateView()
 
     view->next = r_renderer.views;
     r_renderer.views = view;
+
+    return view;
 }
 
 void r_SetView(struct view_t *view)

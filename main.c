@@ -8,21 +8,21 @@ int main(int argc, char *argv[])
     mat3_t yaw_matrix;
     vec2_t mouse_delta;
 
-    vec3_t tris[6] = {vec3_t(-1.0, 0.0, 1.0), vec3_t(1.0, 0.0, 1.0), vec3_t(1.0, 0.0, -1.0),
-                      vec3_t(1.0, 0.0, -1.0), vec3_t(-1.0, 0.0, -1.0), vec3_t(-1.0, 0.0, 1.0)};
+//    vec3_t tris[6] = {vec3_t(-1.0, 0.0, 1.0), vec3_t(1.0, 0.0, 1.0), vec3_t(1.0, 0.0, -1.0),
+//                      vec3_t(1.0, 0.0, -1.0), vec3_t(-1.0, 0.0, -1.0), vec3_t(-1.0, 0.0, 1.0)};
+//
+//    vec3_t wall0[6] = {vec3_t(-1.0, 0.6, -1.0), vec3_t(-1.0, 0.0, -1.0), vec3_t(1.0, 0.0, -1.0),
+//                      vec3_t(1.0, 0.0, -1.0), vec3_t(1.0, 0.6, -1.0), vec3_t(-1.0, 0.6, -1.0)};
+//
+//    vec3_t wall1[6] = {vec3_t(-1.0, 0.6, -1.0), vec3_t(-1.0, 0.6, 1.0), vec3_t(-1.0, 0.0, 1.0),
+//                      vec3_t(-1.0, 0.0, 1.0), vec3_t(-1.0, 0.0, -1.0), vec3_t(-1.0, 0.6, -1.0)};
 
-    vec3_t wall0[6] = {vec3_t(-1.0, 0.6, -1.0), vec3_t(-1.0, 0.0, -1.0), vec3_t(1.0, 0.0, -1.0),
-                      vec3_t(1.0, 0.0, -1.0), vec3_t(1.0, 0.6, -1.0), vec3_t(-1.0, 0.6, -1.0)};
-
-    vec3_t wall1[6] = {vec3_t(-1.0, 0.6, -1.0), vec3_t(-1.0, 0.6, 1.0), vec3_t(-1.0, 0.0, 1.0),
-                      vec3_t(-1.0, 0.0, 1.0), vec3_t(-1.0, 0.0, -1.0), vec3_t(-1.0, 0.6, -1.0)};
-
-    int x_count = 8;
-    int y_count = 8;
-    int y;
-    int x;
-    int v;
-    vec3_t *verts;
+//    int x_count = 8;
+//    int y_count = 8;
+//    int y;
+//    int x;
+//    //int v;
+//    vec3_t *verts;
 
     struct geometry_data_t level_data;
 
@@ -176,8 +176,8 @@ int main(int argc, char *argv[])
 
 
 
-    glEnable(GL_POINT_SMOOTH);
-    glPointSize(8.0);
+   // glEnable(GL_POINT_SMOOTH);
+   // glPointSize(8.0);
 
     while(!(in_GetKeyStatus(SDL_SCANCODE_ESCAPE) & KEY_STATUS_PRESSED))
     {

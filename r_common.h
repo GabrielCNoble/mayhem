@@ -20,9 +20,9 @@ struct frustum_t
 
 struct draw_batch_t
 {
-    int start;
-    int count;
-    int material;
+    unsigned int start;
+    unsigned int count;
+    unsigned short material;
 };
 
 

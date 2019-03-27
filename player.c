@@ -43,7 +43,7 @@ int player_CreatePlayer(char *name, vec3_t position)
 
         collider = (struct player_collider_t *)phy_GetColliderPointer(player->collider);
 
-        collider->height = 0.5;
+        collider->height = 1.0;
         collider->radius = 0.2;
         collider->base.position = position;
     }
@@ -80,12 +80,12 @@ void player_UpdateActivePlayer()
             translation = vec3_t(0.0, 0.0, 0.0);
             mouse_delta = in_GetMouseDelta();
 
-            player->pitch += mouse_delta.y * 0.1;
+            player->pitch += mouse_delta.y * 0.15;
 
             if(player->pitch > 0.5) player->pitch = 0.5;
             else if(player->pitch < -0.5) player->pitch = -0.5;
 
-            player->yaw -= mouse_delta.x * 0.1;
+            player->yaw -= mouse_delta.x * 0.15;
 
             pitch_matrix = rotate_x(pitch_matrix, player->pitch);
             yaw_matrix = rotate_y(yaw_matrix, player->yaw);

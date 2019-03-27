@@ -44,6 +44,7 @@ void aux_LoadWavefront(char *file_name,  struct geometry_data_t *geometry_data)
     geometry_data->normals.init(sizeof(vec3_t), 32);
     geometry_data->tangents.init(sizeof(vec3_t), 32);
     geometry_data->tex_coords.init(sizeof(vec2_t), 32);
+    geometry_data->draw_batches.init(sizeof(struct draw_batch_t), 32);
 
     struct face_t
     {
@@ -215,6 +216,126 @@ void aux_LoadWavefront(char *file_name,  struct geometry_data_t *geometry_data)
             }
         }
     }
+}
+
+
+void aux_LoadWavefrontMaterial(char *file_name, struct geometry_data_t *geometry_data)
+{
+    int i = 0;
+    int j;
+    char *file_buffer;
+    unsigned long file_size;
+    struct geometry_material_t *current_material = NULL;
+    int value_str_index;
+    unsigned short material_handle;
+    char value_str[64];
+    vec4_t color;
+    FILE *file;
+
+    file = fopen(file_name, "rb");
+
+    if(file)
+    {
+        if(!geometry_data->materials.buffer)
+        {
+            geometry_data->materials.init(sizeof(struct geometry_material_t), 32);
+        }
+
+        file_buffer = (char *)aux_ReadFile(file);
+        file_size = aux_FileSize(file);
+        fclose(file);
+
+        while(i < file_size)
+        {
+            switch(file_buffer[i])
+            {
+                case 'K':
+                    i++;
+
+                    if(file_buffer[i] == 'a' || file_buffer[i] == 's')
+                    {
+                        while(file_buffer[i] != '\n' && file_buffer[i] != '\r' && file_buffer[i] != '\0')i++;
+                    }
+                    else if(file_buffer[i] == 'd')
+                    {
+                        for(j = 0; j < 3; j++)
+                        {
+                            value_str_index = 0;
+
+                            while(file_buffer[i] == ' ') i++;
+
+                            while(file_buffer[i] != ' ' &&
+                                  file_buffer[i] != '\n' &&
+                                  file_buffer[i] != '\r' &&
+                                  file_buffer[i] != '\0')
+                            {
+                                value_str[value_str_index] = file_buffer[i];
+                                i++;
+                                value_str_index++;
+                            }
+
+                            color[j] = atof(value_str);
+                        }
+
+                        color[3] = 1.0;
+
+                        current_material->color = color;
+                    }
+                break;
+
+                case 'n':
+                    if(!strcmp(file_buffer + i, "newmtl"))
+                    {
+                        i++;
+
+                        while(file_buffer[i] == ' ')i++;
+
+                        value_str_index = 0;
+
+                        while(file_buffer[i] != ' ' && file_buffer[i] != '\n' &&
+                              file_buffer[i] != '\r' && file_buffer[i] != '\0')
+                        {
+                            value_str[value_str_index] = file_buffer[i];
+                            value_str_index++;
+                            i++;
+                        }
+
+                        value_str[value_str_index] = '\0';
+
+                        material_handle = (unsigned short)geometry_data->materials.add(NULL);
+                        current_material = (struct geometry_material_t *)geometry_data->materials.get(material_handle);
+
+                        current_material->name = strdup(value_str);
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                break;
+
+                case 'd':
+                    while(file_buffer[i] != '\n' && file_buffer[i] != '\r' && file_buffer[i] != '\0')i++;
+                break;
+
+                case 'i':
+                    if(!strcmp(file_buffer + i, "illum"))
+                    {
+                        while(file_buffer[i] != '\n' && file_buffer[i] != '\r' && file_buffer[i] != '\0')i++;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                break;
+
+                default:
+                    i++;
+                break;
+            }
+        }
+
+    }
+
 }
 
 

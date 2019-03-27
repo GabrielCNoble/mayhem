@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1553405192 source:d:\files\gabriel noble\compiler\mayhem\main.c
+1553561100 source:d:\files\gabriel noble\compiler\mayhem\main.c
 	"main.h"
 	<stdio.h>
 	<math.h>
@@ -381,7 +381,7 @@
 	"r_view.h"
 	"r_frame.h"
 
-1553400091 d:\files\gabriel noble\compiler\mayhem\r_common.h
+1553570358 d:\files\gabriel noble\compiler\mayhem\r_common.h
 	"SDL2\SDL.h"
 	"GL\glew.h"
 	"matrix.h"
@@ -402,7 +402,7 @@
 
 1552956336 d:\files\gabriel noble\compiler\mayhem\stack_list.h
 
-1552958614 source:d:\files\gabriel noble\compiler\mayhem\r_view.c
+1553475751 source:d:\files\gabriel noble\compiler\mayhem\r_view.c
 	"r_view.h"
 	<math.h>
 	<stdlib.h>
@@ -435,7 +435,7 @@
 	"vector.h"
 	"physics.h"
 
-1553405151 source:d:\files\gabriel noble\compiler\mayhem\player.c
+1553564363 source:d:\files\gabriel noble\compiler\mayhem\player.c
 	"player.h"
 	"stack_list.h"
 	"input.h"
@@ -451,7 +451,7 @@
 
 1552956354 d:\files\gabriel noble\compiler\mayhem\list.h
 
-1553404942 source:d:\files\gabriel noble\compiler\mayhem\physics.c
+1553564478 source:d:\files\gabriel noble\compiler\mayhem\physics.c
 	"physics.h"
 	"stack_list.h"
 	<stdlib.h>
@@ -462,7 +462,7 @@
 	"r_view.h"
 	<stdio.h>
 
-1553401574 d:\files\gabriel noble\compiler\mayhem\physics.h
+1553564425 d:\files\gabriel noble\compiler\mayhem\physics.h
 	"vector.h"
 	"list.h"
 
@@ -471,13 +471,38 @@
 1553401511 source:d:\files\gabriel noble\compiler\mayhem\w_main.c
 	"w_main.h"
 
-1553404295 source:d:\files\gabriel noble\compiler\mayhem\s_aux.c
+1553649690 source:d:\files\gabriel noble\compiler\mayhem\s_aux.c
 	"s_aux.h"
 	<stdlib.h>
 	<string.h>
 
-1553401521 d:\files\gabriel noble\compiler\mayhem\s_aux.h
+1553649617 d:\files\gabriel noble\compiler\mayhem\s_aux.h
 	<stdio.h>
 	"vector.h"
 	"list.h"
+	"r_common.h"
+	"r_surf.h"
+
+1553475593 source:d:\files\gabriel noble\compiler\mayhem\r_material.c
+	"r_material.h"
+	"stack_list.h"
+	"list.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1553475469 d:\files\gabriel noble\compiler\mayhem\r_material.h
+	"vector.h"
+
+1553571524 source:d:\files\gabriel noble\compiler\mayhem\r_surf.c
+	"r_surf.h"
+	"stack_list.h"
+	"list.h"
+	"r_common.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1553571502 d:\files\gabriel noble\compiler\mayhem\r_surf.h
+	"vector.h"
 
