@@ -49,10 +49,13 @@ void r_Init()
     r_SetView(view);
 
     r_CreateMaterial(vec4_t(1.0, 1.0, 1.0, 1.0), R_INVALID_TEXTURE_HANDLE, R_INVALID_TEXTURE_HANDLE, "default_material");
+
+    r_InitVerts();
 }
 
 void r_Shutdown()
 {
+    r_ShutdownVerts();
     SDL_GL_DeleteContext(r_renderer.context);
     SDL_DestroyWindow(r_renderer.window);
 }

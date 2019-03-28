@@ -371,16 +371,17 @@
 	"begin_code.h"
 	"close_code.h"
 
-1553657497 source:d:\files\gabriel noble\compiler\mayhem\r_main.c
+1553737770 source:d:\files\gabriel noble\compiler\mayhem\r_main.c
 	"r_main.h"
 	"r_surf.h"
 	<stdio.h>
 	<stdlib.h>
 
-1552952617 d:\files\gabriel noble\compiler\mayhem\r_main.h
+1553734183 d:\files\gabriel noble\compiler\mayhem\r_main.h
 	"r_common.h"
 	"r_view.h"
 	"r_frame.h"
+	"r_verts.h"
 
 1553570358 d:\files\gabriel noble\compiler\mayhem\r_common.h
 	"SDL2\SDL.h"
@@ -444,13 +445,13 @@
 	<stdlib.h>
 	<string.h>
 
-1553385395 source:d:\files\gabriel noble\compiler\mayhem\list.c
+1553735873 source:d:\files\gabriel noble\compiler\mayhem\list.c
 	"list.h"
 	"stack_list.h"
 	<stdlib.h>
 	<string.h>
 
-1552956354 d:\files\gabriel noble\compiler\mayhem\list.h
+1553735920 d:\files\gabriel noble\compiler\mayhem\list.h
 
 1553564478 source:d:\files\gabriel noble\compiler\mayhem\physics.c
 	"physics.h"
@@ -472,7 +473,7 @@
 1553401511 source:d:\files\gabriel noble\compiler\mayhem\w_main.c
 	"w_main.h"
 
-1553658089 source:d:\files\gabriel noble\compiler\mayhem\s_aux.c
+1553658219 source:d:\files\gabriel noble\compiler\mayhem\s_aux.c
 	"s_aux.h"
 	<stdlib.h>
 	<string.h>
@@ -504,6 +505,14 @@
 	<stdlib.h>
 	<string.h>
 
-1553657601 d:\files\gabriel noble\compiler\mayhem\r_surf.h
+1553658595 d:\files\gabriel noble\compiler\mayhem\r_surf.h
 	"vector.h"
+
+1553737690 d:\files\gabriel noble\compiler\mayhem\r_verts.h
+
+1553737954 source:d:\files\gabriel noble\compiler\mayhem\r_verts.c
+	"r_verts.h"
+	"stack_list.h"
+	"list.h"
+	"r_common.h"
 

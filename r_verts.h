@@ -11,15 +11,23 @@ struct verts_handle_t
     unsigned is_index_alloc : 1;
 };
 
+#define R_INVALID_ALLOC_INDEX 0x7fffffff
+#define R_INVALID_VERTS_HANDLE (struct verts_handle_t){R_INVALID_ALLOC_INDEX, 1};
 
 
-struct verts_handle_t r_AllocVert(int size);
+void r_InitVerts();
 
-struct verts_handle_t r_AllocIndex(int size);
+void r_ShutdownVerts();
 
-struct verts_handle_t r_Alloc(int size, int is_index_alloc);
+struct verts_handle_t r_AllocVerts(unsigned int size);
+
+struct verts_handle_t r_AllocIndex(unsigned int size);
+
+struct verts_handle_t r_Alloc(unsigned int size, int is_index_alloc);
 
 void r_Free(struct verts_handle_t);
+
+void r_DefragVerts(int index_list);
 
 
 

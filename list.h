@@ -27,6 +27,8 @@ class list_t
 
     void remove(int index);
 
+    void remove_move(int index);
+
     void *get(int index);
 
     void * operator [] (int index);

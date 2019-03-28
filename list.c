@@ -83,14 +83,34 @@ int list_t::add(void *data)
 
 void list_t::remove(int index)
 {
+    void *src;
+    void *dst;
+
     if(index >= 0 && index < this->cursor)
     {
         this->cursor--;
 
         if(index < this->cursor)
         {
-            memcpy((char *)this->buffer + index, (char *)this->buffer + this->cursor, this->elem_size);
+            dst = (char *)this->buffer + this->elem_size * index;
+            src = (char *)this->buffer + this->elem_size * this->cursor;
+
+            memcpy(dst, src, this->elem_size);
         }
+    }
+}
+
+void list_t::remove_move(int index)
+{
+    void *src;
+    void *dst;
+
+    if(index >= 0 && index < this->cursor)
+    {
+        dst = (char *)this->buffer + this->elem_size * index;
+        src = (char *)this->buffer + this->elem_size * (index + 1);
+        memcpy(dst, src, this->elem_size * (this->cursor - index));
+        this->cursor--;
     }
 }
 
