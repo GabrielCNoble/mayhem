@@ -1,12 +1,11 @@
 #include "r_frame.h"
+#include "r_verts.h"
 #include "matrix.h"
 #include "physics.h"
 
 #include <stdlib.h>
 
 extern struct renderer_t r_renderer;
-
-//vec3_t *verts = NULL;
 
 extern int phy_collision_triangle_count;
 vec3_t *tris_lut = NULL;
@@ -82,6 +81,11 @@ void r_DrawBvh(struct bvh_node_t *node)
 
         level--;
     }
+}
+
+void r_DrawWorld()
+{
+
 }
 
 void r_DrawFrame()

@@ -4,6 +4,9 @@
 #include "r_common.h"
 #include "r_view.h"
 
+
+void r_DrawWorld();
+
 void r_DrawFrame();
 
 

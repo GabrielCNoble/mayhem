@@ -70,7 +70,7 @@
 		</Unit>
 		<Unit filename="r_surf.h" />
 		<Unit filename="r_verts.c">
-			<Option compilerVar="CC" />
+			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="r_verts.h" />
 		<Unit filename="r_view.c">

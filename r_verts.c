@@ -2,6 +2,8 @@
 #include "stack_list.h"
 #include "list.h"
 
+#include <string.h>
+
 #include "r_common.h"
 
 #define R_HEAP_SIZE 67108864
@@ -10,9 +12,13 @@ struct gpu_chunk_t
 {
     unsigned int size;
     unsigned int start;
+    unsigned short mapped;
+    unsigned short align;
 };
 
 
+void *r_mapped[2] = {NULL};
+unsigned int r_mapped_count[2] = {0};
 unsigned int r_buffers[2] = {0};
 struct stack_list_t r_allocs[2];
 struct list_t r_frees[2];
@@ -221,10 +227,118 @@ void r_DefragVerts(int index_list)
 
 
 
+void *r_MapAlloc(struct verts_handle_t handle)
+{
+    void *pointer = NULL;
+    unsigned short target;
+    struct gpu_chunk_t *alloc;
+
+    if(handle.index != R_INVALID_ALLOC_INDEX)
+    {
+        alloc = (struct gpu_chunk_t *)r_allocs[handle.is_index_alloc].get(handle.index);
+
+        if(alloc)
+        {
+            if(!alloc->mapped)
+            {
+                alloc->mapped = 1;
+                r_mapped_count[handle.is_index_alloc]++;
+            }
+
+            if(!r_mapped[handle.is_index_alloc])
+            {
+                target = handle.is_index_alloc ? GL_ELEMENT_ARRAY_BUFFER : GL_ARRAY_BUFFER;
+                glBindBuffer(target, r_buffers[handle.is_index_alloc]);
+                r_mapped[handle.is_index_alloc] = glMapBuffer(target, GL_READ_WRITE);
+            }
+
+            pointer = (unsigned char *)r_mapped[handle.is_index_alloc] + alloc->start;
+        }
+    }
+
+    return pointer;
+}
+
+void r_UnmapAlloc(struct verts_handle_t handle)
+{
+    struct gpu_chunk_t *alloc;
+    unsigned short target;
+
+    if(handle.index != R_INVALID_ALLOC_INDEX)
+    {
+        alloc = (struct gpu_chunk_t *)r_allocs[handle.is_index_alloc].get(handle.index);
+
+        if(alloc)
+        {
+            if(alloc->mapped)
+            {
+                alloc->mapped = 0;
+                r_mapped_count[handle.is_index_alloc]--;
+            }
+
+            if(!r_mapped_count[handle.is_index_alloc] && r_mapped[handle.is_index_alloc])
+            {
+                target = handle.is_index_alloc ? GL_ELEMENT_ARRAY_BUFFER : GL_ARRAY_BUFFER;
+                glUnmapBuffer(target);
+                r_mapped[handle.is_index_alloc] = NULL;
+            }
+        }
+    }
+}
+
+void r_UnmapAllAllocs()
+{
+    glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+
+    int i;
+    struct gpu_chunk_t *alloc;
+
+    r_mapped[0] = NULL;
+    r_mapped[1] = NULL;
+
+    r_mapped_count[0] = 0;
+    r_mapped_count[1] = 0;
+
+    for(i = 0; i < r_allocs[0].cursor; i++)
+    {
+        alloc = (struct gpu_chunk_t *)r_allocs[0].get(i);
+        alloc->mapped = 0;
+    }
+
+    for(i = 0; i < r_allocs[1].cursor; i++)
+    {
+        alloc = (struct gpu_chunk_t *)r_allocs[1].get(i);
+        alloc->mapped = 0;
+    }
+}
 
 
+void r_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size)
+{
+    void *dst_ptr;
 
+    dst_ptr = r_MapAlloc(dst);
 
+    if(dst_ptr)
+    {
+        memcpy(dst_ptr, src, size);
+        r_UnmapAlloc(dst);
+    }
+}
+
+void r_MemcpyFrom(void *dst, struct verts_handle_t src, unsigned int size)
+{
+    void *src_ptr;
+
+    src_ptr = r_MapAlloc(src);
+
+    if(src_ptr)
+    {
+        memcpy(dst, src_ptr, size);
+        r_UnmapAlloc(src);
+    }
+}
 
 
 

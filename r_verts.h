@@ -29,6 +29,16 @@ void r_Free(struct verts_handle_t);
 
 void r_DefragVerts(int index_list);
 
+void *r_MapAlloc(struct verts_handle_t handle);
+
+void r_UnmapAlloc(struct verts_handle_t handle);
+
+void r_UnmapAllAllocs();
+
+void r_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size);
+
+void r_MemcpyFrom(void *dst, struct verts_handle_t src, unsigned int size);
+
 
 
 

@@ -25,6 +25,11 @@ struct draw_batch_t
     unsigned short material;
 };
 
+struct draw_command_t
+{
+    mat4_t *transform;
+};
+
 
 struct view_t
 {
@@ -36,9 +41,9 @@ struct view_t
     mat3_t orientation;
     vec3_t position;
     struct frustum_t frustum;
+
+    struct list_t draw_commands;
 };
-
-
 
 
 struct renderer_t

@@ -371,7 +371,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1553737770 source:d:\files\gabriel noble\compiler\mayhem\r_main.c
+1553738010 source:d:\files\gabriel noble\compiler\mayhem\r_main.c
 	"r_main.h"
 	"r_surf.h"
 	<stdio.h>
@@ -508,11 +508,12 @@
 1553658595 d:\files\gabriel noble\compiler\mayhem\r_surf.h
 	"vector.h"
 
-1553737690 d:\files\gabriel noble\compiler\mayhem\r_verts.h
+1553739408 d:\files\gabriel noble\compiler\mayhem\r_verts.h
 
-1553737954 source:d:\files\gabriel noble\compiler\mayhem\r_verts.c
+1553739805 source:d:\files\gabriel noble\compiler\mayhem\r_verts.c
 	"r_verts.h"
 	"stack_list.h"
 	"list.h"
+	<string.h>
 	"r_common.h"
 

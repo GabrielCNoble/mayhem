@@ -101,8 +101,7 @@ struct view_t *r_CreateView()
 
     view->orientation.identity();
     view->position = vec3_t(0.0, 0.0, 0.0);
-
-    //r_Perspective(0.5, 320.0 / 240.0, 0.1, 500.0, &view->projection_matrix, &view->frustum);
+    view->draw_commands.init(sizeof(struct draw_command_t), 128);
 
     view->next = r_renderer.views;
     r_renderer.views = view;
