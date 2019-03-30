@@ -5,6 +5,7 @@
 #include "r_view.h"
 #include "r_frame.h"
 #include "r_verts.h"
+#include "r_shader.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -38,6 +38,8 @@ int main(int argc, char *argv[])
 
     be_Init();
 
+    r_LoadShader("shaders/test");
+
     SDL_Thread *thread;
     thread = SDL_CreateThread(fe_RunFrontend, "Frontend", NULL);
 

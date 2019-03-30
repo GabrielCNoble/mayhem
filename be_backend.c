@@ -32,6 +32,7 @@ void be_Init()
 void be_Shutdown()
 {
     free(cmd_stream);
+    free(cmd_data_buffer);
 }
 
 void be_RunBackend()
@@ -66,8 +67,7 @@ void be_RunBackend()
                 break;
 
                 case BE_CMD_MATRIX_MODE:
-                    matrix_mode = *(int *)data;
-                    glMatrixMode(matrix_mode);
+                    glMatrixMode(*(int *)data);
                 break;
 
                 case BE_CMD_LOAD_MATRIX:

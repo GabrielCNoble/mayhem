@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1553900798 source:d:\files\gabriel noble\compiler\mayhem\main.c
+1553915850 source:d:\files\gabriel noble\compiler\mayhem\main.c
 	"main.h"
 	<stdio.h>
 	<math.h>
 
-1553861587 d:\files\gabriel noble\compiler\mayhem\main.h
+1553915813 d:\files\gabriel noble\compiler\mayhem\main.h
 	"SDL2\SDL.h"
 	"vector.h"
 	"matrix.h"
@@ -379,11 +379,12 @@
 	<stdio.h>
 	<stdlib.h>
 
-1553734183 d:\files\gabriel noble\compiler\mayhem\r_main.h
+1553915822 d:\files\gabriel noble\compiler\mayhem\r_main.h
 	"r_common.h"
 	"r_view.h"
 	"r_frame.h"
 	"r_verts.h"
+	"r_shader.h"
 
 1553776513 d:\files\gabriel noble\compiler\mayhem\r_common.h
 	"SDL2\SDL.h"
@@ -523,7 +524,7 @@
 	<string.h>
 	"r_common.h"
 
-1553904102 source:d:\files\gabriel noble\compiler\mayhem\be_backend.c
+1553906582 source:d:\files\gabriel noble\compiler\mayhem\be_backend.c
 	"be_backend.h"
 	"r_common.h"
 	"r_frame.h"
@@ -546,4 +547,15 @@
 	<stdio.h>
 
 1553860360 d:\files\gabriel noble\compiler\mayhem\fe_frontend.h
+
+1553916661 d:\files\gabriel noble\compiler\mayhem\r_shader.h
+
+1553916824 source:d:\files\gabriel noble\compiler\mayhem\r_shader.c
+	"r_shader.h"
+	"r_common.h"
+	"stack_list.h"
+	"s_aux.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
 
