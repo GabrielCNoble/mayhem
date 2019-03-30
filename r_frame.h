@@ -9,5 +9,6 @@ void r_DrawWorld();
 
 void r_DrawFrame();
 
+void r_Clear();
 
 #endif // R_FRAME_H

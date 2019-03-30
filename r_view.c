@@ -101,7 +101,7 @@ struct view_t *r_CreateView()
 
     view->orientation.identity();
     view->position = vec3_t(0.0, 0.0, 0.0);
-    view->draw_commands.init(sizeof(struct draw_command_t), 128);
+//    view->draw_commands.init(sizeof(struct draw_command_t), 128);
 
     view->next = r_renderer.views;
     r_renderer.views = view;

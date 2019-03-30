@@ -92,11 +92,11 @@ void r_DrawFrame()
 {
     mat4_t proj;
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf((float *)r_renderer.active_view->projection_matrix.floats);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixf((float *)r_renderer.active_view->view_matrix.floats);
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadMatrixf((float *)r_renderer.active_view->projection_matrix.floats);
+//
+//    glMatrixMode(GL_MODELVIEW);
+//    glLoadMatrixf((float *)r_renderer.active_view->view_matrix.floats);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDisable(GL_CULL_FACE);
@@ -104,8 +104,8 @@ void r_DrawFrame()
     color_index = 0;
     r_DrawBvh(phy_collision_bvh);
 
-    SDL_GL_SwapWindow(r_renderer.window);
+    //SDL_GL_SwapWindow(r_renderer.window);
 
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearColor(0.0, 0.0, 0.0, 0.0);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

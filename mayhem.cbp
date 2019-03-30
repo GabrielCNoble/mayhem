@@ -32,6 +32,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="be_backend.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="be_backend.h" />
+		<Unit filename="fe_frontend.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="fe_frontend.h" />
 		<Unit filename="input.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -65,6 +73,7 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="r_main.h" />
+		<Unit filename="r_portal.h" />
 		<Unit filename="r_surf.c">
 			<Option compilerVar="CPP" />
 		</Unit>

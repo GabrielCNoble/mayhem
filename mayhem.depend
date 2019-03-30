@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1553657800 source:d:\files\gabriel noble\compiler\mayhem\main.c
+1553900798 source:d:\files\gabriel noble\compiler\mayhem\main.c
 	"main.h"
 	<stdio.h>
 	<math.h>
 
-1553402976 d:\files\gabriel noble\compiler\mayhem\main.h
+1553861587 d:\files\gabriel noble\compiler\mayhem\main.h
 	"SDL2\SDL.h"
 	"vector.h"
 	"matrix.h"
@@ -14,6 +14,8 @@
 	"player.h"
 	"physics.h"
 	"s_aux.h"
+	"be_backend.h"
+	"fe_frontend.h"
 
 1553376038 source:d:\files\gabriel noble\compiler\mayhem\vector.c
 	"vector.h"
@@ -383,10 +385,11 @@
 	"r_frame.h"
 	"r_verts.h"
 
-1553570358 d:\files\gabriel noble\compiler\mayhem\r_common.h
+1553776513 d:\files\gabriel noble\compiler\mayhem\r_common.h
 	"SDL2\SDL.h"
 	"GL\glew.h"
 	"matrix.h"
+	"list.h"
 
 1501547140 d:\files\gabriel noble\compiler\mayhem\libs\glew\include\gl\glew.h
 	<stddef.h>
@@ -404,7 +407,7 @@
 
 1552956336 d:\files\gabriel noble\compiler\mayhem\stack_list.h
 
-1553475751 source:d:\files\gabriel noble\compiler\mayhem\r_view.c
+1553776519 source:d:\files\gabriel noble\compiler\mayhem\r_view.c
 	"r_view.h"
 	<math.h>
 	<stdlib.h>
@@ -413,12 +416,13 @@
 	"r_common.h"
 	"matrix.h"
 
-1552884467 d:\files\gabriel noble\compiler\mayhem\r_frame.h
+1553899584 d:\files\gabriel noble\compiler\mayhem\r_frame.h
 	"r_common.h"
 	"r_view.h"
 
-1553405582 source:d:\files\gabriel noble\compiler\mayhem\r_frame.c
+1553904152 source:d:\files\gabriel noble\compiler\mayhem\r_frame.c
 	"r_frame.h"
+	"r_verts.h"
 	"matrix.h"
 	"physics.h"
 	<stdlib.h>
@@ -470,8 +474,10 @@
 
 1553401503 d:\files\gabriel noble\compiler\mayhem\w_main.h
 
-1553401511 source:d:\files\gabriel noble\compiler\mayhem\w_main.c
+1553741289 source:d:\files\gabriel noble\compiler\mayhem\w_main.c
 	"w_main.h"
+	"r_common.h"
+	"r_verts.h"
 
 1553658219 source:d:\files\gabriel noble\compiler\mayhem\s_aux.c
 	"s_aux.h"
@@ -516,4 +522,28 @@
 	"list.h"
 	<string.h>
 	"r_common.h"
+
+1553904102 source:d:\files\gabriel noble\compiler\mayhem\be_backend.c
+	"be_backend.h"
+	"r_common.h"
+	"r_frame.h"
+	"input.h"
+	"SDL2/SDL_atomic.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
+1553904438 d:\files\gabriel noble\compiler\mayhem\be_backend.h
+
+1553904299 source:d:\files\gabriel noble\compiler\mayhem\fe_frontend.c
+	"fe_frontend.h"
+	"be_backend.h"
+	"input.h"
+	"r_view.h"
+	"r_common.h"
+	"player.h"
+	"physics.h"
+	<stdio.h>
+
+1553860360 d:\files\gabriel noble\compiler\mayhem\fe_frontend.h
 

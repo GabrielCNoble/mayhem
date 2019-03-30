@@ -6,6 +6,7 @@
 #include "GL\glew.h"
 
 #include "matrix.h"
+#include "list.h"
 
 
 struct frustum_t
@@ -30,6 +31,11 @@ struct draw_command_t
     mat4_t *transform;
 };
 
+struct draw_command_buffer_t
+{
+    struct list_t draw_commands;
+    struct view_t *view;
+};
 
 struct view_t
 {
@@ -42,7 +48,7 @@ struct view_t
     vec3_t position;
     struct frustum_t frustum;
 
-    struct list_t draw_commands;
+    int draw_command_buffer;
 };
 
 
