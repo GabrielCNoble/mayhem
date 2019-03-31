@@ -2,7 +2,7 @@
 #define R_VERTS_H
 
 
-
+#include "vector.h"
 
 
 struct verts_handle_t
@@ -12,7 +12,15 @@ struct verts_handle_t
 };
 
 #define R_INVALID_ALLOC_INDEX 0x7fffffff
-#define R_INVALID_VERTS_HANDLE (struct verts_handle_t){R_INVALID_ALLOC_INDEX, 1};
+#define R_INVALID_VERTS_HANDLE (struct verts_handle_t){R_INVALID_ALLOC_INDEX, 1}
+
+struct vertex_t
+{
+    vec3_t position;
+    vec3_t normal;
+    vec3_t tanget;
+    vec2_t tex_coord;
+};
 
 
 void r_InitVerts();
@@ -25,7 +33,9 @@ struct verts_handle_t r_AllocIndex(unsigned int size);
 
 struct verts_handle_t r_Alloc(unsigned int size, int is_index_alloc);
 
-void r_Free(struct verts_handle_t);
+void r_Free(struct verts_handle_t handle);
+
+int r_GetAllocStart(struct verts_handle_t handle);
 
 void r_DefragVerts(int index_list);
 

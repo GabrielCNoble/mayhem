@@ -29,6 +29,7 @@ struct draw_batch_t
 struct draw_command_t
 {
     mat4_t *transform;
+    struct draw_batch_t batch;
 };
 
 struct draw_command_buffer_t
@@ -60,12 +61,31 @@ struct renderer_t
     struct view_t *views;
     struct view_t *active_view;
 
+    int active_shader;
+    int active_material;
+
     int window_width;
     int window_height;
 
     int renderer_width;
     int renderer_height;
+
+    int model_view_projection_top;
+    mat4_t *model_view_projection_stack;
+
+
+    mat4_t projection_matrix;
+    mat4_t view_matrix;
 };
+
+#define R_MAX_WIDTH 1920
+#define R_MAX_HEIGHT 1080
+
+#define R_MIN_WIDTH 640
+#define R_MIN_HEIGHT 480
+
+
+#define R_MATRIX_STACK_DEPTH 255
 
 
 

@@ -61,6 +61,8 @@ short r_GetMaterialHandle(char *material_name);
 
 struct material_t *r_GetMaterialPointer(short material_handle);
 
+void r_SetMaterial(int material_handle);
+
 
 
 

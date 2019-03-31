@@ -1,4 +1,5 @@
 #include "r_surf.h"
+#include "r_shader.h"
 #include "stack_list.h"
 #include "list.h"
 
@@ -15,6 +16,7 @@ struct stack_list_t r_textures(sizeof(struct texture_t), 32);
 struct list_t r_texture_names(sizeof(struct texture_name_t), 32);
 
 
+extern struct renderer_t r_renderer;
 
 void r_SetMaterialColor(short material, vec4_t color)
 {
@@ -133,6 +135,25 @@ struct material_t *r_GetMaterialPointer(short material_handle)
     return material;
 }
 
+void r_SetMaterial(int material_handle)
+{
+    struct material_t *material;
+    vec4_t base_color;
+
+    material = r_GetMaterialPointer(material_handle);
+
+    if(material)
+    {
+        r_renderer.active_material = material_handle;
+
+        base_color.x = (float)material->color[0] / (float)0xff;
+        base_color.y = (float)material->color[1] / (float)0xff;
+        base_color.z = (float)material->color[2] / (float)0xff;
+        base_color.w = (float)material->color[3] / (float)0xff;
+
+        r_DefaultUniform4fv(r_BaseColor, (float *) base_color.floats);
+    }
+}
 
 unsigned int r_CreateGLTexture(unsigned short target, unsigned short width, unsigned short height, unsigned short depth, unsigned short internal_format)
 {

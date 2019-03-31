@@ -125,6 +125,18 @@ void r_Free(struct verts_handle_t handle)
     }
 }
 
+int r_GetAllocStart(struct verts_handle_t handle)
+{
+    struct gpu_chunk_t *alloc;
+
+    alloc = (struct gpu_chunk_t *)r_allocs[handle.is_index_alloc].get(handle.index);
+
+    if(alloc)
+    {
+        return alloc->start;
+    }
+}
+
 
 
 void r_SortFreeChunks(int left, int right, struct gpu_chunk_t *chunks)

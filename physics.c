@@ -126,25 +126,7 @@ void phy_UpdateColliders()
                         player_collider->base.linear_velocity.z *= GROUND_FRICTION;
                     }
 
-                    //phy_FindContactPointsPlayerWorld(COLLIDER_HANDLE(PHY_COLLIDER_TYPE_PLAYER, i));
-
-//                    if(player_collider->base.position.y - player_collider->height * 0.5 < 0.0)
-//                    {
-//                        player_collider->base.position.y = player_collider->height * 0.5;
-//                        player_collider->base.linear_velocity.y = 0.0;
-//
-//                        player_collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_FLYING;
-//                    }
-//
-//                    if(!(player_collider->flags & PHY_PLAYER_COLLIDER_FLAG_FLYING))
-//                    {
-//                        player_collider->base.linear_velocity.x *= GROUND_FRICTION;
-//                        player_collider->base.linear_velocity.z *= GROUND_FRICTION;
-//                    }
-
                     player_collider->base.linear_velocity.y -= GRAVITY;
-
-
                 }
             break;
         }

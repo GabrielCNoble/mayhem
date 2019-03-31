@@ -74,6 +74,10 @@
 		</Unit>
 		<Unit filename="r_main.h" />
 		<Unit filename="r_portal.h" />
+		<Unit filename="r_shader.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_shader.h" />
 		<Unit filename="r_surf.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -86,6 +90,10 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="r_view.h" />
+		<Unit filename="ring_buffer.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="ring_buffer.h" />
 		<Unit filename="s_aux.c">
 			<Option compilerVar="CPP" />
 		</Unit>

@@ -6,12 +6,6 @@
 
 struct renderer_t r_renderer;
 
-#define R_MAX_WIDTH 1920
-#define R_MAX_HEIGHT 1080
-
-#define R_MIN_WIDTH 640
-#define R_MIN_HEIGHT 480
-
 #ifdef __cplusplus
 extern "C"
 {

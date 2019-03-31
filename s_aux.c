@@ -360,6 +360,8 @@ void aux_LoadWavefrontMtl(char *file_name, struct geometry_data_t *geometry_data
                     }
                     else if(file_buffer[i] == 'd')
                     {
+                        i++;
+
                         for(j = 0; j < 3; j++)
                         {
                             value_str_index = 0;
@@ -376,6 +378,8 @@ void aux_LoadWavefrontMtl(char *file_name, struct geometry_data_t *geometry_data
                                 i++;
                                 value_str_index++;
                             }
+
+                            value_str[value_str_index] = '\0';
 
                             color[j] = atof(value_str);
                         }

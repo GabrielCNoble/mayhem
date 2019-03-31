@@ -1,5 +1,6 @@
 #include "r_shader.h"
 #include "r_common.h"
+#include "r_verts.h"
 #include "stack_list.h"
 #include "s_aux.h"
 
@@ -10,6 +11,7 @@
 
 struct stack_list_t r_shaders(sizeof(struct shader_t), 32);
 
+extern struct renderer_t r_renderer;
 
 int r_CreateShader(char *name)
 {
@@ -20,10 +22,14 @@ int r_CreateShader(char *name)
     shader = (struct shader_t *)r_shaders.get(shader_handle);
 
     shader->name = strdup(name);
+    shader->default_uniforms = (struct uniform_t *)calloc(sizeof(struct uniform_t), r_LAST_UNIFORM);
 
     shader->program = glCreateProgram();
     shader->vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     shader->fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    shader->vertex_position = 0;
+    shader->vertex_normal = 0;
 
     return shader_handle;
 }
@@ -154,6 +160,12 @@ int r_CompileShaderSource(int shader_handle, char *source)
         return 0;
     }
 
+    shader->vertex_position = glGetAttribLocation(shader->program, "r_VertexPosition");
+    shader->vertex_normal = glGetAttribLocation(shader->program, "r_VertexNormal");
+
+
+    shader->default_uniforms[r_ModelViewProjectionMatrix].location = glGetUniformLocation(shader->program, "r_ModelViewProjectionMatrix");
+    shader->default_uniforms[r_BaseColor].location = glGetUniformLocation(shader->program, "r_BaseColor");
 
     return 1;
 }
@@ -169,7 +181,31 @@ int r_LoadShader(char *file_name)
     if(shader_source)
     {
         r_CompileShaderSource(shader_handle, shader_source);
+        free(shader_source);
     }
+
+    return shader_handle;
+}
+
+int r_GetShader(char *name)
+{
+    struct shader_t *shaders;
+    int i;
+
+    shaders = (struct shader_t *)r_shaders.buffer;
+
+    for(i = 0; i < r_shaders.cursor; i++)
+    {
+        if(!strcmp(shaders[i].name, name))
+        {
+            if(shaders[i].program)
+            {
+                return i;
+            }
+        }
+    }
+
+    return -1;
 }
 
 struct shader_t *r_GetShaderPointer(int shader_handle)
@@ -188,3 +224,79 @@ struct shader_t *r_GetShaderPointer(int shader_handle)
 
     return shader;
 }
+
+
+
+void r_SetShader(int shader_handle)
+{
+    struct shader_t *shader;
+
+    shader = r_GetShaderPointer(shader_handle);
+
+    if(shader)
+    {
+        r_renderer.active_shader = shader_handle;
+
+        glUseProgram(shader->program);
+
+        if(shader->vertex_position > -1)
+        {
+            glEnableVertexAttribArray(shader->vertex_position);
+            glVertexAttribPointer(shader->vertex_position, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &((struct vertex_t *)0)->position);
+        }
+
+        if(shader->vertex_normal > -1)
+        {
+            glEnableVertexAttribArray(shader->vertex_normal);
+            glVertexAttribPointer(shader->vertex_normal, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &((struct vertex_t *)0)->normal);
+        }
+
+    }
+}
+
+
+void r_DefaultUniformMatrix4fv(int uniform, float *value)
+{
+    struct shader_t *shader;
+
+    shader = r_GetShaderPointer(r_renderer.active_shader);
+
+    if(shader)
+    {
+        r_UniformMatrix4fv(shader->default_uniforms + uniform, value);
+    }
+}
+
+void r_UniformMatrix4fv(struct uniform_t *uniform, float *value)
+{
+    if(uniform)
+    {
+        glUniformMatrix4fv(uniform->location, 1, GL_FALSE, value);
+    }
+}
+
+void r_DefaultUniform4fv(int uniform, float *value)
+{
+    struct shader_t *shader;
+
+    shader = r_GetShaderPointer(r_renderer.active_shader);
+
+    if(shader)
+    {
+        r_Uniform4fv(shader->default_uniforms + uniform, value);
+    }
+}
+
+void r_Uniform4fv(struct uniform_t *uniform, float *value)
+{
+    if(uniform)
+    {
+        glUniform4fv(uniform->location, 1, value);
+    }
+}
+
+
+
+
+
+
