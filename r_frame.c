@@ -148,6 +148,7 @@ void r_DrawPortal(struct draw_command_buffer_t *cmd_buffer, int add)
 
     r_DefaultUniformMatrix4fv(r_ModelViewProjectionMatrix, (float *) &model_view_projection_matrix.floats);
 
+    glDisable(GL_CULL_FACE);
     glEnable(GL_STENCIL_TEST);
     glStencilMask(0xff);
     glStencilOp(GL_KEEP, GL_KEEP, add ? GL_INCR : GL_DECR);

@@ -60,16 +60,18 @@ int fe_Frontend(void *data)
 //        cmd_buffer.draw_commands.add(&draw_cmd);
 //    }
 
-    int portal0 = r_CreatePortal(vec3_t(-5.0, 1.2, -6.5), vec2_t(1.5, 2.0));
-    int portal1 = r_CreatePortal(vec3_t(5.0, 1.2, -6.5), vec2_t(1.5, 2.0));
+    int portal0 = r_CreatePortal(vec3_t(-1.5, 0.5, -3.5), vec2_t(1.5, 2.0));
+    int portal1 = r_CreatePortal(vec3_t(3.5, 0.5, -3.5), vec2_t(1.5, 2.0));
 
     struct portal_t *portal;
 
     r_LinkPortals(portal0, portal1);
 
     portal = r_GetPortalPointer(portal0);
+    portal->orientation = rotate_y(portal->orientation, 0.5);
 
-    portal->orientation = rotate_y(portal->orientation, 0.0);
+    portal = r_GetPortalPointer(portal1);
+    portal->orientation = rotate_y(portal->orientation, 0.5);
 
     while(1)
     {

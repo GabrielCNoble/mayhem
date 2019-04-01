@@ -8,6 +8,7 @@ void main()
 {
     vec3 light_pos = vec3(6.0, 1.0, 0.0);
     vec3 light_vec = normalize(light_pos - pos.xyz);
-    gl_FragColor = r_BaseColor * dot(light_vec, normal.xyz);
+    float l = dot(light_vec, normal.xyz);
+    gl_FragColor = (r_BaseColor) * l * l;
     //gl_FragColor = r_BaseColor;
 }
