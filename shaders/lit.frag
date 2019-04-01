@@ -1,0 +1,13 @@
+
+varying vec4 pos;
+varying vec4 normal;
+
+uniform vec4 r_BaseColor;
+
+void main()
+{
+    vec3 light_pos = vec3(6.0, 1.0, 0.0);
+    vec3 light_vec = normalize(light_pos - pos.xyz);
+    gl_FragColor = r_BaseColor * dot(light_vec, normal.xyz);
+    //gl_FragColor = r_BaseColor;
+}

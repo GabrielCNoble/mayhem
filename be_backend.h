@@ -11,11 +11,6 @@ enum BE_BACKEND_CMD
     BE_CMD_SWAP_BUFFERS = 0,
     BE_CMD_CLEAR_BUFFER,
 
-//    BE_CMD_MATRIX_MODE,
-//    BE_CMD_LOAD_MATRIX,
-//    BE_CMD_PUSH_MATRIX,
-//    BE_CMD_POP_MATRIX,
-
     BE_CMD_SET_SHADER,
     BE_CMD_SET_TEXTURE,
 
@@ -24,6 +19,10 @@ enum BE_BACKEND_CMD
     BE_CMD_MEMCPY_TO,
 
     BE_CMD_DRAW,
+
+    BE_CMD_DRAW_LIT,
+    BE_CMD_ADD_PORTAL,
+    BE_CMD_REMOVE_PORTAL,
 
     BE_CMD_ENABLE_VERTS_READS,
 
@@ -46,10 +45,6 @@ void be_RunBackend();
 
 void be_QueueCmd(int type, void *data, int size);
 
-void be_MatrixMode(int mode);
-
-void be_LoadMatrix(float *matrix);
-
 void be_Clear(int mask);
 
 void be_SwapBuffers();
@@ -62,7 +57,11 @@ void be_LoadTexture(char *file_name);
 
 void be_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size);
 
-void be_Draw(struct draw_command_buffer_t *cmd_buffer);
+void be_DrawLit(struct draw_command_buffer_t *cmd_buffer);
+
+void be_AddPortal(struct draw_command_buffer_t *cmd_buffer);
+
+void be_RemovePortal(struct draw_command_buffer_t *cmd_buffer);
 
 void be_EnableVertsReads();
 

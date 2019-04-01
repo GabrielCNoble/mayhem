@@ -5,6 +5,7 @@
 
 
 class mat4_t;
+class vec3_t;
 
 class vec4_t
 {
@@ -25,6 +26,7 @@ class vec4_t
 
         vec4_t();
         vec4_t(float x, float y, float z, float w);
+        vec4_t(const vec3_t& vec3, float w);
 
         vec4_t operator + (const vec4_t &vec);
         vec4_t operator += (const vec4_t &vec);
@@ -112,6 +114,8 @@ float length(const vec3_t &vec);
 float dot(const vec3_t &a, const vec3_t &b);
 
 vec3_t cross(const vec3_t &a, const vec3_t &b);
+
+vec3_t vfabs(const vec3_t& vec);
 
 
 /*

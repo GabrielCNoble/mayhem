@@ -9,9 +9,9 @@ void r_DrawWorld();
 
 void r_DrawFrame();
 
-void r_Draw(struct draw_command_buffer_t *cmd_buffer);
+void r_DrawLit(struct draw_command_buffer_t *cmd_buffer);
 
-void r_MatrixMode(int mode);
+void r_DrawPortal(struct draw_command_buffer_t *cmd_buffer, int add);
 
 void r_Clear();
 

@@ -209,7 +209,7 @@ struct bvh_node_t *phy_BuildBvhRecursive(struct bvh_node_t *nodes)
         {
             new_node = (struct bvh_node_t *)calloc(sizeof(struct bvh_node_t), 1);
             new_node->left = nodes;
-            new_node->triangle = NULL;
+            new_node->data = NULL;
             nodes = nodes->parent;
             new_node->left->parent = new_node;
 
@@ -358,7 +358,7 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count)
 //                if(new_node->min[j] == 0.0) new_node->min[j] = -0.01;
             }
 
-            new_node->triangle = phy_collision_triangles + phy_collision_triangle_count;
+            new_node->data = phy_collision_triangles + phy_collision_triangle_count;
 
 
             new_node->parent = nodes;
@@ -377,9 +377,9 @@ void phy_BoxOnBvhRecursive(vec3_t &aabb_max, vec3_t &aabb_min, struct bvh_node_t
     struct bvh_node_t *child;
     int i;
 
-    if(node->triangle)
+    if(node->data)
     {
-        triangle_list->add(&node->triangle);
+        triangle_list->add(&node->data);
     }
     else
     {
@@ -458,7 +458,6 @@ struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_
     float tri_dist;
 
     float area;
-
 
     collider = phy_GetPlayerColliderPointer(player_collider);
 
@@ -557,22 +556,20 @@ struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_
                 }
 
                 closest_on_plane = triangle->verts[j] + edge * edge_t;
-
-                //dists = vec3_t(-1.0, -1.0, -1.0);
             }
-
-
-
-            //if(dists[0] <= 0.0 && dists[1] <= 0.0 && dists[2] <= 0.0)
-            //{
 
             col_tri_vec = closest_on_capsule - closest_on_plane;
             tri_dist = length(col_tri_vec);
 
             if(tri_dist < collider->radius)
             {
-                if(tri_dist == 0.0)
+                if(tri_dist < 0.0001)
                 {
+                    /* HACK: sometimes, due to numeric precision, a intersection
+                    will generate a contact point with a normal opposite the triangle
+                    normal. This happens when the capsule is going through the triangle,
+                    and instead of having distance and vector zero, will have a vector
+                    pointing slightly in the opposite direction of the triangle's normal... */
                     col_tri_vec = triangle->normal;
                 }
                 else
@@ -585,10 +582,6 @@ struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_
                 contact.penetration = collider->radius - tri_dist;
                 contact_points.add(&contact);
             }
-
-            //}
-
-            //phy_closest_point = closest_on_plane;
         }
 
         return &contact_points;

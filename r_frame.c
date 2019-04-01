@@ -6,6 +6,7 @@
 #include "physics.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 extern struct renderer_t r_renderer;
 
@@ -103,33 +104,28 @@ void r_DrawFrame()
  //   r_DrawBvh(phy_collision_bvh);
 }
 
-void r_Draw(struct draw_command_buffer_t *cmd_buffer)
+int r_current_stencil = 0;
+
+void r_DrawLit(struct draw_command_buffer_t *cmd_buffer)
 {
     int i;
     int c;
     struct draw_command_t *draw_cmds;
-    struct view_t *view;
-
-    mat4_t view_projection_matrix;
     mat4_t model_view_projection_matrix;
 
     draw_cmds = (struct draw_command_t *)cmd_buffer->draw_commands.buffer;
     c = cmd_buffer->draw_commands.cursor;
 
-    view = cmd_buffer->view;
-
-    view_projection_matrix = view->view_matrix * view->projection_matrix;
+    r_SetShader(r_renderer.lit_shader);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, r_renderer.current_stencil, 0xff);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glClear(GL_DEPTH_BUFFER_BIT);
 
     for(i = 0; i < c; i++)
     {
-        if(draw_cmds[i].transform)
-        {
-            model_view_projection_matrix = *draw_cmds[i].transform * view_projection_matrix;
-        }
-        else
-        {
-            model_view_projection_matrix = view_projection_matrix;
-        }
+        model_view_projection_matrix = draw_cmds[i].transform * cmd_buffer->view_projection_matrix;
 
         r_SetMaterial(draw_cmds[i].batch.material);
 
@@ -139,19 +135,39 @@ void r_Draw(struct draw_command_buffer_t *cmd_buffer)
     }
 }
 
-void r_MatrixMode(int mode)
+void r_DrawPortal(struct draw_command_buffer_t *cmd_buffer, int add)
 {
-//    switch(mode)
-//    {
-//        case GL_MODELVIEW:
-//            r_current_matrix_stack = 0;
-//        break;
-//
-//        case GL_PROJECTION:
-//
-//        break;
-//    }
+    struct draw_command_t *cmd;
+    mat4_t model_view_projection_matrix;
+
+    r_SetShader(r_renderer.portal_stencil_shader);
+
+    cmd = (struct draw_command_t*)cmd_buffer->draw_commands.buffer;
+
+    model_view_projection_matrix = cmd->transform * cmd_buffer->view_projection_matrix;
+
+    r_DefaultUniformMatrix4fv(r_ModelViewProjectionMatrix, (float *) &model_view_projection_matrix.floats);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilMask(0xff);
+    glStencilOp(GL_KEEP, GL_KEEP, add ? GL_INCR : GL_DECR);
+    glStencilFunc(GL_EQUAL, r_renderer.current_stencil, 0xff);
+
+    add ? r_renderer.current_stencil++ : r_renderer.current_stencil--;
+
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    //glDepthMask(GL_FALSE);
+    glDrawArrays(GL_TRIANGLES, cmd->batch.start, 6);
+    //glDepthMask(GL_TRUE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    //glDisable(GL_STENCIL_TEST);
 }
+
+void r_Clear()
+{
+    r_current_stencil = 0;
+}
+
 
 
 

@@ -27,11 +27,11 @@ void r_InitVerts();
 
 void r_ShutdownVerts();
 
-struct verts_handle_t r_AllocVerts(unsigned int size);
+struct verts_handle_t r_AllocVerts(unsigned int size, int alignment);
 
-struct verts_handle_t r_AllocIndex(unsigned int size);
+struct verts_handle_t r_AllocIndex(unsigned int size, int alignment);
 
-struct verts_handle_t r_Alloc(unsigned int size, int is_index_alloc);
+struct verts_handle_t r_Alloc(unsigned int size, int alignment, int is_index_alloc);
 
 void r_Free(struct verts_handle_t handle);
 
@@ -47,7 +47,13 @@ void r_UnmapAllAllocs();
 
 void r_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size);
 
+void r_MemcpyToUnmapped(struct verts_handle_t dst, void *src, unsigned int size);
+
 void r_MemcpyFrom(void *dst, struct verts_handle_t src, unsigned int size);
+
+void r_EnableVertsReads();
+
+void r_DisableVertsReads();
 
 
 

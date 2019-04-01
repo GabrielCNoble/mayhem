@@ -5,10 +5,13 @@
 
 enum R_SHADER_DEFAULT_UNIFORMS
 {
-    r_ProjectionMatrix = 0,
-    r_ModelViewMatrix,
     r_ModelViewProjectionMatrix,
     r_BaseColor,
+    r_NearPlane,
+
+    r_TextureSampler0,
+    r_TextureSampler1,
+
     r_LAST_UNIFORM,
 };
 
@@ -37,7 +40,9 @@ struct shader_t
     char *name;
 };
 
+void r_InitShader();
 
+void r_ShutdownShader();
 
 int r_CreateShader(char *name);
 

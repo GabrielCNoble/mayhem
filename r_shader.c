@@ -13,10 +13,33 @@ struct stack_list_t r_shaders(sizeof(struct shader_t), 32);
 
 extern struct renderer_t r_renderer;
 
+char *r_default_uniform_names[r_LAST_UNIFORM];
+
+void r_InitShader()
+{
+    #define STRFY(x) #x
+    r_default_uniform_names[r_ModelViewProjectionMatrix] = STRFY(r_ModelViewProjectionMatrix);
+    r_default_uniform_names[r_BaseColor] = STRFY(r_BaseColor);
+    r_default_uniform_names[r_NearPlane] = STRFY(r_NearPlane);
+    r_default_uniform_names[r_TextureSampler0] = STRFY(r_TextureSampler0);
+    r_default_uniform_names[r_TextureSampler1] = STRFY(r_TextureSampler1);
+    #undef STRFY
+
+
+    r_renderer.lit_shader = r_LoadShader("shaders/lit");
+    r_renderer.portal_stencil_shader = r_LoadShader("shaders/portal_stencil");
+}
+
+void r_ShutdownShader()
+{
+
+}
+
 int r_CreateShader(char *name)
 {
     int shader_handle;
     struct shader_t *shader;
+    int i;
 
     shader_handle = r_shaders.add(NULL);
     shader = (struct shader_t *)r_shaders.get(shader_handle);
@@ -30,6 +53,11 @@ int r_CreateShader(char *name)
 
     shader->vertex_position = 0;
     shader->vertex_normal = 0;
+
+    for(i = 0; i < r_LAST_UNIFORM; i++)
+    {
+        shader->default_uniforms[i].location = -1;
+    }
 
     return shader_handle;
 }
@@ -116,6 +144,8 @@ int r_CompileShaderSource(int shader_handle, char *source)
     struct shader_t *shader;
     int compilation_status;
 
+    int i;
+
     char *vertex_source;
     char *fragment_source;
 
@@ -163,9 +193,10 @@ int r_CompileShaderSource(int shader_handle, char *source)
     shader->vertex_position = glGetAttribLocation(shader->program, "r_VertexPosition");
     shader->vertex_normal = glGetAttribLocation(shader->program, "r_VertexNormal");
 
-
-    shader->default_uniforms[r_ModelViewProjectionMatrix].location = glGetUniformLocation(shader->program, "r_ModelViewProjectionMatrix");
-    shader->default_uniforms[r_BaseColor].location = glGetUniformLocation(shader->program, "r_BaseColor");
+    for(i = 0; i < r_LAST_UNIFORM; i++)
+    {
+        shader->default_uniforms[i].location = glGetUniformLocation(shader->program, r_default_uniform_names[i]);
+    }
 
     return 1;
 }
@@ -242,13 +273,13 @@ void r_SetShader(int shader_handle)
         if(shader->vertex_position > -1)
         {
             glEnableVertexAttribArray(shader->vertex_position);
-            glVertexAttribPointer(shader->vertex_position, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &((struct vertex_t *)0)->position);
+            glVertexAttribPointer(shader->vertex_position, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->position));
         }
 
         if(shader->vertex_normal > -1)
         {
             glEnableVertexAttribArray(shader->vertex_normal);
-            glVertexAttribPointer(shader->vertex_normal, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &((struct vertex_t *)0)->normal);
+            glVertexAttribPointer(shader->vertex_normal, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->normal));
         }
 
     }

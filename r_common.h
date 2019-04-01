@@ -23,33 +23,41 @@ struct draw_batch_t
 {
     unsigned int start;
     unsigned int count;
-    unsigned short material;
+    int material;
+};
+
+struct draw_triangle_t
+{
+    unsigned int first_vertice;
+    int batch_index;
 };
 
 struct draw_command_t
 {
-    mat4_t *transform;
+    mat4_t transform;
     struct draw_batch_t batch;
 };
 
 struct draw_command_buffer_t
 {
     struct list_t draw_commands;
-    struct view_t *view;
+    mat4_t view_projection_matrix;
+    vec4_t near_plane;
 };
 
 struct view_t
 {
     struct view_t *next;
 
+    mat4_t view_projection_matrix;
     mat4_t projection_matrix;
     mat4_t view_matrix;
+
+    vec4_t near_plane;
 
     mat3_t orientation;
     vec3_t position;
     struct frustum_t frustum;
-
-    int draw_command_buffer;
 };
 
 
@@ -72,6 +80,12 @@ struct renderer_t
 
     int model_view_projection_top;
     mat4_t *model_view_projection_stack;
+
+
+    int lit_shader;
+    int portal_stencil_shader;
+
+    int current_stencil;
 
 
     mat4_t projection_matrix;

@@ -5,7 +5,10 @@
 #include "r_verts.h"
 #include "r_common.h"
 #include "r_shader.h"
+#include "r_portal.h"
+#include "r_vis.h"
 #include "s_aux.h"
+#include "w_main.h"
 
 #include "player.h"
 #include "physics.h"
@@ -14,22 +17,22 @@
 #include <stdlib.h>
 
 extern struct renderer_t r_renderer;
+extern struct list_t w_world_batches;
 
 int fe_Frontend(void *data)
 {
-    int i;
-    struct view_t *view;
-    struct draw_batch_t *batch;
-    struct geometry_data_t level_data;
+    //struct view_t *view;
+    //struct draw_batch_t *batch;
+    //struct geometry_data_t level_data;
     int player_index;
 
-    struct draw_command_buffer_t cmd_buffer;
-    struct draw_command_t draw_cmd;
+  //  struct draw_command_buffer_t cmd_buffer;
+  //  struct draw_command_t draw_cmd;
 
-    struct vertex_t *vertices;
-    struct verts_handle_t handle;
+ //   struct vertex_t *vertices;
+ //   struct verts_handle_t handle;
 
-    int shd = fe_LoadShader("shaders/test");
+   // int shd = fe_LoadShader("shaders/test");
 
     player_index = player_CreatePlayer("default", vec3_t(3.0, 0.22, 0.0));
     player_SetActivePlayer(player_index);
@@ -41,55 +44,45 @@ int fe_Frontend(void *data)
     in_RegisterKey(SDL_SCANCODE_SPACE);
     in_RegisterKey(SDL_SCANCODE_ESCAPE);
 
-    aux_LoadWavefront("test4.obj", &level_data);
+    w_LoadLevel("test4.obj");
 
-    phy_BuildBvh((vec3_t *)level_data.vertices.buffer, level_data.vertices.cursor);
+//    cmd_buffer.draw_commands.init(sizeof(struct draw_command_t), 32);
 
-    vertices = (struct vertex_t *)calloc(sizeof(vertex_t), level_data.vertices.cursor);
+//    for(i = 0; i < w_world_batches.cursor; i++)
+//    {
+//        batch = (struct draw_batch_t *)w_world_batches.get(i);
+//
+//        draw_cmd.batch.start = batch->start;
+//        draw_cmd.batch.count = batch->count;
+//        draw_cmd.batch.material = batch->material;
+//        draw_cmd.transform = NULL;
+//
+//        cmd_buffer.draw_commands.add(&draw_cmd);
+//    }
 
-    for(i = 0; i < level_data.vertices.cursor; i++)
-    {
-        vertices[i].position = *(vec3_t *)level_data.vertices.get(i);
-        vertices[i].normal = *(vec3_t *)level_data.normals.get(i);
-    }
+    int portal0 = r_CreatePortal(vec3_t(-5.0, 1.2, -6.5), vec2_t(1.5, 2.0));
+    int portal1 = r_CreatePortal(vec3_t(5.0, 1.2, -6.5), vec2_t(1.5, 2.0));
 
-    handle = r_AllocVerts(sizeof(vertex_t) * level_data.vertices.cursor);
+    struct portal_t *portal;
 
-    be_MemcpyTo(handle, vertices, sizeof(vertex_t) * level_data.vertices.cursor);
+    r_LinkPortals(portal0, portal1);
 
-    cmd_buffer.draw_commands.init(sizeof(struct draw_command_t), 32);
+    portal = r_GetPortalPointer(portal0);
 
-    for(i = 0; i < level_data.draw_batches.cursor; i++)
-    {
-        batch = (struct draw_batch_t *)level_data.draw_batches.get(i);
-
-        draw_cmd.batch.start = batch->start;
-        draw_cmd.batch.count = batch->count;
-        draw_cmd.batch.material = batch->material;
-        draw_cmd.transform = NULL;
-
-        cmd_buffer.draw_commands.add(&draw_cmd);
-    }
-
-    cmd_buffer.view = r_GetActiveView();
+    portal->orientation = rotate_y(portal->orientation, 0.0);
 
     while(1)
     {
         be_QueueCmd(BE_CMD_UPDATE_INPUT, NULL, 0);
         be_WaitEmptyQueue();
 
-
         player_UpdatePlayers();
         phy_UpdateColliders();
         player_PostUpdatePlayers();
 
-        r_UpdateActiveView();
-
-        be_SetShader(shd);
-
-        be_Draw(&cmd_buffer);
+        r_VisibleWorld();
         be_SwapBuffers();
-        be_Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        be_Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         be_WaitEmptyQueue();
 
         if(in_GetKeyStatus(SDL_SCANCODE_ESCAPE) & KEY_STATUS_JUST_PRESSED)
@@ -98,6 +91,8 @@ int fe_Frontend(void *data)
             break;
         }
     }
+
+    return 0;
 }
 
 void fe_RunFrontend()

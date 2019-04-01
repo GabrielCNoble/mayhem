@@ -22,7 +22,9 @@ struct bvh_node_t
     vec3_t max;
     vec3_t min;
 
-    struct collision_triangle_t *triangle;
+    //struct collision_triangle_t *triangle;
+
+    void *data;
 };
 
 struct collision_pair_t
@@ -111,6 +113,8 @@ void phy_Move(struct collider_handle_t collider, vec3_t acceleration);
 
 
 void phy_ClearBvh(struct bvh_node_t *node);
+
+struct bvh_node_t *phy_BuildBvhRecursive(struct bvh_node_t *nodes);
 
 void phy_BuildBvh(vec3_t *vertices, int vertice_count);
 

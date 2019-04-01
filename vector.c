@@ -15,6 +15,14 @@ vec4_t::vec4_t(float x, float y, float z, float w)
     this->w = w;
 }
 
+vec4_t::vec4_t(const vec3_t& vec3, float w)
+{
+    this->x = vec3.x;
+    this->y = vec3.y;
+    this->z = vec3.z;
+    this->w = w;
+}
+
 
 
 vec4_t vec4_t::operator+(const vec4_t &vec)
@@ -278,6 +286,10 @@ vec3_t cross(const vec3_t &a, const vec3_t &b)
     return vec3_t(a.z * b.y - a.y * b.z, a.x * b.z - a.z * b.x, a.y * b.x - a.x * b.y);
 }
 
+vec3_t vfabs(const vec3_t& vec)
+{
+    return vec3_t(fabs(vec.x), fabs(vec.y), fabs(vec.z));
+}
 
 /*
 =====================================================================

@@ -59,7 +59,7 @@ void be_RunBackend()
     int matrix_mode;
     int mask;
 
-    glBindBuffer(GL_ARRAY_BUFFER, r_buffers[0]);
+    r_EnableVertsReads();
 
     while(1)
     {
@@ -80,21 +80,10 @@ void be_RunBackend()
                     in_UpdateInput();
                 break;
 
-//                case BE_CMD_TEST:
-//                    r_DrawFrame();
-//                break;
-//
-//                case BE_CMD_MATRIX_MODE:
-//                    glMatrixMode(*(int *)cmd_data);
-//                break;
-//
-//                case BE_CMD_LOAD_MATRIX:
-//                    glLoadMatrixf((const float*) cmd_data);
-//                break;
-
                 case BE_CMD_CLEAR_BUFFER:
                     mask = *(int *)cmd_data;
                     glClear(mask);
+                    r_renderer.current_stencil = 0;
                 break;
 
                 case BE_CMD_SET_SHADER:
@@ -105,13 +94,21 @@ void be_RunBackend()
                     r_LoadShader(*(char **)cmd_data);
                 break;
 
-                case BE_CMD_DRAW:
-                    r_Draw(*(struct draw_command_buffer_t **)cmd_data);
+                case BE_CMD_DRAW_LIT:
+                    r_DrawLit(*(struct draw_command_buffer_t **)cmd_data);
+                break;
+
+                case BE_CMD_ADD_PORTAL:
+                    r_DrawPortal(*(struct draw_command_buffer_t **)cmd_data, 1);
+                break;
+
+                case BE_CMD_REMOVE_PORTAL:
+                    r_DrawPortal(*(struct draw_command_buffer_t **)cmd_data, 0);
                 break;
 
                 case BE_CMD_MEMCPY_TO:
                     memcpy_data = (struct memcpy_to_data_t *)cmd_data;
-                    r_MemcpyTo(memcpy_data->dst, memcpy_data->src, memcpy_data->size);
+                    r_MemcpyToUnmapped(memcpy_data->dst, memcpy_data->src, memcpy_data->size);
                 break;
 
                 case BE_CMD_SWAP_BUFFERS:
@@ -157,16 +154,6 @@ void be_QueueCmd(int type, void *data, int size)
     SDL_AtomicUnlock(&backend.stream_spinlock);
 }
 
-void be_MatrixMode(int mode)
-{
-    //be_QueueCmd(BE_CMD_MATRIX_MODE, &mode, sizeof(int));
-}
-
-void be_LoadMatrix(float *matrix)
-{
-    //be_QueueCmd(BE_CMD_LOAD_MATRIX, matrix, sizeof(float) * 16);
-}
-
 void be_Clear(int mask)
 {
     be_QueueCmd(BE_CMD_CLEAR_BUFFER, &mask, sizeof(int));
@@ -196,16 +183,26 @@ void be_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size)
 {
     struct memcpy_to_data_t data;
 
-    data.dst;
+    data.dst = dst;
     data.src = src;
     data.size = size;
 
     be_QueueCmd(BE_CMD_MEMCPY_TO, &data, sizeof(data));
 }
 
-void be_Draw(struct draw_command_buffer_t *cmd_buffer)
+void be_DrawLit(struct draw_command_buffer_t *cmd_buffer)
 {
-    be_QueueCmd(BE_CMD_DRAW, &cmd_buffer, sizeof(cmd_buffer));
+    be_QueueCmd(BE_CMD_DRAW_LIT, &cmd_buffer, sizeof(cmd_buffer));
+}
+
+void be_AddPortal(struct draw_command_buffer_t *cmd_buffer)
+{
+    be_QueueCmd(BE_CMD_ADD_PORTAL, &cmd_buffer, sizeof(cmd_buffer));
+}
+
+void be_RemovePortal(struct draw_command_buffer_t *cmd_buffer)
+{
+    be_QueueCmd(BE_CMD_REMOVE_PORTAL, &cmd_buffer, sizeof(cmd_buffer));
 }
 
 void be_WaitEmptyQueue()

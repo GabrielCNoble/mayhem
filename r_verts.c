@@ -57,17 +57,17 @@ void r_ShutdownVerts()
     glDeleteBuffers(2, r_buffers);
 }
 
-struct verts_handle_t r_AllocVerts(unsigned int size)
+struct verts_handle_t r_AllocVerts(unsigned int size, int alignment)
 {
-    return r_Alloc(size, 0);
+    return r_Alloc(size, alignment, 0);
 }
 
-struct verts_handle_t r_AllocIndex(unsigned int size)
+struct verts_handle_t r_AllocIndex(unsigned int size, int alignment)
 {
-    return r_Alloc(size, 1);
+    return r_Alloc(size, alignment, 1);
 }
 
-struct verts_handle_t r_Alloc(unsigned int size, int is_index_alloc)
+struct verts_handle_t r_Alloc(unsigned int size, int alignment, int is_index_alloc)
 {
     struct verts_handle_t handle = R_INVALID_VERTS_HANDLE;
     struct gpu_chunk_t *free_chunks;
@@ -82,7 +82,11 @@ struct verts_handle_t r_Alloc(unsigned int size, int is_index_alloc)
     free_chunks = (struct gpu_chunk_t *)r_frees[is_index_alloc].buffer;
     c = r_frees[is_index_alloc].cursor;
 
-    size = (size + 3) & (~3);
+    while(size % alignment)
+    {
+        size += size % alignment;
+        size = (size + alignment - 1) & ~(alignment - 1);
+    }
 
     for(i = 0; i < c; i++)
     {
@@ -93,6 +97,7 @@ struct verts_handle_t r_Alloc(unsigned int size, int is_index_alloc)
 
             alloc_chunk->start = free_chunks[i].start;
             alloc_chunk->size = size;
+            alloc_chunk->align = 0;
 
             free_chunks[i].start += size;
             free_chunks[i].size -= size;
@@ -100,6 +105,11 @@ struct verts_handle_t r_Alloc(unsigned int size, int is_index_alloc)
             if(free_chunks[i].size == 0)
             {
                 r_frees[is_index_alloc].remove(i);
+            }
+
+            if(alloc_chunk->start % alignment)
+            {
+                alloc_chunk->align += alignment - alloc_chunk->start % alignment;
             }
 
             break;
@@ -133,7 +143,7 @@ int r_GetAllocStart(struct verts_handle_t handle)
 
     if(alloc)
     {
-        return alloc->start;
+        return alloc->start + alloc->align;
     }
 }
 
@@ -242,7 +252,7 @@ void r_DefragVerts(int index_list)
 void *r_MapAlloc(struct verts_handle_t handle)
 {
     void *pointer = NULL;
-    unsigned short target;
+    int target;
     struct gpu_chunk_t *alloc;
 
     if(handle.index != R_INVALID_ALLOC_INDEX)
@@ -339,6 +349,16 @@ void r_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size)
     }
 }
 
+void r_MemcpyToUnmapped(struct verts_handle_t dst, void *src, unsigned int size)
+{
+    int target;
+    struct gpu_chunk_t *alloc;
+    target = dst.is_index_alloc ? GL_ELEMENT_ARRAY_BUFFER : GL_ARRAY_BUFFER;
+    alloc = (struct gpu_chunk_t *)r_allocs[dst.is_index_alloc].get(dst.index);
+    glBindBuffer(target, r_buffers[dst.is_index_alloc]);
+    glBufferSubData(target, alloc->start, size, src);
+}
+
 void r_MemcpyFrom(void *dst, struct verts_handle_t src, unsigned int size)
 {
     void *src_ptr;
@@ -351,6 +371,19 @@ void r_MemcpyFrom(void *dst, struct verts_handle_t src, unsigned int size)
         r_UnmapAlloc(src);
     }
 }
+
+void r_EnableVertsReads()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, r_buffers[0]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r_buffers[1]);
+}
+
+void r_DisableVertsReads()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
 
 
 
