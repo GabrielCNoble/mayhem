@@ -59,6 +59,16 @@ void be_RunBackend()
     int matrix_mode;
     int mask;
 
+    glStencilMask(0xff);
+    glClearStencil(0);
+    glClearDepth(1.0);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_STENCIL_TEST);
+    glEnable(GL_DEPTH_TEST);
+
+    r_renderer.current_stencil = 0;
+
     r_EnableVertsReads();
 
     while(1)
@@ -80,12 +90,6 @@ void be_RunBackend()
                     in_UpdateInput();
                 break;
 
-                case BE_CMD_CLEAR_BUFFER:
-                    mask = *(int *)cmd_data;
-                    glClear(mask);
-                    r_renderer.current_stencil = 0;
-                break;
-
                 case BE_CMD_SET_SHADER:
                     r_SetShader(*(int *)cmd_data);
                 break;
@@ -98,17 +102,21 @@ void be_RunBackend()
                     r_DrawLit(*(struct draw_command_buffer_t **)cmd_data);
                 break;
 
-                case BE_CMD_ADD_PORTAL:
-                    r_DrawPortal(*(struct draw_command_buffer_t **)cmd_data, 1);
+                case BE_CMD_ADD_PORTAL_STENCIL:
+                    r_PortalStencil(*(struct draw_command_buffer_t **)cmd_data, 0);
                 break;
 
-                case BE_CMD_REMOVE_PORTAL:
-                    r_DrawPortal(*(struct draw_command_buffer_t **)cmd_data, 0);
+                case BE_CMD_REM_PORTAL_STENCIL:
+                    r_PortalStencil(*(struct draw_command_buffer_t **)cmd_data, 1);
                 break;
 
                 case BE_CMD_MEMCPY_TO:
                     memcpy_data = (struct memcpy_to_data_t *)cmd_data;
                     r_MemcpyToUnmapped(memcpy_data->dst, memcpy_data->src, memcpy_data->size);
+                break;
+
+                case BE_CMD_CLEAR_BUFFER:
+                    r_Clear(*(int *)cmd_data);
                 break;
 
                 case BE_CMD_SWAP_BUFFERS:
@@ -195,14 +203,19 @@ void be_DrawLit(struct draw_command_buffer_t *cmd_buffer)
     be_QueueCmd(BE_CMD_DRAW_LIT, &cmd_buffer, sizeof(cmd_buffer));
 }
 
-void be_AddPortal(struct draw_command_buffer_t *cmd_buffer)
+void be_AddPortalStencil(struct draw_command_buffer_t *cmd_buffer)
 {
-    be_QueueCmd(BE_CMD_ADD_PORTAL, &cmd_buffer, sizeof(cmd_buffer));
+    be_QueueCmd(BE_CMD_ADD_PORTAL_STENCIL, &cmd_buffer, sizeof(cmd_buffer));
 }
 
-void be_RemovePortal(struct draw_command_buffer_t *cmd_buffer)
+void be_RemPortalStencil(struct draw_command_buffer_t *cmd_buffer)
 {
-    be_QueueCmd(BE_CMD_REMOVE_PORTAL, &cmd_buffer, sizeof(cmd_buffer));
+    be_QueueCmd(BE_CMD_REM_PORTAL_STENCIL, &cmd_buffer, sizeof(cmd_buffer));
+}
+
+void be_PortalStencil(struct draw_command_buffer_t *cmd_buffer)
+{
+    //be_QueueCmd(BE_CMD_PORTAL_STENCIL, &cmd_buffer, sizeof(cmd_buffer));
 }
 
 void be_WaitEmptyQueue()

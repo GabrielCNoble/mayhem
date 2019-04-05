@@ -42,7 +42,8 @@ struct draw_command_buffer_t
 {
     struct list_t draw_commands;
     mat4_t view_projection_matrix;
-    vec4_t near_plane;
+    int remove_stencil;
+    int portal_start;
 };
 
 struct view_t
@@ -84,6 +85,7 @@ struct renderer_t
 
     int lit_shader;
     int portal_stencil_shader;
+    int clear_portal_depth_shader;
 
     int current_stencil;
 

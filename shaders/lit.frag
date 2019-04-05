@@ -1,6 +1,11 @@
-
 varying vec4 pos;
 varying vec4 normal;
+
+struct light_t
+{
+    vec4 pos_radius;
+    vec4 col_energy;
+};
 
 uniform vec4 r_BaseColor;
 

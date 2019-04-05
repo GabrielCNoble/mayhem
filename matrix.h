@@ -98,11 +98,22 @@ class mat3_t
 //
 //mat3_t transpose(const mat3_t &mat);
 
-mat3_t rotate_x(const mat3_t &mat, float angle);
+mat3_t rotate_x(float angle);
 
-mat3_t rotate_y(const mat3_t &mat, float angle);
+void rotate_x(mat3_t &mat, float angle);
 
-mat3_t rotate_z(const mat3_t &mat, float angle);
+
+mat3_t rotate_y(float angle);
+
+void rotate_y(mat3_t &mat, float angle);
+
+
+mat3_t rotate_z(float angle);
+
+void rotate_z(mat3_t &mat, float angle);
+
+
+mat3_t rotate(const vec3_t &axis, float angle);
 
 
 

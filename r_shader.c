@@ -28,6 +28,7 @@ void r_InitShader()
 
     r_renderer.lit_shader = r_LoadShader("shaders/lit");
     r_renderer.portal_stencil_shader = r_LoadShader("shaders/portal_stencil");
+    r_renderer.clear_portal_depth_shader = r_LoadShader("shaders/clear_portal_depth");
 }
 
 void r_ShutdownShader()

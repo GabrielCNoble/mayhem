@@ -258,8 +258,7 @@ void mat3_t::transpose()
 //}
 
 
-
-mat3_t rotate_x(const mat3_t &mat, float angle)
+mat3_t rotate_x(float angle)
 {
     float s;
     float c;
@@ -272,7 +271,22 @@ mat3_t rotate_x(const mat3_t &mat, float angle)
                   vec3_t(0.0,  -s,   c));
 }
 
-mat3_t rotate_y(const mat3_t &mat, float angle)
+void rotate_x(mat3_t &mat, float angle)
+{
+    float s;
+    float c;
+
+    s = sin(angle * M_PI);
+    c = cos(angle * M_PI);
+
+    mat *= mat3_t(vec3_t(1.0, 0.0, 0.0),
+                  vec3_t(0.0,   c,   s),
+                  vec3_t(0.0,  -s,   c));
+}
+
+
+
+mat3_t rotate_y(float angle)
 {
     float s;
     float c;
@@ -285,7 +299,22 @@ mat3_t rotate_y(const mat3_t &mat, float angle)
                   vec3_t(s  , 0.0,   c));
 }
 
-mat3_t rotate_z(const mat3_t &mat, float angle)
+void rotate_y(mat3_t &mat, float angle)
+{
+    float s;
+    float c;
+
+    s = sin(angle * M_PI);
+    c = cos(angle * M_PI);
+
+    mat *= mat3_t(vec3_t(c  , 0.0,  -s),
+                  vec3_t(0.0, 1.0, 0.0),
+                  vec3_t(s  , 0.0,   c));
+}
+
+
+
+mat3_t rotate_z(float angle)
 {
     float s;
     float c;
@@ -296,6 +325,46 @@ mat3_t rotate_z(const mat3_t &mat, float angle)
     return mat3_t(vec3_t(c  ,   s, 0.0),
                   vec3_t(-s ,   c, 0.0),
                   vec3_t(0.0, 0.0, 1.0));
+}
+
+void rotate_z(mat3_t &mat, float angle)
+{
+    float s;
+    float c;
+
+    s = sin(angle * M_PI);
+    c = cos(angle * M_PI);
+
+    mat *= mat3_t(vec3_t(c  ,   s, 0.0),
+                  vec3_t(-s ,   c, 0.0),
+                  vec3_t(0.0, 0.0, 1.0));
+}
+
+
+mat3_t rotate(const vec3_t &axis, float angle)
+{
+	float s, c;
+	float c_m_one;
+	mat3_t result;
+
+	s = sin(3.14159265 * angle);
+	c = cos(3.14159265 * angle);
+
+	c_m_one = 1.0 - c;
+
+    result[0][0] = axis.floats[0] * axis.floats[0] * (c_m_one) + c;
+    result[0][1] = axis.floats[0] * axis.floats[1] * (c_m_one) + axis.floats[2] * s;
+    result[0][2] = axis.floats[0] * axis.floats[2] * (c_m_one) - axis.floats[1] * s;
+
+    result[1][0] = axis.floats[0] * axis.floats[1] * (c_m_one) - axis.floats[2] * s;
+    result[1][1] = axis.floats[1] * axis.floats[1] * (c_m_one) + c;
+    result[1][2] = axis.floats[1] * axis.floats[2] * (c_m_one) + axis.floats[0] * s;
+
+    result[2][0] = axis.floats[0] * axis.floats[2] * (c_m_one) + axis.floats[1] * s;
+    result[2][1] = axis.floats[1] * axis.floats[2] * (c_m_one) - axis.floats[0] * s;
+    result[2][2] = axis.floats[2] * axis.floats[2] * (c_m_one) + c;
+
+	return result;
 }
 
 

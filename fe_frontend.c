@@ -15,6 +15,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 extern struct renderer_t r_renderer;
 extern struct list_t w_world_batches;
@@ -60,21 +61,32 @@ int fe_Frontend(void *data)
 //        cmd_buffer.draw_commands.add(&draw_cmd);
 //    }
 
-    int portal0 = r_CreatePortal(vec3_t(-1.5, 0.5, -3.5), vec2_t(1.5, 2.0));
-    int portal1 = r_CreatePortal(vec3_t(3.5, 0.5, -3.5), vec2_t(1.5, 2.0));
+    int portal0 = r_CreatePortal(vec3_t(0.8, 1.9, -3.5), vec2_t(1.5, 2.4));
+    int portal1 = r_CreatePortal(vec3_t(3.8, 0.2, -3.5), vec2_t(1.5, 2.4));
 
     struct portal_t *portal;
 
     r_LinkPortals(portal0, portal1);
 
-    portal = r_GetPortalPointer(portal0);
-    portal->orientation = rotate_y(portal->orientation, 0.5);
-
     portal = r_GetPortalPointer(portal1);
-    portal->orientation = rotate_y(portal->orientation, 0.5);
+    portal->orientation = rotate_y(0.5);
+
+    portal = r_GetPortalPointer(portal0);
+    //portal->orientation = rotate_y(portal->orientation, -0.5);
+    portal->orientation = rotate_x(-0.5);
+    //portal->orientation = rotate(vec3_t(1.0, 0.0, 0.0), -0.5);
+
+
+    float pos = 2.5;
+    float angle = 0.0;
 
     while(1)
     {
+        //portal->orientation = rotate_y(portal->orientation, angle);
+
+        portal->position.y = pos + sin(angle) * 2.0;
+        angle += 0.009;
+
         be_QueueCmd(BE_CMD_UPDATE_INPUT, NULL, 0);
         be_WaitEmptyQueue();
 
@@ -82,9 +94,9 @@ int fe_Frontend(void *data)
         phy_UpdateColliders();
         player_PostUpdatePlayers();
 
+        be_Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         r_VisibleWorld();
         be_SwapBuffers();
-        be_Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         be_WaitEmptyQueue();
 
         if(in_GetKeyStatus(SDL_SCANCODE_ESCAPE) & KEY_STATUS_JUST_PRESSED)

@@ -87,8 +87,8 @@ void player_UpdateActivePlayer()
 
             player->yaw -= mouse_delta.x * 0.15;
 
-            pitch_matrix = rotate_x(pitch_matrix, player->pitch);
-            yaw_matrix = rotate_y(yaw_matrix, player->yaw);
+            pitch_matrix = rotate_x(player->pitch);
+            yaw_matrix = rotate_y(player->yaw);
 
             view = r_GetActiveView();
 

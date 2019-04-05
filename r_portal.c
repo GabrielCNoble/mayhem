@@ -3,6 +3,8 @@
 #include "r_verts.h"
 #include "be_backend.h"
 
+#include <stdio.h>
+
 
 
 struct stack_list_t r_portals(sizeof(struct portal_t ), 32);
@@ -19,6 +21,7 @@ int r_CreatePortal(vec3_t position, vec2_t size)
 
     portal->view = r_CreateView();
     portal->linked = -1;
+    portal->size = size;
 
     size *= 0.5;
 
@@ -116,24 +119,29 @@ void r_ComputePortalView(int portal_index, struct view_t *view)
     vec3_t portal_view_pos;
     vec3_t portal_view_vec;
 
+    float t;
+
     portal = r_GetPortalPointer(portal_index);
 
     if(portal && portal->linked != -1)
     {
         linked = r_GetPortalPointer(portal->linked);
 
+        portal_view_vec = portal->position - view->position;
+
         inverse_portal_orientation = portal->orientation;
         inverse_portal_orientation.transpose();
 
-        portal->view->orientation = view->orientation * inverse_portal_orientation * linked->orientation;
-
-        portal_view_vec = view->position - portal->position;
-
-        portal_view_pos.x = dot(portal->orientation[0], portal_view_vec);
+        portal_view_pos.x = -dot(portal->orientation[0], portal_view_vec);
         portal_view_pos.y = dot(portal->orientation[1], portal_view_vec);
-        portal_view_pos.z = dot(portal->orientation[2], portal_view_vec);
+        portal_view_pos.z = -dot(portal->orientation[2], portal_view_vec);
+        portal->view->position = -portal_view_pos[0] * linked->orientation[0] +
+                                 -portal_view_pos[1] * linked->orientation[1] +
+                                 -portal_view_pos[2] * linked->orientation[2] + linked->position;
 
-        portal->view->position = portal_view_pos * linked->orientation + linked->position;
+        portal->view->orientation = view->orientation * inverse_portal_orientation * linked->orientation * rotate(linked->orientation[1], 1.0);
+
+
     }
 }
 

@@ -132,7 +132,7 @@ vec4_t normalize(const vec4_t &vec)
     return vec4_t(vec.x / len, vec.y / len, vec.z / len, vec.w / len);
 }
 
-float dot(vec4_t &a, vec4_t &b)
+float dot(const vec4_t &a, const vec4_t &b)
 {
     return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
@@ -406,7 +406,7 @@ vec2_t normalize(const vec2_t &vec)
     return vec2_t(vec.x / len, vec.y / len);
 }
 
-float dot(vec2_t &a, vec2_t &b)
+float dot(const vec2_t &a, const vec2_t &b)
 {
     return a.x * b.x + a.y * b.y;
 }

@@ -18,11 +18,9 @@ enum BE_BACKEND_CMD
     BE_CMD_LOAD_TEXTURE,
     BE_CMD_MEMCPY_TO,
 
-    BE_CMD_DRAW,
-
     BE_CMD_DRAW_LIT,
-    BE_CMD_ADD_PORTAL,
-    BE_CMD_REMOVE_PORTAL,
+    BE_CMD_ADD_PORTAL_STENCIL,
+    BE_CMD_REM_PORTAL_STENCIL,
 
     BE_CMD_ENABLE_VERTS_READS,
 
@@ -59,9 +57,11 @@ void be_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size);
 
 void be_DrawLit(struct draw_command_buffer_t *cmd_buffer);
 
-void be_AddPortal(struct draw_command_buffer_t *cmd_buffer);
+void be_AddPortalStencil(struct draw_command_buffer_t *cmd_buffer);
 
-void be_RemovePortal(struct draw_command_buffer_t *cmd_buffer);
+void be_RemPortalStencil(struct draw_command_buffer_t *cmd_buffer);
+
+void be_PortalStencil(struct draw_command_buffer_t *cmd_buffer);
 
 void be_EnableVertsReads();
 

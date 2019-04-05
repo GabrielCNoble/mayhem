@@ -104,8 +104,6 @@ void r_DrawFrame()
  //   r_DrawBvh(phy_collision_bvh);
 }
 
-int r_current_stencil = 0;
-
 void r_DrawLit(struct draw_command_buffer_t *cmd_buffer)
 {
     int i;
@@ -117,56 +115,63 @@ void r_DrawLit(struct draw_command_buffer_t *cmd_buffer)
     c = cmd_buffer->draw_commands.cursor;
 
     r_SetShader(r_renderer.lit_shader);
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_STENCIL_TEST);
     glStencilFunc(GL_EQUAL, r_renderer.current_stencil, 0xff);
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-    glClear(GL_DEPTH_BUFFER_BIT);
 
     for(i = 0; i < c; i++)
     {
         model_view_projection_matrix = draw_cmds[i].transform * cmd_buffer->view_projection_matrix;
-
         r_SetMaterial(draw_cmds[i].batch.material);
-
         r_DefaultUniformMatrix4fv(r_ModelViewProjectionMatrix, (float *)model_view_projection_matrix.floats);
-
         glDrawArrays(GL_TRIANGLES, draw_cmds[i].batch.start, draw_cmds[i].batch.count);
     }
 }
 
-void r_DrawPortal(struct draw_command_buffer_t *cmd_buffer, int add)
+void r_PortalStencil(struct draw_command_buffer_t *cmd_buffer, int remove)
 {
     struct draw_command_t *cmd;
     mat4_t model_view_projection_matrix;
+    int mode;
 
-    r_SetShader(r_renderer.portal_stencil_shader);
 
     cmd = (struct draw_command_t*)cmd_buffer->draw_commands.buffer;
-
     model_view_projection_matrix = cmd->transform * cmd_buffer->view_projection_matrix;
 
+
+    r_SetShader(r_renderer.portal_stencil_shader);
     r_DefaultUniformMatrix4fv(r_ModelViewProjectionMatrix, (float *) &model_view_projection_matrix.floats);
-
-    glDisable(GL_CULL_FACE);
-    glEnable(GL_STENCIL_TEST);
-    glStencilMask(0xff);
-    glStencilOp(GL_KEEP, GL_KEEP, add ? GL_INCR : GL_DECR);
+    glStencilOp(GL_KEEP, GL_KEEP, remove ? GL_DECR : GL_INCR);
     glStencilFunc(GL_EQUAL, r_renderer.current_stencil, 0xff);
+    remove ? r_renderer.current_stencil-- : r_renderer.current_stencil++;
 
-    add ? r_renderer.current_stencil++ : r_renderer.current_stencil--;
+    glEnable(GL_DEPTH_CLAMP);
 
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-    //glDepthMask(GL_FALSE);
-    glDrawArrays(GL_TRIANGLES, cmd->batch.start, 6);
-    //glDepthMask(GL_TRUE);
+    glDepthMask(GL_FALSE);
+    glDrawArrays(GL_TRIANGLES, cmd_buffer->portal_start, 6);
+    glDepthMask(GL_TRUE);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    //glDisable(GL_STENCIL_TEST);
+
+    if(!remove)
+    {
+        r_SetShader(r_renderer.clear_portal_depth_shader);
+        r_DefaultUniformMatrix4fv(r_ModelViewProjectionMatrix, (float *) &model_view_projection_matrix.floats);
+
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+        glStencilFunc(GL_EQUAL, r_renderer.current_stencil, 0xff);
+
+        glDepthFunc(GL_ALWAYS);
+        glDrawArrays(GL_TRIANGLES, cmd_buffer->portal_start, 6);
+        glDepthFunc(GL_LESS);
+    }
+    glDisable(GL_DEPTH_CLAMP);
+
 }
 
-void r_Clear()
+void r_Clear(int mask)
 {
-    r_current_stencil = 0;
+    glClear(mask);
+    r_renderer.current_stencil = 0;
 }
 
 

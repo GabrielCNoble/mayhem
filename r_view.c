@@ -28,15 +28,28 @@ void r_Perspective(float fov_y, float aspect, float znear, float zfar, mat4_t *m
 
 	mat->floats[0][0] = f.znear / f.right;
 	mat->floats[1][1] = f.znear / f.top;
-	//mat->floats[2][2] = (-f.zfar)/(f.zfar-f.znear);
 	mat->floats[2][2] = (-f.zfar + f.znear) / (f.zfar - f.znear);
-	//mat->floats[2][2] = -1.0;
+
+//    vec3_t near = vec3_t(-1.0, 0.0, 0.0);
+//    near = normalize(near);
+//
+//    mat->floats[0][2] = near[0];
+//    mat->floats[1][2] = near[1];
+//    mat->floats[2][2] = near[2];
+	mat->floats[2][3] = -1.0;
 
 
 	mat->floats[3][2] = ((-2.0) * f.zfar * f.znear) / (f.zfar - f.znear);
-	mat->floats[2][3] = -1.0;
+	//mat->floats[3][2] = -0.2;
 	mat->floats[3][0] = 0.0;
 	mat->floats[3][1] = 0.0;
+
+//	vec3_t near = vec3_t(0.8, 0.0, -1.0);
+//	near = normalize(near);
+//
+//    mat->floats[0][3] = near[0];
+//	mat->floats[1][3] = near[1];
+//	mat->floats[2][3] = near[2];
 
 	if(frustum)
 	{
@@ -50,7 +63,6 @@ void r_UpdateView(struct view_t *view)
 {
     r_Perspective(0.5, (float)r_renderer.renderer_width / (float)r_renderer.renderer_height, 0.1, 500.0, &view->projection_matrix, &view->frustum);
     r_ComputeViewMatrix(view);
-
     view->view_projection_matrix = view->view_matrix * view->projection_matrix;
 }
 
@@ -104,6 +116,8 @@ struct view_t *r_CreateView()
 
     view->orientation.identity();
     view->position = vec3_t(0.0, 0.0, 0.0);
+
+    r_Perspective(0.5, (float)r_renderer.renderer_width / (float)r_renderer.renderer_height, 0.1, 500.0, &view->projection_matrix, &view->frustum);
 
     view->next = r_renderer.views;
     r_renderer.views = view;
