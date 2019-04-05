@@ -143,7 +143,10 @@ char *r_LoadShaderSource(char *file_name)
 int r_CompileShaderSource(int shader_handle, char *source)
 {
     struct shader_t *shader;
-    int compilation_status;
+    int success = 1;
+    int compilation_status = 0;
+    char *log;
+    int log_len;
 
     int i;
 
@@ -157,37 +160,45 @@ int r_CompileShaderSource(int shader_handle, char *source)
         return 0;
     }
 
+    printf("=============================================\n");
+    printf("compiling shader [%s]\n", shader->name);
+    printf("=============================================\n");
+
+    log = (char *)malloc(2048);
+
     vertex_source = source;
     fragment_source = source + strlen(source) + 2;
 
     glShaderSource(shader->vertex_shader, 1, &vertex_source, NULL);
     glCompileShader(shader->vertex_shader);
     glGetShaderiv(shader->vertex_shader, GL_COMPILE_STATUS, &compilation_status);
-
-    if(!compilation_status)
-    {
-        printf("vertex shader deu ruim...\n");
-        return 0;
-    }
+    glGetShaderInfoLog(shader->vertex_shader, 2048, &log_len, log);
+    printf("vertex stage log: \n%s\n", log);
+    success = success && compilation_status;
 
     glShaderSource(shader->fragment_shader, 1, &fragment_source, NULL);
     glCompileShader(shader->fragment_shader);
     glGetShaderiv(shader->fragment_shader, GL_COMPILE_STATUS, &compilation_status);
-
-    if(!compilation_status)
-    {
-        printf("fragment shader deu ruim...\n");
-        return 0;
-    }
+    glGetShaderInfoLog(shader->vertex_shader, 2048, &log_len, log);
+    printf("fragment stage log: \n%s\n", log);
+    success = success && compilation_status;
 
     glAttachShader(shader->program, shader->vertex_shader);
     glAttachShader(shader->program, shader->fragment_shader);
     glLinkProgram(shader->program);
     glGetProgramiv(shader->program, GL_LINK_STATUS, &compilation_status);
+    glGetProgramInfoLog(shader->program, 2048, &log_len, log);
+    printf("program log: \n%s\n", log);
+    success = success && compilation_status;
 
-    if(!compilation_status)
+    printf("=============================================\n");
+    printf("compilation status: %s\n", success ? "ok" : "failed");
+    printf("=============================================\n\n");
+
+    free(log);
+
+    if(!success)
     {
-        printf("linkagem deu ruim...\n");
         return 0;
     }
 

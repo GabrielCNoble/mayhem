@@ -1,8 +1,10 @@
-attribute vec4 r_VertexPosition;
-attribute vec4 r_VertexNormal;
+#version 330
 
-varying vec4 pos;
-varying vec4 normal;
+in vec4 r_VertexPosition;
+in vec4 r_VertexNormal;
+
+out vec4 pos;
+out vec4 normal;
 
 uniform mat4 r_ModelViewProjectionMatrix;
 

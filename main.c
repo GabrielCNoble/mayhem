@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
     player_Init();
     phy_Init();
 
-    r_SetWindowSize(800, 600);
-    r_SetRendererResolution(800, 600);
+    r_SetWindowSize(1300, 700);
+    r_SetRendererResolution(1300, 700);
 
     be_Init();
 

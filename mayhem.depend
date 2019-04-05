@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1554390282 source:d:\files\gabriel noble\compiler\mayhem\main.c
+1554430654 source:d:\files\gabriel noble\compiler\mayhem\main.c
 	"main.h"
 	<stdio.h>
 	<math.h>
@@ -555,7 +555,7 @@
 1554419691 d:\files\gabriel noble\compiler\mayhem\be_backend.h
 	"r_verts.h"
 
-1554429840 source:d:\files\gabriel noble\compiler\mayhem\fe_frontend.c
+1554430016 source:d:\files\gabriel noble\compiler\mayhem\fe_frontend.c
 	"fe_frontend.h"
 	"be_backend.h"
 	"input.h"
@@ -571,12 +571,13 @@
 	"physics.h"
 	<stdio.h>
 	<stdlib.h>
+	<math.h>
 
 1553983044 d:\files\gabriel noble\compiler\mayhem\fe_frontend.h
 
 1554083992 d:\files\gabriel noble\compiler\mayhem\r_shader.h
 
-1554419233 source:d:\files\gabriel noble\compiler\mayhem\r_shader.c
+1554469733 source:d:\files\gabriel noble\compiler\mayhem\r_shader.c
 	"r_shader.h"
 	"r_common.h"
 	"r_verts.h"
