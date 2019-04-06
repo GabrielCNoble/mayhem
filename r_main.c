@@ -1,6 +1,7 @@
 #include "r_main.h"
 #include "r_surf.h"
 #include "r_shader.h"
+#include "r_light.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,6 +59,7 @@ void r_Init()
 
     r_InitVerts();
     r_InitShader();
+    r_InitLights();
 }
 
 void r_Shutdown()

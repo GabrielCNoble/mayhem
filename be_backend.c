@@ -2,6 +2,7 @@
 #include "r_common.h"
 #include "r_frame.h"
 #include "r_shader.h"
+#include "r_light.h"
 #include "input.h"
 #include "SDL2/SDL_atomic.h"
 #include <stdlib.h>
@@ -70,6 +71,7 @@ void be_RunBackend()
     r_renderer.current_stencil = 0;
 
     r_EnableVertsReads();
+    r_EnableLightWrites();
 
     while(1)
     {
@@ -113,6 +115,10 @@ void be_RunBackend()
                 case BE_CMD_MEMCPY_TO:
                     memcpy_data = (struct memcpy_to_data_t *)cmd_data;
                     r_MemcpyToUnmapped(memcpy_data->dst, memcpy_data->src, memcpy_data->size);
+                break;
+
+                case BE_CMD_UPLOAD_LIGHTS:
+                    r_UploadLights(*(struct light_buffer_t **)cmd_data);
                 break;
 
                 case BE_CMD_CLEAR_BUFFER:
@@ -180,6 +186,7 @@ void be_SetShader(int shader_handle)
 void be_LoadShader(char *file_name)
 {
     be_QueueCmd(BE_CMD_LOAD_SHADER, &file_name, sizeof(char *));
+    be_WaitEmptyQueue();
 }
 
 void be_LoadTexture(char *file_name)
@@ -196,6 +203,7 @@ void be_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size)
     data.size = size;
 
     be_QueueCmd(BE_CMD_MEMCPY_TO, &data, sizeof(data));
+    be_WaitEmptyQueue();
 }
 
 void be_DrawLit(struct draw_command_buffer_t *cmd_buffer)
@@ -213,9 +221,9 @@ void be_RemPortalStencil(struct draw_command_buffer_t *cmd_buffer)
     be_QueueCmd(BE_CMD_REM_PORTAL_STENCIL, &cmd_buffer, sizeof(cmd_buffer));
 }
 
-void be_PortalStencil(struct draw_command_buffer_t *cmd_buffer)
+void be_UploadLights(struct light_buffer_t *light_buffer)
 {
-    //be_QueueCmd(BE_CMD_PORTAL_STENCIL, &cmd_buffer, sizeof(cmd_buffer));
+    be_QueueCmd(BE_CMD_UPLOAD_LIGHTS, &light_buffer, sizeof(light_buffer));
 }
 
 void be_WaitEmptyQueue()

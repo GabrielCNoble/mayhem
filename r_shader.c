@@ -19,8 +19,10 @@ void r_InitShader()
 {
     #define STRFY(x) #x
     r_default_uniform_names[r_ModelViewProjectionMatrix] = STRFY(r_ModelViewProjectionMatrix);
+    r_default_uniform_names[r_ViewMatrix] = STRFY(r_ViewMatrix);
     r_default_uniform_names[r_BaseColor] = STRFY(r_BaseColor);
     r_default_uniform_names[r_NearPlane] = STRFY(r_NearPlane);
+    //r_default_uniform_names[r_LightCount] = STRFY(r_LightCount);
     r_default_uniform_names[r_TextureSampler0] = STRFY(r_TextureSampler0);
     r_default_uniform_names[r_TextureSampler1] = STRFY(r_TextureSampler1);
     #undef STRFY
@@ -179,7 +181,7 @@ int r_CompileShaderSource(int shader_handle, char *source)
     glShaderSource(shader->fragment_shader, 1, &fragment_source, NULL);
     glCompileShader(shader->fragment_shader);
     glGetShaderiv(shader->fragment_shader, GL_COMPILE_STATUS, &compilation_status);
-    glGetShaderInfoLog(shader->vertex_shader, 2048, &log_len, log);
+    glGetShaderInfoLog(shader->fragment_shader, 2048, &log_len, log);
     printf("fragment stage log: \n%s\n", log);
     success = success && compilation_status;
 
@@ -208,6 +210,11 @@ int r_CompileShaderSource(int shader_handle, char *source)
     for(i = 0; i < r_LAST_UNIFORM; i++)
     {
         shader->default_uniforms[i].location = glGetUniformLocation(shader->program, r_default_uniform_names[i]);
+    }
+
+    if((i = glGetUniformBlockIndex(shader->program, "r_LightsUniformBlock")) != GL_INVALID_INDEX)
+    {
+        glUniformBlockBinding(shader->program, i, 0);
     }
 
     return 1;

@@ -51,7 +51,6 @@ int r_CreatePortal(vec3_t position, vec2_t size)
     portal->orientation.identity();
 
     be_MemcpyTo(portal->handle, &vertices, sizeof(struct vertex_t) * 6);
-    be_WaitEmptyQueue();
 
     return portal_index;
 }

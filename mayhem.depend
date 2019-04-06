@@ -25,11 +25,11 @@
 
 1554062805 d:\files\gabriel noble\compiler\mayhem\vector.h
 
-1554429753 source:d:\files\gabriel noble\compiler\mayhem\matrix.c
+1554523360 source:d:\files\gabriel noble\compiler\mayhem\matrix.c
 	"matrix.h"
 	<math.h>
 
-1554429503 d:\files\gabriel noble\compiler\mayhem\matrix.h
+1554523348 d:\files\gabriel noble\compiler\mayhem\matrix.h
 	"vector.h"
 
 1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl.h
@@ -374,10 +374,11 @@
 	"begin_code.h"
 	"close_code.h"
 
-1554390491 source:d:\files\gabriel noble\compiler\mayhem\r_main.c
+1554519926 source:d:\files\gabriel noble\compiler\mayhem\r_main.c
 	"r_main.h"
 	"r_surf.h"
 	"r_shader.h"
+	"r_light.h"
 	<stdio.h>
 	<stdlib.h>
 
@@ -388,7 +389,7 @@
 	"r_verts.h"
 	"r_shader.h"
 
-1554345259 d:\files\gabriel noble\compiler\mayhem\r_common.h
+1554522732 d:\files\gabriel noble\compiler\mayhem\r_common.h
 	"SDL2\SDL.h"
 	"GL\glew.h"
 	"matrix.h"
@@ -423,7 +424,7 @@
 	"r_common.h"
 	"r_view.h"
 
-1554427671 source:d:\files\gabriel noble\compiler\mayhem\r_frame.c
+1554523007 source:d:\files\gabriel noble\compiler\mayhem\r_frame.c
 	"r_frame.h"
 	"r_verts.h"
 	"r_shader.h"
@@ -540,11 +541,12 @@
 	<string.h>
 	"r_common.h"
 
-1554419807 source:d:\files\gabriel noble\compiler\mayhem\be_backend.c
+1554518017 source:d:\files\gabriel noble\compiler\mayhem\be_backend.c
 	"be_backend.h"
 	"r_common.h"
 	"r_frame.h"
 	"r_shader.h"
+	"r_light.h"
 	"input.h"
 	"SDL2/SDL_atomic.h"
 	<stdlib.h>
@@ -552,10 +554,10 @@
 	<string.h>
 	<stdarg.h>
 
-1554419691 d:\files\gabriel noble\compiler\mayhem\be_backend.h
+1554515695 d:\files\gabriel noble\compiler\mayhem\be_backend.h
 	"r_verts.h"
 
-1554430016 source:d:\files\gabriel noble\compiler\mayhem\fe_frontend.c
+1554524405 source:d:\files\gabriel noble\compiler\mayhem\fe_frontend.c
 	"fe_frontend.h"
 	"be_backend.h"
 	"input.h"
@@ -564,6 +566,7 @@
 	"r_common.h"
 	"r_shader.h"
 	"r_portal.h"
+	"r_light.h"
 	"r_vis.h"
 	"s_aux.h"
 	"w_main.h"
@@ -575,9 +578,9 @@
 
 1553983044 d:\files\gabriel noble\compiler\mayhem\fe_frontend.h
 
-1554083992 d:\files\gabriel noble\compiler\mayhem\r_shader.h
+1554521260 d:\files\gabriel noble\compiler\mayhem\r_shader.h
 
-1554469733 source:d:\files\gabriel noble\compiler\mayhem\r_shader.c
+1554521265 source:d:\files\gabriel noble\compiler\mayhem\r_shader.c
 	"r_shader.h"
 	"r_common.h"
 	"r_verts.h"
@@ -595,19 +598,20 @@
 
 1553982195 d:\files\gabriel noble\compiler\mayhem\ring_buffer.h
 
-1554427731 source:d:\files\gabriel noble\compiler\mayhem\r_vis.c
+1554524463 source:d:\files\gabriel noble\compiler\mayhem\r_vis.c
 	"r_vis.h"
 	"r_view.h"
 	"r_portal.h"
+	"r_light.h"
 	"list.h"
 	"be_backend.h"
 	"stack_list.h"
 	<stdio.h>
 
-1554065691 d:\files\gabriel noble\compiler\mayhem\r_vis.h
+1554515767 d:\files\gabriel noble\compiler\mayhem\r_vis.h
 	"r_common.h"
 
-1554429817 source:d:\files\gabriel noble\compiler\mayhem\r_portal.c
+1554512117 source:d:\files\gabriel noble\compiler\mayhem\r_portal.c
 	"r_portal.h"
 	"stack_list.h"
 	"r_verts.h"
@@ -1228,4 +1232,14 @@
 	"s_aux.h"
 	"be_backend.h"
 	"fe_frontend.h"
+
+1554524181 source:d:\files\gabriel noble\compiler\mayhem\r_light.c
+	"r_light.h"
+	"stack_list.h"
+	"GL/glew.h"
+	<stdio.h>
+
+1554517807 d:\files\gabriel noble\compiler\mayhem\r_light.h
+	"r_common.h"
+	"vector.h"
 

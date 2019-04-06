@@ -6,6 +6,7 @@
 #include "r_common.h"
 #include "r_shader.h"
 #include "r_portal.h"
+#include "r_light.h"
 #include "r_vis.h"
 #include "s_aux.h"
 #include "w_main.h"
@@ -61,8 +62,12 @@ int fe_Frontend(void *data)
 //        cmd_buffer.draw_commands.add(&draw_cmd);
 //    }
 
-    int portal0 = r_CreatePortal(vec3_t(0.8, 1.9, -3.5), vec2_t(1.5, 2.4));
+    int portal0 = r_CreatePortal(vec3_t(1.8, 1.2, -3.5), vec2_t(1.5, 2.4));
     int portal1 = r_CreatePortal(vec3_t(3.8, 0.2, -3.5), vec2_t(1.5, 2.4));
+
+    r_CreateLight(vec3_t(5.0, 1.2, 0.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
+
+    r_CreateLight(vec3_t(-5.0, 1.2, -3.0), vec3_t(1.0, 0.4, 0.2), 0.3, 20.0);
 
     struct portal_t *portal;
 
@@ -72,8 +77,8 @@ int fe_Frontend(void *data)
     portal->orientation = rotate_y(0.5);
 
     portal = r_GetPortalPointer(portal0);
-    //portal->orientation = rotate_y(portal->orientation, -0.5);
-    portal->orientation = rotate_x(-0.5);
+    portal->orientation = rotate_y(-0.5);
+    //portal->orientation = rotate_x(-0.5);
     //portal->orientation = rotate(vec3_t(1.0, 0.0, 0.0), -0.5);
 
 
@@ -84,8 +89,8 @@ int fe_Frontend(void *data)
     {
         //portal->orientation = rotate_y(portal->orientation, angle);
 
-        portal->position.y = pos + sin(angle) * 2.0;
-        angle += 0.009;
+      /*  portal->position.y = pos + sin(angle) * 2.0;
+        angle += 0.009;*/
 
         be_QueueCmd(BE_CMD_UPDATE_INPUT, NULL, 0);
         be_WaitEmptyQueue();

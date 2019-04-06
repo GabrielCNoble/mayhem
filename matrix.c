@@ -16,6 +16,14 @@ mat4_t::mat4_t(const vec4_t &r0, const vec4_t &r1, const vec4_t &r2, const vec4_
     this->rows[3] = r3;
 }
 
+mat4_t::mat4_t(mat3_t &r, vec3_t &t)
+{
+    this->rows[0] = vec4_t(r[0], 0.0);
+    this->rows[1] = vec4_t(r[1], 0.0);
+    this->rows[2] = vec4_t(r[2], 0.0);
+    this->rows[3] = vec4_t(t, 1.0);
+}
+
 mat4_t mat4_t::operator * (const mat4_t &mat) const
 {
     mat4_t result;
