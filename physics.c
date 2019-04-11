@@ -351,9 +351,7 @@ void phy_GenerateCollisionPairsRecursive(int cur_node_index, int node_index, flo
                     moved to the new place in the hierarchy, by making
                     it point to 'cur_node', effectively pairing 'node'
                     and 'cur_node'. Also, 'node's parent node will also
-                    point to 'cur_node's old parent node...
-
-                    */
+                    point to 'cur_node's old parent node... */
 
 
                     /* parent of 'node'... */
@@ -374,27 +372,46 @@ void phy_GenerateCollisionPairsRecursive(int cur_node_index, int node_index, flo
                     node and the sibling. */
                     parent_parent->children[parent_index] = parent->children[sibling_index];
                     sibling->parent = parent->parent;
-
-
-
-                    /* set the 'parent's parent as 'cur_node's old parent... */
-                    parent->parent = cur_node->parent;
-
-                    /* make 'cur_node's old parent node point at 'parent'
-                    node, effectively reinserting it into the hierarchy...  */
-                    parent_parent = phy_GetDbvhNodePointer(cur_node->parent);
-                    parent_parent->children[parent_parent->children[0] == cur_node_index] = node->parent;
-
-                    /* make 'parent' node point at 'cur_node', which then
-                    becomes 'node's new sibling... */
-                    parent->children[sibling_index] = cur_node_index;
-
                 }
             }
+            else
+            {
+                /* 'node' was not in the hierarchy before, so
+                alloc a new node... */
+                parent_index = phy_AllocDbvhNode();
+                parent = phy_GetDbvhNodePointer(parent_index);
+            }
+
+                /* set the 'parent's parent node as 'cur_node's old parent node... */
+                parent->parent = cur_node->parent;
+
+                /* make 'cur_node's old parent node point at 'parent'
+                node, effectively reinserting it into the hierarchy...  */
+                parent_parent = phy_GetDbvhNodePointer(cur_node->parent);
+                parent_parent->children[parent_parent->children[0] == cur_node_index] = node->parent;
+
+                /* make 'parent' node point at 'cur_node', which then
+                becomes 'node's new sibling... */
+                parent->children[0] = cur_node_index;
+                parent->children[1] = node_index;
         }
     }
+}
 
+void phy_RecomputeVolumesRecursive(int node_index)
+{
+    struct dbvh_node_t *node;
 
+    node = phy_GetDbvhNodePointer(node_index);
+
+    if(node)
+    {
+        if(node->collider.index == INVALID_COLLIDER_INDEX)
+        {
+            phy_DbvhNodesVolume(node->children[0], node->children[1], &node->max, &node->min);
+            phy_RecomputeVolumesRecursive(node->parent);
+        }
+    }
 }
 
 void phy_GenerateCollisionPairs(struct collider_handle_t collider)
@@ -436,6 +453,7 @@ void phy_GenerateCollisionPairs(struct collider_handle_t collider)
         }
 
         phy_GenerateCollisionPairsRecursive(phy_dbvh_root, collider_ptr->dbvh_node, &smallest_volume, &smallest_index);
+        phy_RecomputeVolumesRecursive(collider_ptr->dbvh_node);
     }
 }
 
