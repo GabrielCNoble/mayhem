@@ -100,6 +100,10 @@ void be_RunBackend()
                     r_LoadShader(*(char **)cmd_data);
                 break;
 
+                case BE_CMD_DRAW_DBG:
+                    r_DrawDebug(*(struct draw_command_buffer_t **)cmd_data, 0);
+                break;
+
                 case BE_CMD_DRAW_LIT:
                     r_DrawLit(*(struct draw_command_buffer_t **)cmd_data);
                 break;
@@ -204,6 +208,11 @@ void be_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size)
 
     be_QueueCmd(BE_CMD_MEMCPY_TO, &data, sizeof(data));
     be_WaitEmptyQueue();
+}
+
+void be_DrawDebug(struct draw_command_buffer_t *cmd_buffer)
+{
+    be_QueueCmd(BE_CMD_DRAW_DBG, &cmd_buffer, sizeof(cmd_buffer));
 }
 
 void be_DrawLit(struct draw_command_buffer_t *cmd_buffer)

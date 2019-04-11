@@ -28,8 +28,8 @@ struct collider_handle_t
 
 struct dbvh_node_t
 {
-    unsigned int parent;
-    unsigned int children[2];
+    int parent;
+    int children[2];
 
     struct collider_handle_t collider;
 
@@ -153,6 +153,8 @@ void phy_Init();
 void phy_Shutdown();
 
 struct collider_handle_t phy_CreateCollider(int type);
+
+void phy_DestroyCollider(struct collider_handle_t collider_handle);
 
 struct base_collider_t *phy_GetColliderPointer(struct collider_handle_t collider);
 

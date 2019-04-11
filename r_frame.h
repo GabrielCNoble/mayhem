@@ -5,9 +5,14 @@
 #include "r_view.h"
 
 
-void r_DrawWorld();
+enum R_DEBUG_DRAW
+{
+    R_DEBUG_DRAW_OPTION_LIGHTS = 1,
+    R_DEBUG_DRAW_OPTION_COLLIDERS = 1 << 1,
+    R_DEBUG_DRAW_OPTION_DBVH = 1 << 2,
+};
 
-void r_DrawFrame();
+void r_DrawDebug(struct draw_command_buffer_t *cmd_buffer, int options);
 
 void r_DrawLit(struct draw_command_buffer_t *cmd_buffer);
 

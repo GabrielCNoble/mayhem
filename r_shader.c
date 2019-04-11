@@ -281,26 +281,32 @@ void r_SetShader(int shader_handle)
 {
     struct shader_t *shader;
 
-    shader = r_GetShaderPointer(shader_handle);
-
-    if(shader)
+    if(shader_handle > -1)
     {
-        r_renderer.active_shader = shader_handle;
+        shader = r_GetShaderPointer(shader_handle);
 
-        glUseProgram(shader->program);
-
-        if(shader->vertex_position > -1)
+        if(shader)
         {
-            glEnableVertexAttribArray(shader->vertex_position);
-            glVertexAttribPointer(shader->vertex_position, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->position));
-        }
+            r_renderer.active_shader = shader_handle;
 
-        if(shader->vertex_normal > -1)
-        {
-            glEnableVertexAttribArray(shader->vertex_normal);
-            glVertexAttribPointer(shader->vertex_normal, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->normal));
-        }
+            glUseProgram(shader->program);
 
+            if(shader->vertex_position > -1)
+            {
+                glEnableVertexAttribArray(shader->vertex_position);
+                glVertexAttribPointer(shader->vertex_position, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->position));
+            }
+
+            if(shader->vertex_normal > -1)
+            {
+                glEnableVertexAttribArray(shader->vertex_normal);
+                glVertexAttribPointer(shader->vertex_normal, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->normal));
+            }
+        }
+    }
+    else
+    {
+        glUseProgram(0);
     }
 }
 

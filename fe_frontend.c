@@ -39,6 +39,10 @@ int fe_Frontend(void *data)
     player_index = player_CreatePlayer("default", vec3_t(3.0, 0.22, 0.0));
     player_SetActivePlayer(player_index);
 
+    player_CreatePlayer("default1", vec3_t(4.0, 0.22, 0.0));
+    player_CreatePlayer("default2", vec3_t(-3.0, 0.22, 0.0));
+    player_CreatePlayer("default2", vec3_t(-3.0, 2.22, 5.0));
+
     in_RegisterKey(SDL_SCANCODE_W);
     in_RegisterKey(SDL_SCANCODE_S);
     in_RegisterKey(SDL_SCANCODE_A);

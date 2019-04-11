@@ -20,6 +20,7 @@ enum BE_BACKEND_CMD
     BE_CMD_UPLOAD_LIGHTS,
 
     BE_CMD_DRAW_LIT,
+    BE_CMD_DRAW_DBG,
     BE_CMD_ADD_PORTAL_STENCIL,
     BE_CMD_REM_PORTAL_STENCIL,
 
@@ -55,6 +56,8 @@ void be_LoadShader(char *file_name);
 void be_LoadTexture(char *file_name);
 
 void be_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size);
+
+void be_DrawDebug(struct draw_command_buffer_t *cmd_buffer);
 
 void be_DrawLit(struct draw_command_buffer_t *cmd_buffer);
 

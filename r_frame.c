@@ -5,103 +5,140 @@
 #include "matrix.h"
 #include "physics.h"
 
+#include "stack_list.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 
 extern struct renderer_t r_renderer;
-
-//extern int phy_collision_triangle_count;
-//vec3_t *tris_lut = NULL;
-
-//int color_index = 0;
-
-//extern struct bvh_node_t *phy_collision_bvh;
+extern struct stack_list_t phy_colliders[PHY_COLLIDER_TYPE_NONE];
+extern struct stack_list_t phy_dbvh_nodes;
+extern int phy_dbvh_root;
 
 
-
-void r_DrawBvh(struct bvh_node_t *node)
+void r_DrawDbvh(int node_index)
 {
-//    static int level = -1;
-//
-//    int i;
-//
-//    if(!tris_lut)
-//    {
-//        tris_lut = (vec3_t *)calloc(sizeof(vec3_t), phy_collision_triangle_count);
-//
-//        for(i = 0; i < phy_collision_triangle_count; i++)
-//        {
-//            tris_lut[i] = vec3_t((float)rand() / (float)RAND_MAX, (float)rand() / (float)RAND_MAX, (float)rand() / (float)RAND_MAX);
-//        }
-//    }
-//
-//    if(node)
-//    {
-//        level++;
-//
-//        if(node->triangle)
-//        {
-//            glBegin(GL_TRIANGLES);
-//            //glColor3f(1.0, 1.0, 0.0);
-//            glColor3f(tris_lut[color_index].x, tris_lut[color_index].y, tris_lut[color_index].z);
-//            for(i = 0; i < 3; i++)
-//            {
-//                glVertex3f(node->triangle->verts[i].x, node->triangle->verts[i].y, node->triangle->verts[i].z);
-//            }
-//            glEnd();
-//
-//            color_index++;
-//        }
-//
-////        glBegin(GL_QUADS);
-////        glColor3f(1.0, 0.0, 0.0);
-////
-////        glVertex3f(node->min.x, node->max.y, node->min.z);
-////        glVertex3f(node->min.x, node->max.y, node->max.z);
-////        glVertex3f(node->min.x, node->min.y, node->max.z);
-////        glVertex3f(node->min.x, node->min.y, node->min.z);
-////
-////
-////        glVertex3f(node->max.x, node->max.y, node->min.z);
-////        glVertex3f(node->max.x, node->max.y, node->max.z);
-////        glVertex3f(node->max.x, node->min.y, node->max.z);
-////        glVertex3f(node->max.x, node->min.y, node->min.z);
-////
-////
-////        glVertex3f(node->min.x, node->max.y, node->min.z);
-////        glVertex3f(node->min.x, node->min.y, node->min.z);
-////        glVertex3f(node->max.x, node->min.y, node->min.z);
-////        glVertex3f(node->max.x, node->max.y, node->min.z);
-////
-////
-////        glVertex3f(node->min.x, node->max.y, node->max.z);
-////        glVertex3f(node->min.x, node->min.y, node->max.z);
-////        glVertex3f(node->max.x, node->min.y, node->max.z);
-////        glVertex3f(node->max.x, node->max.y, node->max.z);
-////
-////        glEnd();
-//
-//        r_DrawBvh(node->left);
-//        r_DrawBvh(node->right);
-//
-//        level--;
-//    }
+    struct dbvh_node_t *node;
+
+    node = phy_GetDbvhNodePointer(node_index);
+
+    vec3_t extents;
+    vec3_t center;
+
+    if(node)
+    {
+        center = (node->max + node->min) / 2.0;
+        extents = node->max - center;
+
+        glVertex3f(center[0] - extents[0], center[1] + extents[1], center[2] - extents[2]);
+        glVertex3f(center[0] - extents[0], center[1] + extents[1], center[2] + extents[2]);
+        glVertex3f(center[0] + extents[0], center[1] + extents[1], center[2] + extents[2]);
+        glVertex3f(center[0] + extents[0], center[1] + extents[1], center[2] - extents[2]);
+
+
+        glVertex3f(center[0] - extents[0], center[1] - extents[1], center[2] - extents[2]);
+        glVertex3f(center[0] - extents[0], center[1] - extents[1], center[2] + extents[2]);
+        glVertex3f(center[0] + extents[0], center[1] - extents[1], center[2] + extents[2]);
+        glVertex3f(center[0] + extents[0], center[1] - extents[1], center[2] - extents[2]);
+
+
+        glVertex3f(center[0] - extents[0], center[1] + extents[1], center[2] - extents[2]);
+        glVertex3f(center[0] - extents[0], center[1] - extents[1], center[2] - extents[2]);
+        glVertex3f(center[0] - extents[0], center[1] - extents[1], center[2] + extents[2]);
+        glVertex3f(center[0] - extents[0], center[1] + extents[1], center[2] + extents[2]);
+
+
+        glVertex3f(center[0] + extents[0], center[1] + extents[1], center[2] - extents[2]);
+        glVertex3f(center[0] + extents[0], center[1] - extents[1], center[2] - extents[2]);
+        glVertex3f(center[0] + extents[0], center[1] - extents[1], center[2] + extents[2]);
+        glVertex3f(center[0] + extents[0], center[1] + extents[1], center[2] + extents[2]);
+
+        r_DrawDbvh(node->children[0]);
+        r_DrawDbvh(node->children[1]);
+    }
 }
 
-void r_DrawWorld()
+void r_DrawDebug(struct draw_command_buffer_t *cmd_buffer, int options)
 {
+    r_SetShader(-1);
 
-}
+    int i;
+    int c;
+    struct player_collider_t *player_colliders;
+    struct player_collider_t *player_collider;
 
-void r_DrawFrame()
-{
-    mat4_t proj;
+    vec3_t pos;
+    float radius;
+    float height;
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    player_colliders = (struct player_collider_t *)phy_colliders[PHY_COLLIDER_TYPE_PLAYER].buffer;
+    c = phy_colliders[PHY_COLLIDER_TYPE_PLAYER].cursor;
+
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixf((float *)cmd_buffer->view_matrix.floats);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    //if(options & R_DEBUG_DRAW_OPTION_COLLIDERS)
+    {
+        for(i = 0; i < c; i++)
+        {
+            player_collider = player_colliders + i;
+
+            if(player_collider->base.type == PHY_COLLIDER_TYPE_NONE)
+            {
+                continue;
+            }
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glDisable(GL_CULL_FACE);
+            glLineWidth(2.0);
+            glColor3f(1.0, 1.0, 1.0);
+            glBegin(GL_QUADS);
+
+            radius = player_collider->radius;
+            height = player_collider->height * 0.5;
+            pos = player_collider->base.position;
+
+            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] + radius);
+            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] - radius);
+            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] - radius);
+            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] + radius);
+
+
+            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] + radius);
+            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] - radius);
+            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] - radius);
+            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] + radius);
+
+
+            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] + radius);
+            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] + radius);
+            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] - radius);
+            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] - radius);
+
+
+            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] + radius);
+            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] + radius);
+            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] - radius);
+            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] - radius);
+
+
+            glEnd();
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glEnable(GL_CULL_FACE);
+            glLineWidth(1.0);
+        }
+    }
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDisable(GL_CULL_FACE);
-
-//    color_index = 0;
- //   r_DrawBvh(phy_collision_bvh);
+    glColor3f(0.5, 0.2, 1.0);
+    glBegin(GL_QUADS);
+    r_DrawDbvh(phy_dbvh_root);
+    glEnd();
+    glEnable(GL_CULL_FACE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void r_DrawLit(struct draw_command_buffer_t *cmd_buffer)
