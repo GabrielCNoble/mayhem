@@ -394,6 +394,10 @@ void phy_GenerateCollisionPairsRecursive(int cur_node_index, int node_index, flo
                 becomes 'node's new sibling... */
                 parent->children[0] = cur_node_index;
                 parent->children[1] = node_index;
+
+                /* make the paired nodes point to their parent... */
+                cur_node->parent = parent_index;
+                node->parent = parent_index;
         }
     }
 }
