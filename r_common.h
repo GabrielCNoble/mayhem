@@ -36,15 +36,14 @@ struct draw_command_t
 {
     mat4_t model_view_projection_matrix;
     struct draw_batch_t batch;
+    int *indices;
 };
 
 struct draw_command_buffer_t
 {
     struct list_t draw_commands;
-    //mat4_t view_projection_matrix;
+    struct list_t indices;
     mat4_t view_matrix;
-    int remove_stencil;
-    int portal_start;
 };
 
 struct light_buffer_t
@@ -94,6 +93,8 @@ struct renderer_t
     int clear_portal_depth_shader;
 
     int current_stencil;
+
+    int max_recursion;
 
 
     mat4_t projection_matrix;

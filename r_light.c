@@ -83,6 +83,11 @@ void r_EnableLightWrites()
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, r_light_uniform_buffer);
 }
 
+void r_DisableLightWrites()
+{
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, 0);
+}
+
 
 
 

@@ -57,6 +57,8 @@ void r_Init()
     def->color[2] = 0xff;
     def->color[3] = 0xff;
 
+    r_renderer.max_recursion = 3;
+
     r_InitVerts();
     r_InitShader();
     r_InitLights();

@@ -22,6 +22,12 @@ struct bvh_node_t *phy_collision_bvh = NULL;
 int phy_collision_triangle_count = 0;
 struct collision_triangle_t *phy_collision_triangles = NULL;
 
+
+struct stack_list_t phy_dbvh_nodes;
+int phy_dbvh_root = -1;
+struct list_t phy_collision_pairs;
+
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -30,7 +36,10 @@ extern "C"
 
 void phy_Init()
 {
+    phy_dbvh_nodes.init(sizeof(struct dbvh_node_t), 256);
+    phy_collision_pairs.init(sizeof(struct collision_pair_t), 512);
     phy_colliders[PHY_COLLIDER_TYPE_PLAYER].init(sizeof(struct player_collider_t), 32);
+    phy_colliders[PHY_COLLIDER_TYPE_PORTAL].init(sizeof(struct portal_collider_t), 32);
 }
 
 void phy_Shutdown()
@@ -103,6 +112,8 @@ void phy_UpdateColliders()
     struct player_collider_t *player_colliders;
     struct player_collider_t *player_collider;
 
+    phy_collision_pairs.cursor = 0;
+
     for(type = PHY_COLLIDER_TYPE_PLAYER; type < PHY_COLLIDER_TYPE_PROJECTILE; type++)
     {
         switch(type)
@@ -132,6 +143,12 @@ void phy_UpdateColliders()
         }
     }
 }
+
+/*
+============================================
+============================================
+============================================
+*/
 
 
 void phy_Jump(struct collider_handle_t collider)
@@ -174,6 +191,289 @@ void phy_Move(struct collider_handle_t collider, vec3_t acceleration)
         collider_ptr->base.linear_velocity.z = acceleration.z;
     }
 }
+
+/*
+============================================
+============================================
+============================================
+*/
+
+
+int phy_AllocDbvhNode()
+{
+    struct dbvh_node_t *node;
+    int node_index;
+    node_index = phy_dbvh_nodes.add(NULL);
+    node = (struct dbvh_node_t *)phy_dbvh_nodes.get(node_index);
+
+    node->parent = -1;
+    node->children[0] = -1;
+    node->children[1] = -1;
+    node->collider = INVALID_COLLIDER_HANDLE;
+
+    return node_index;
+}
+
+void phy_DeallocDbvhNode(int node_index)
+{
+    phy_dbvh_nodes.remove(node_index);
+}
+
+struct dbvh_node_t *phy_GetDbvhNodePointer(int node_index)
+{
+    return (struct dbvh_node_t *)phy_dbvh_nodes.get(node_index);
+}
+
+void phy_GenerateCollisionPairsRecursive(int cur_node_index, int node_index, float *smallest_volume, int *smallest_index)
+{
+    struct dbvh_node_t *cur_node;
+    struct dbvh_node_t *new_node;
+    struct dbvh_node_t *node;
+    struct dbvh_node_t *sibling;
+    struct dbvh_node_t *parent;
+    struct dbvh_node_t *parent_parent;
+    struct collision_pair_t pair;
+    float volume;
+    int i;
+    int new_node_index;
+    int parent_index;
+    int sibling_index;
+
+    vec3_t max;
+    vec3_t min;
+
+    if(phy_dbvh_root == -1)
+    {
+        /* the dbvh tree doesn't have a root,
+        so set this node as the new root... */
+        phy_dbvh_root = node_index;
+        return;
+    }
+
+    if(cur_node_index == node_index)
+    {
+        /* no reason to test collision between
+        a node and itself... */
+        return;
+    }
+
+    cur_node = phy_GetDbvhNodePointer(cur_node_index);
+    node = phy_GetDbvhNodePointer(node_index);
+
+    if(node->max.x >= cur_node->min.x && node->min.x <= cur_node->max.x)
+    {
+        if(node->max.y >= cur_node->min.y && node->min.y <= cur_node->max.y)
+        {
+            if(node->max.z >= cur_node->min.z && node->min.z <= cur_node->max.z)
+            {
+                if(cur_node->collider.index != INVALID_COLLIDER_INDEX)
+                {
+                    /* leaf node... */
+                    pair.collider_a = node->collider;
+                    pair.collider_b = cur_node->collider;
+                    phy_collision_pairs.add(&pair);
+                }
+                else
+                {
+                    phy_GenerateCollisionPairsRecursive(cur_node->children[0], node_index, smallest_volume, smallest_index);
+                    phy_GenerateCollisionPairsRecursive(cur_node->children[1], node_index, smallest_volume, smallest_index);
+
+                    return;
+                }
+            }
+        }
+    }
+
+    phy_DbvhNodesVolume(cur_node_index, node_index, &max, &min);
+
+    volume = (max.x - min.x) * (max.y - min.y) * (max.z - min.z);
+
+    if(volume < *smallest_volume)
+    {
+        /* this is the smallest volume formed so far... */
+        *smallest_volume = volume;
+        *smallest_index = cur_node_index;
+    }
+
+    if(cur_node_index == phy_dbvh_root)
+    {
+        cur_node_index = *smallest_index;
+
+        cur_node = phy_GetDbvhNodePointer(cur_node_index);
+
+        if(cur_node->parent == -1)
+        {
+            /* the node that forms the smallest volume is actually
+            the root of the dbvh tree, so just create a new node,
+            set is a the root and set both cur_node and node as
+            its children... */
+            new_node_index = phy_AllocDbvhNode();
+            new_node = phy_GetDbvhNodePointer(new_node_index);
+
+            node->parent = new_node_index;
+            cur_node->parent = new_node_index;
+
+            new_node->children[0] = cur_node_index;
+            new_node->children[1] = node_index;
+        }
+        else
+        {
+            if(node->parent != -1)
+            {
+                /* 'node' was already added to the hierarchy... */
+                if(node->parent != cur_node->parent)
+                {
+                    /* 'node' and 'cur_node' have different parent nodes,
+                    which means that the hierarchy will change.
+
+                    'node' will be paired with 'cur_node' (with which the
+                    smallest volume is formed). For that, a new dbvh_node_t
+                    will be allocated, 'node' and 'cur_node' will become
+                    this new node's children, and this new node's parent
+                    will be 'cur_node's parent.
+
+                    Since 'node' was already in the hierarchy, it's old
+                    parent node has to be updated as well to reflect the
+                    change.
+
+                    What will happen is that since 'node' won't be paired
+                    with it's sibling anymore, it's parent node will become
+                    redundant, serving only as an indirection to 'node's
+                    sibling node. To fix that, we make the parent node of
+                    'node's parent node point at 'node's sibling, and
+                    'node's sibling to point at it's parent's parent node.
+
+                    This essentially removes 'node's parent node from
+                    the hierarchy.
+
+                    To avoid the deallocation and allocation of a new
+                    node in this step, 'node's parent node just get
+                    moved to the new place in the hierarchy, by making
+                    it point to 'cur_node', effectively pairing 'node'
+                    and 'cur_node'. Also, 'node's parent node will also
+                    point to 'cur_node's old parent node...
+
+                    */
+
+
+                    /* parent of 'node'... */
+                    parent = phy_GetDbvhNodePointer(node->parent);
+                    /* parent of 'parent'... */
+                    parent_parent = phy_GetDbvhNodePointer(parent->parent);
+
+
+                    /* the sibling of 'node'... */
+                    sibling_index = parent->children[0] == node_index;
+                    sibling = phy_GetDbvhNodePointer(parent->children[sibling_index]);
+
+                    /* find out 'parent's index in its parent node child list... */
+                    parent_index = parent_parent->children[0] != node->parent;
+
+                    /* make the 'parent's parent node point at the sibling of 'node'. This
+                    essentially removes the 'parent' node from between the 'parent's parent
+                    node and the sibling. */
+                    parent_parent->children[parent_index] = parent->children[sibling_index];
+                    sibling->parent = parent->parent;
+
+
+
+                    /* set the 'parent's parent as 'cur_node's old parent... */
+                    parent->parent = cur_node->parent;
+
+                    /* make 'cur_node's old parent node point at 'parent'
+                    node, effectively reinserting it into the hierarchy...  */
+                    parent_parent = phy_GetDbvhNodePointer(cur_node->parent);
+                    parent_parent->children[parent_parent->children[0] == cur_node_index] = node->parent;
+
+                    /* make 'parent' node point at 'cur_node', which then
+                    becomes 'node's new sibling... */
+                    parent->children[sibling_index] = cur_node_index;
+
+                }
+            }
+        }
+    }
+
+
+}
+
+void phy_GenerateCollisionPairs(struct collider_handle_t collider)
+{
+    struct dbvh_node_t *node;
+    struct base_collider_t *collider_ptr;
+    struct player_collider_t *player_collider;
+
+    float smallest_volume = FLT_MAX;
+    int smallest_index = -1;
+
+    collider_ptr = phy_GetColliderPointer(collider);
+
+    if(collider_ptr)
+    {
+        if(collider_ptr->dbvh_node == -1)
+        {
+            collider_ptr->dbvh_node = phy_AllocDbvhNode();
+        }
+
+        node = phy_GetDbvhNodePointer(collider_ptr->dbvh_node);
+        node->collider = collider;
+
+        switch(collider_ptr->type)
+        {
+            case PHY_COLLIDER_TYPE_PLAYER:
+                player_collider = (struct player_collider_t *)collider_ptr;
+
+                node->max = player_collider->base.position +
+                            vec3_t(player_collider->radius,
+                                   player_collider->height * 0.5,
+                                   player_collider->radius);
+
+                node->min = player_collider->base.position +
+                            vec3_t(-player_collider->radius,
+                                   -player_collider->height * 0.5,
+                                   -player_collider->radius);
+            break;
+        }
+
+        phy_GenerateCollisionPairsRecursive(phy_dbvh_root, collider_ptr->dbvh_node, &smallest_volume, &smallest_index);
+    }
+}
+
+void phy_DbvhNodesVolume(int node_a, int node_b, vec3_t *max, vec3_t *min)
+{
+    struct dbvh_node_t *a_ptr;
+    struct dbvh_node_t *b_ptr;
+
+    int i;
+
+    a_ptr = phy_GetDbvhNodePointer(node_a);
+    b_ptr = phy_GetDbvhNodePointer(node_b);
+
+
+    if(a_ptr && b_ptr)
+    {
+        *max = vec3_t(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+        *min = vec3_t(FLT_MAX, FLT_MAX, FLT_MAX);
+
+        for(i = 0; i < 3; i++)
+        {
+            if(a_ptr->max[i] > max->floats[i]) max->floats[i] = a_ptr->max[i];
+            if(a_ptr->min[i] < min->floats[i]) min->floats[i] = a_ptr->min[i];
+        }
+
+        for(i = 0; i < 3; i++)
+        {
+            if(b_ptr->max[i] > max->floats[i]) max->floats[i] = b_ptr->max[i];
+            if(b_ptr->min[i] < min->floats[i]) min->floats[i] = b_ptr->min[i];
+        }
+    }
+}
+
+/*
+============================================
+============================================
+============================================
+*/
 
 
 void phy_ClearBvh(struct bvh_node_t *node)
@@ -354,8 +654,6 @@ void phy_BuildBvh(vec3_t *vertices, int vertice_count)
                     new_node->max[j] += 0.05;
                     new_node->min[j] -= 0.05;
                 }
-//                if(new_node->max[j] == 0.0) new_node->max[j] = 0.01;
-//                if(new_node->min[j] == 0.0) new_node->min[j] = -0.01;
             }
 
             new_node->data = phy_collision_triangles + phy_collision_triangle_count;

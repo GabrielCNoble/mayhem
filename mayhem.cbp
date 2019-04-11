@@ -69,6 +69,10 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="r_frame.h" />
+		<Unit filename="r_light.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_light.h" />
 		<Unit filename="r_main.c">
 			<Option compilerVar="CPP" />
 		</Unit>

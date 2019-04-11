@@ -60,7 +60,7 @@ void w_LoadLevel(char *file_name)
     }
 
     w_world_verts = r_AllocVerts(sizeof(struct vertex_t) * level_data.vertices.cursor, sizeof(struct vertex_t));
-    w_world_indices = r_AllocIndex(sizeof(unsigned int) * level_data.vertices.cursor, sizeof(unsigned int ));
+    //w_world_indices = r_AllocIndex(sizeof(unsigned int) * level_data.vertices.cursor, sizeof(unsigned int ));
 
     w_world_indices_buffer = (unsigned int *)calloc(sizeof(unsigned int ), level_data.vertices.cursor);
     w_world_draw_triangles = (struct draw_triangle_t *)calloc(sizeof(struct draw_triangle_t ), level_data.vertices.cursor);
@@ -68,7 +68,6 @@ void w_LoadLevel(char *file_name)
     w_world_bvh = w_BuildBvh((struct draw_batch_t *)level_data.draw_batches.buffer, level_data.draw_batches.cursor, (vec3_t *)level_data.vertices.buffer, w_world_draw_triangles);
 
     be_MemcpyTo(w_world_verts, vertices, sizeof(struct vertex_t) * level_data.vertices.cursor);
-    be_WaitEmptyQueue();
 }
 
 struct bvh_node_t *w_BuildBvh(struct draw_batch_t *batches, int batch_count, vec3_t *vertices, struct draw_triangle_t *draw_triangles)

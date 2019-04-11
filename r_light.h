@@ -34,6 +34,8 @@ void r_UploadLights(struct light_buffer_t *light_buffer);
 
 void r_EnableLightWrites();
 
+void r_DisableLightWrites();
+
 
 
 

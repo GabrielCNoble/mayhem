@@ -11,11 +11,12 @@
 
 extern struct list_t w_world_batches;
 struct stack_list_t r_command_buffers(sizeof(struct draw_command_buffer_t), 8192);
-struct stack_list_t r_light_buffers(sizeof(struct light_buffer_t), 1024);
+struct stack_list_t r_light_buffers(sizeof(struct light_buffer_t), 8192);
 
 extern struct stack_list_t r_portals;
 extern struct stack_list_t r_lights;
 extern struct verts_handle_t w_world_verts;
+extern struct renderer_t r_renderer;
 
 void r_VisibleWorld()
 {
@@ -30,7 +31,7 @@ void r_VisibleWorld()
 
 void r_VisibleWorldOnView(struct view_t *view)
 {
-    static int level = -1;
+    static int current_recursion = -1;
     struct draw_command_buffer_t *cmd_buffer;
     struct light_buffer_t *light_buffer;
     struct draw_command_t cmd;
@@ -44,7 +45,7 @@ void r_VisibleWorldOnView(struct view_t *view)
 
     portals = (struct portal_t *)r_portals.buffer;
 
-    level++;
+    current_recursion++;
 
     r_UpdateView(view);
 
@@ -53,14 +54,13 @@ void r_VisibleWorldOnView(struct view_t *view)
     be_UploadLights(light_buffer);
 
     cmd_buffer = r_AllocCommandBuffer();
-//    cmd_buffer->view_projection_matrix = view->view_projection_matrix;
     cmd_buffer->view_matrix = view->view_matrix;
     r_VisibleWorldTrianglesOnView(view, cmd_buffer);
 
     be_DrawLit(cmd_buffer);
 
 
-    if(level < 16)
+    if(current_recursion < r_renderer.max_recursion)
     {
         for(i = 0; i < r_portals.cursor; i++)
         {
@@ -72,11 +72,9 @@ void r_VisibleWorldOnView(struct view_t *view)
                 }
 
                 cmd_buffer = r_AllocCommandBuffer();
-
                 cmd.batch.start = r_GetAllocStart(portals[i].handle) / sizeof(struct vertex_t);
                 cmd.model_view_projection_matrix = mat4_t(portals[i].orientation, portals[i].position) * view->view_projection_matrix;
                 cmd_buffer->draw_commands.add(&cmd);
-
 
                 be_AddPortalStencil(cmd_buffer);
                 r_ComputePortalView(i, view);
@@ -86,7 +84,7 @@ void r_VisibleWorldOnView(struct view_t *view)
         }
     }
 
-    level--;
+    current_recursion--;
 }
 
 void r_VisibleWorldTrianglesOnView(struct view_t *view, struct draw_command_buffer_t *cmd_buffer)
@@ -287,6 +285,11 @@ struct draw_command_buffer_t *r_AllocCommandBuffer()
     if(cmd_buffer->draw_commands.buffer == NULL)
     {
         cmd_buffer->draw_commands.init(sizeof(struct draw_command_t), 32);
+    }
+
+    if(cmd_buffer->indices.buffer == NULL)
+    {
+        cmd_buffer->indices.init(sizeof(unsigned int), 256);
     }
 
     cmd_buffer->draw_commands.cursor = 0;

@@ -375,13 +375,13 @@ void r_MemcpyFrom(void *dst, struct verts_handle_t src, unsigned int size)
 void r_EnableVertsReads()
 {
     glBindBuffer(GL_ARRAY_BUFFER, r_buffers[0]);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r_buffers[1]);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r_buffers[1]);
 }
 
 void r_DisableVertsReads()
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 
