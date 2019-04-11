@@ -75,15 +75,7 @@ struct base_collider_t *phy_GetColliderPointer(struct collider_handle_t collider
     {
         if(collider.index != INVALID_COLLIDER_INDEX)
         {
-            if(collider.index < phy_colliders[collider.type].cursor)
-            {
-                collider_ptr = (struct base_collider_t *)phy_colliders[collider.type].get(collider.index);
-
-                if(collider.type != collider_ptr->type)
-                {
-                    collider_ptr = NULL;
-                }
-            }
+            collider_ptr = (struct base_collider_t *)phy_colliders[collider.type].get(collider.index);
         }
     }
 
