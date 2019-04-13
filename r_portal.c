@@ -12,6 +12,7 @@ struct stack_list_t r_portals(sizeof(struct portal_t ), 32);
 int r_CreatePortal(vec3_t position, vec2_t size)
 {
     struct portal_t *portal;
+    struct portal_collider_t *collider;
     int portal_index;
 
     struct vertex_t vertices[6];
@@ -49,6 +50,11 @@ int r_CreatePortal(vec3_t position, vec2_t size)
     portal->handle = r_AllocVerts(sizeof(struct vertex_t) * 6, sizeof(vertex_t));
     portal->position = position;
     portal->orientation.identity();
+
+    portal->collider = phy_CreateCollider(PHY_COLLIDER_TYPE_PORTAL);
+    collider = phy_GetPortalColliderPointer(portal->collider);
+
+    collider->portal_handle = portal_index;
 
     be_MemcpyTo(portal->handle, &vertices, sizeof(struct vertex_t) * 6);
 

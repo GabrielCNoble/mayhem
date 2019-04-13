@@ -139,6 +139,10 @@ struct player_collider_t
 struct portal_collider_t
 {
     struct base_collider_t base;
+
+//    mat3_t orientation;
+//    vec2_t scale;
+
     int portal_handle;
 };
 
@@ -159,6 +163,8 @@ void phy_DestroyCollider(struct collider_handle_t collider_handle);
 struct base_collider_t *phy_GetColliderPointer(struct collider_handle_t collider);
 
 struct player_collider_t *phy_GetPlayerColliderPointer(struct collider_handle_t collider);
+
+struct portal_collider_t *phy_GetPortalColliderPointer(struct collider_handle_t collider);
 
 void phy_UpdateColliders();
 
@@ -221,7 +227,11 @@ struct list_t *phy_BoxOnBvh(vec3_t &aabb_max, vec3_t &aabb_min);
 
 struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_collider);
 
+struct list_t *phy_FindContactPointsPlayerPortal(struct collider_handle_t player_collider, struct collider_handle_t portal_collider);
+
 void phy_CollidePlayerWorld(struct collider_handle_t player_collider);
+
+void phy_CollidePlayerPortal(struct collider_handle_t player_collider, struct collider_handle_t portal_collider);
 
 
 

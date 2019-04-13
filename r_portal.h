@@ -5,6 +5,7 @@
 #include "r_verts.h"
 #include "vector.h"
 #include "matrix.h"
+#include "physics.h"
 
 struct portal_t
 {
@@ -12,6 +13,8 @@ struct portal_t
     mat3_t orientation;
     vec3_t position;
     vec2_t size;
+
+    struct collider_handle_t collider;
 
     struct verts_handle_t handle;
 

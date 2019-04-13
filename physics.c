@@ -7,6 +7,7 @@
 
 #include "r_common.h"
 #include "r_view.h"
+#include "r_portal.h"
 
 #include <stdio.h>
 
@@ -85,7 +86,7 @@ struct base_collider_t *phy_GetColliderPointer(struct collider_handle_t collider
 {
     struct base_collider_t *collider_ptr = NULL;
 
-    if(collider.type >= PHY_COLLIDER_TYPE_PLAYER && collider.type < PHY_COLLIDER_TYPE_PROJECTILE)
+    if(collider.type >= PHY_COLLIDER_TYPE_PLAYER && collider.type < PHY_COLLIDER_TYPE_NONE)
     {
         if(collider.index != INVALID_COLLIDER_INDEX)
         {
@@ -114,6 +115,18 @@ struct player_collider_t *phy_GetPlayerColliderPointer(struct collider_handle_t 
     return collider_ptr;
 }
 
+struct portal_collider_t *phy_GetPortalColliderPointer(struct collider_handle_t collider)
+{
+    struct portal_collider_t *collider_ptr = NULL;
+
+    if(collider.type == PHY_COLLIDER_TYPE_PORTAL)
+    {
+        collider_ptr = (struct portal_collider_t *)phy_GetColliderPointer(collider);
+    }
+
+    return collider_ptr;
+}
+
 
 void phy_UpdateColliders()
 {
@@ -123,9 +136,14 @@ void phy_UpdateColliders()
     struct player_collider_t *player_colliders;
     struct player_collider_t *player_collider;
 
+    struct portal_collider_t *portal_colliders;
+    struct portal_collider_t *portal_collider;
+
+    struct collision_pair_t *collision_pairs;
+
     phy_collision_pairs.cursor = 0;
 
-    for(type = PHY_COLLIDER_TYPE_PLAYER; type < PHY_COLLIDER_TYPE_PROJECTILE; type++)
+    for(type = PHY_COLLIDER_TYPE_PLAYER; type < PHY_COLLIDER_TYPE_NONE; type++)
     {
         switch(type)
         {
@@ -156,6 +174,44 @@ void phy_UpdateColliders()
                     }
                 }
             break;
+
+            case PHY_COLLIDER_TYPE_PORTAL:
+                portal_colliders = (struct portal_collider_t *)phy_colliders[type].buffer;
+
+                c = phy_colliders[type].cursor;
+
+                for(i = 0; i < c; i++)
+                {
+                    portal_collider = portal_colliders + i;
+
+                    if(portal_collider->base.type != PHY_COLLIDER_TYPE_NONE)
+                    {
+                        phy_GenerateCollisionPairs(COLLIDER_HANDLE(PHY_COLLIDER_TYPE_PORTAL, i));
+                    }
+                }
+            break;
+        }
+    }
+
+    collision_pairs = (struct collision_pair_t *) phy_collision_pairs.buffer;
+
+    c = phy_collision_pairs.cursor;
+
+    for(i = 0; i < c; i++)
+    {
+        if(collision_pairs[i].collider_a.type == PHY_COLLIDER_TYPE_PLAYER &&
+           collision_pairs[i].collider_b.type == PHY_COLLIDER_TYPE_PORTAL ||
+           collision_pairs[i].collider_b.type == PHY_COLLIDER_TYPE_PLAYER &&
+           collision_pairs[i].collider_a.type == PHY_COLLIDER_TYPE_PORTAL)
+        {
+            printf("COLLISION\n");
+        }
+
+        else if(collision_pairs[i].collider_a.type == PHY_COLLIDER_TYPE_PLAYER &&
+                collision_pairs[i].collider_b.type == PHY_COLLIDER_TYPE_PLAYER)
+
+        {
+            printf("meh\n");
         }
     }
 }
@@ -240,7 +296,7 @@ struct dbvh_node_t *phy_GetDbvhNodePointer(int node_index)
     return (struct dbvh_node_t *)phy_dbvh_nodes.get(node_index);
 }
 
-void phy_GenerateCollisionPairsRecursive(int cur_node_index, int node_index, float *smallest_volume, int *smallest_index)
+void phy_GenerateColliderCollisionPairsRecursive(int cur_node_index, int node_index, float *smallest_area, int *smallest_index)
 {
     struct dbvh_node_t *cur_node;
     struct dbvh_node_t *new_node;
@@ -249,7 +305,7 @@ void phy_GenerateCollisionPairsRecursive(int cur_node_index, int node_index, flo
     struct dbvh_node_t *parent;
     struct dbvh_node_t *parent_parent;
     struct collision_pair_t pair;
-    float volume;
+    float area;
     int i;
     int new_node_index;
     int parent_index;
@@ -257,6 +313,8 @@ void phy_GenerateCollisionPairsRecursive(int cur_node_index, int node_index, flo
 
     vec3_t max;
     vec3_t min;
+
+    vec3_t extents;
 
     //printf("-->%d\n", cur_node_index);
 
@@ -295,8 +353,8 @@ void phy_GenerateCollisionPairsRecursive(int cur_node_index, int node_index, flo
                 }
                 else
                 {
-                    phy_GenerateCollisionPairsRecursive(cur_node->children[0], node_index, smallest_volume, smallest_index);
-                    phy_GenerateCollisionPairsRecursive(cur_node->children[1], node_index, smallest_volume, smallest_index);
+                    phy_GenerateColliderCollisionPairsRecursive(cur_node->children[0], node_index, smallest_area, smallest_index);
+                    phy_GenerateColliderCollisionPairsRecursive(cur_node->children[1], node_index, smallest_area, smallest_index);
                 }
             }
         }
@@ -304,12 +362,18 @@ void phy_GenerateCollisionPairsRecursive(int cur_node_index, int node_index, flo
 
     phy_DbvhNodesVolume(cur_node_index, node_index, &max, &min);
 
-    volume = (max.x - min.x) * (max.y - min.y) * (max.z - min.z);
+    //volume = (max.x - min.x) * (max.y - min.y) * (max.z - min.z);
 
-    if(volume < *smallest_volume)
+    extents = max - min;
+
+    /* smallest area heuristic... */
+    area = ((extents.x * extents.z) +
+            (extents.y * extents.z) +
+            (extents.x * extents.y)) * 2.0;
+
+    if(area < *smallest_area)
     {
-        /* this is the smallest volume formed so far... */
-        *smallest_volume = volume;
+        *smallest_area = area;
         *smallest_index = cur_node_index;
     }
 
@@ -394,14 +458,22 @@ void phy_RecomputeVolumesRecursive(int node_index)
     }
 }
 
-void phy_GenerateCollisionPairs(struct collider_handle_t collider)
+void phy_GenerateColliderCollisionPairs(struct collider_handle_t collider)
 {
     struct dbvh_node_t *node;
     struct base_collider_t *collider_ptr;
     struct player_collider_t *player_collider;
+    struct portal_collider_t *portal_collider;
+    struct portal_t *portal;
 
     float smallest_volume = FLT_MAX;
     int smallest_index = -1;
+
+    vec2_t portal_size;
+    vec3_t portal_corners[4];
+
+    int i;
+    int j;
 
     collider_ptr = phy_GetColliderPointer(collider);
 
@@ -430,9 +502,44 @@ void phy_GenerateCollisionPairs(struct collider_handle_t collider)
                                    -player_collider->height * 0.5,
                                    -player_collider->radius);
             break;
+
+            case PHY_COLLIDER_TYPE_PORTAL:
+                portal_collider = (struct portal_collider_t *)collider_ptr;
+                portal = r_GetPortalPointer(portal_collider->portal_handle);
+
+                node->max = vec3_t(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+                node->min = vec3_t(FLT_MAX, FLT_MAX, FLT_MAX);
+
+                portal_size = portal->size * 0.5;
+
+                portal_corners[0] = vec3_t(portal_size[0], portal_size[1], 0.0);
+                portal_corners[1] = vec3_t(-portal_size[0], portal_size[1], 0.0);
+                portal_corners[2] = vec3_t(-portal_size[0], -portal_size[1], 0.0);
+                portal_corners[3] = vec3_t(portal_size[0], -portal_size[1], 0.0);
+
+                for(i = 0; i < 4; i++)
+                {
+                    portal_corners[i] = portal_corners[i] * portal->orientation + portal->position;
+
+                    for(j = 0; j < 3; j++)
+                    {
+                        if(portal_corners[i][j] > node->max[j]) node->max[j] = portal_corners[i][j];
+                        if(portal_corners[i][j] < node->min[j]) node->min[j] = portal_corners[i][j];
+                    }
+                }
+
+                for(i = 0; i < 3; i++)
+                {
+                    if(fabs(node->max[i] - node->min[i]) < 0.001)
+                    {
+                        node->max[i] += 0.05;
+                        node->min[i] -= 0.05;
+                    }
+                }
+
+            break;
         }
 
-        //printf("start: node %d\n", collider_ptr->dbvh_node);
         phy_GenerateCollisionPairsRecursive(phy_dbvh_root, collider_ptr->dbvh_node, &smallest_volume, &smallest_index);
         phy_RecomputeVolumesRecursive(collider_ptr->dbvh_node);
     }
@@ -722,6 +829,11 @@ struct list_t *phy_BoxOnBvh(vec3_t &aabb_max, vec3_t &aabb_min)
     return NULL;
 }
 
+void phy_SolveContactPoints()
+{
+
+}
+
 #define MAX_CONTACT_POINTS 2048
 struct contact_point_t contact_points_buffer[MAX_CONTACT_POINTS];
 struct list_t contact_points;
@@ -887,6 +999,11 @@ struct list_t *phy_FindContactPointsPlayerWorld(struct collider_handle_t player_
     return NULL;
 }
 
+struct list_t *phy_FindContactPointsPlayerPortal(struct collider_handle_t player_collider, struct collider_handle_t portal_collider)
+{
+
+}
+
 #define MAX_ITERATIONS 8
 
 void phy_CollidePlayerWorld(struct collider_handle_t player_collider)
@@ -972,6 +1089,10 @@ void phy_CollidePlayerWorld(struct collider_handle_t player_collider)
             }
         }
     }
+}
+
+void phy_CollidePlayerPortal(struct collider_handle_t player_collider, struct collider_handle_t portal_collider)
+{
 
 }
 

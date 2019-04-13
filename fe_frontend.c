@@ -38,10 +38,10 @@ int fe_Frontend(void *data)
 
     player_index = player_CreatePlayer("default", vec3_t(3.0, 0.22, 0.0));
     player_SetActivePlayer(player_index);
-
-    player_CreatePlayer("default1", vec3_t(4.0, 0.22, 0.0));
-    player_CreatePlayer("default2", vec3_t(-3.0, 0.22, 0.0));
-    player_CreatePlayer("default2", vec3_t(-3.0, 2.22, 5.0));
+//
+//    player_CreatePlayer("default1", vec3_t(4.0, 0.22, 0.0));
+//    player_CreatePlayer("default2", vec3_t(-3.0, 0.22, -4.0));
+//    player_CreatePlayer("default2", vec3_t(-3.0, 2.22, 5.0));
 
     in_RegisterKey(SDL_SCANCODE_W);
     in_RegisterKey(SDL_SCANCODE_S);
@@ -90,10 +90,21 @@ int fe_Frontend(void *data)
 
     portal = r_GetPortalPointer(portal2);
     portal->orientation = rotate_y(0.5);
-//
+
     portal = r_GetPortalPointer(portal3);
     portal->orientation = rotate_y(1.0);
 
+//    int portal0 = r_CreatePortal(vec3_t(0.0, 18.0, 0.0), vec2_t(24.5, 24.5));
+//    int portal1 = r_CreatePortal(vec3_t(0.0, 2.2, -7.5), vec2_t(24.5, 3.4));
+//    r_LinkPortals(portal0, portal1);
+//
+//    struct portal_t *portal;
+//
+//    portal = r_GetPortalPointer(portal0);
+//    portal->orientation = rotate_x(-0.5);
+//
+//    portal = r_GetPortalPointer(portal1);
+//    portal->orientation = rotate_y(1.0);
 
     //portal->orientation = rotate_x(-0.5);
     //portal->orientation = rotate(vec3_t(1.0, 0.0, 0.0), -0.5);
