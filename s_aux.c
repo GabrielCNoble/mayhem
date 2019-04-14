@@ -31,7 +31,7 @@ void *aux_ReadFile(FILE *file)
     if(file)
     {
         file_size = aux_FileSize(file);
-        file_buffer = calloc(file_size, 1);
+        file_buffer = calloc(file_size + 2, 1);
         fread(file_buffer, file_size, 1, file);
     }
 
@@ -81,7 +81,7 @@ void aux_LoadWavefront(char *file_name,  struct geometry_data_t *geometry_data)
     short current_material;
 
     int value_string_index;
-    char value_string[64];
+    char value_string[128];
 
     file = fopen(file_name, "rb");
 

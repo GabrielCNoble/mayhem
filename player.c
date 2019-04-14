@@ -46,9 +46,19 @@ int player_CreatePlayer(char *name, vec3_t position)
         collider->height = 1.0;
         collider->radius = 0.2;
         collider->base.position = position;
+        collider->player_handle = player_index;
     }
 
     return player_index;
+}
+
+struct player_t *player_GetPlayerPointer(int player_handle)
+{
+    struct player_t *player;
+
+    player = (struct player_t *)players.get(player_handle);
+
+    return player;
 }
 
 void player_UpdatePlayers()

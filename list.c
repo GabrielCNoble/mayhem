@@ -3,6 +3,7 @@
 #include "stack_list.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 list_t::list_t()
 {
@@ -63,7 +64,6 @@ void list_t::resize(int new_size)
 int list_t::add(void *data)
 {
     int index = -1;
-
     if(this->cursor >= this->size)
     {
         this->resize(this->size + 64);

@@ -16,16 +16,18 @@ extern "C"
 struct verts_handle_t w_world_verts = R_INVALID_VERTS_HANDLE;
 struct verts_handle_t w_world_indices = R_INVALID_VERTS_HANDLE;
 
-struct list_t w_world_batches(sizeof(struct draw_batch_t), 32);
+struct list_t w_world_batches;
 unsigned int *w_world_indices_buffer = NULL;
 struct draw_triangle_t *w_world_draw_triangles;
 struct bvh_node_t *w_world_bvh = NULL;
+
+struct collider_handle_t w_world_collider;
 
 
 
 void w_Init()
 {
-
+    w_world_batches.init(sizeof(struct draw_batch_t), 32);
 }
 
 void w_Shutdown()
@@ -41,7 +43,11 @@ void w_LoadLevel(char *file_name)
 
     aux_LoadWavefront(file_name, &level_data);
 
-    phy_BuildBvh((vec3_t *)level_data.vertices.buffer, level_data.vertices.cursor);
+    //phy_BuildBvh((vec3_t *)level_data.vertices.buffer, level_data.vertices.cursor);
+    w_world_collider = phy_CreateStaticCollider();
+    phy_AddStaticTriangles(w_world_collider, (vec3_t *)level_data.vertices.buffer, level_data.vertices.cursor);
+    phy_StaticColliderBvh(w_world_collider);
+
 
     vertices = (struct vertex_t *)calloc(sizeof(vertex_t), level_data.vertices.cursor);
 

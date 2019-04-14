@@ -53,6 +53,7 @@ int r_CreatePortal(vec3_t position, vec2_t size)
 
     portal->collider = phy_CreateCollider(PHY_COLLIDER_TYPE_PORTAL);
     collider = phy_GetPortalColliderPointer(portal->collider);
+    collider->base.position = portal->position;
 
     collider->portal_handle = portal_index;
 

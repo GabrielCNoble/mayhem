@@ -70,41 +70,41 @@ int fe_Frontend(void *data)
     r_CreateLight(vec3_t(-5.0, 1.2, -3.0), vec3_t(1.0, 0.4, 0.2), 0.3, 20.0);
     r_CreateLight(vec3_t(0.0, 8.2, 1.5), vec3_t(0.2, 0.4, 1.0), 0.3, 20.0);
 
-    int portal0 = r_CreatePortal(vec3_t(1.8, 1.2, 7.5), vec2_t(1.5, 2.4));
-    int portal1 = r_CreatePortal(vec3_t(3.8, 1.2, -7.5), vec2_t(1.5, 2.4));
-    r_LinkPortals(portal0, portal1);
-
-    int portal2 = r_CreatePortal(vec3_t(3.8, 1.2, 7.5), vec2_t(1.5, 2.4));
-    int portal3 = r_CreatePortal(vec3_t(0.0, 8.5, 0.6), vec2_t(1.5, 2.4));
-    r_LinkPortals(portal2, portal3);
-
-
-    struct portal_t *portal;
-
-
-    portal = r_GetPortalPointer(portal0);
-    portal->orientation = rotate_y(-0.5);
-
-    portal = r_GetPortalPointer(portal1);
-    portal->orientation = rotate_y(0.5);
-
-    portal = r_GetPortalPointer(portal2);
-    portal->orientation = rotate_y(0.5);
-
-    portal = r_GetPortalPointer(portal3);
-    portal->orientation = rotate_y(1.0);
-
-//    int portal0 = r_CreatePortal(vec3_t(0.0, 18.0, 0.0), vec2_t(24.5, 24.5));
-//    int portal1 = r_CreatePortal(vec3_t(0.0, 2.2, -7.5), vec2_t(24.5, 3.4));
+//    int portal0 = r_CreatePortal(vec3_t(1.8, 1.2, 7.5), vec2_t(1.5, 2.4));
+//    int portal1 = r_CreatePortal(vec3_t(3.8, 1.2, -7.5), vec2_t(1.5, 2.4));
 //    r_LinkPortals(portal0, portal1);
+//
+//    int portal2 = r_CreatePortal(vec3_t(3.8, 1.2, 7.5), vec2_t(1.5, 2.4));
+//    int portal3 = r_CreatePortal(vec3_t(0.0, 8.5, 0.6), vec2_t(1.5, 2.4));
+//    r_LinkPortals(portal2, portal3);
+//
 //
 //    struct portal_t *portal;
 //
+//
 //    portal = r_GetPortalPointer(portal0);
-//    portal->orientation = rotate_x(-0.5);
+//    portal->orientation = rotate_y(-0.5);
 //
 //    portal = r_GetPortalPointer(portal1);
+//    portal->orientation = rotate_y(0.5);
+//
+//    portal = r_GetPortalPointer(portal2);
+//    portal->orientation = rotate_y(0.5);
+//
+//    portal = r_GetPortalPointer(portal3);
 //    portal->orientation = rotate_y(1.0);
+
+    int portal0 = r_CreatePortal(vec3_t(4.0, 1.2, -7.5), vec2_t(1.5, 2.4));
+    int portal1 = r_CreatePortal(vec3_t(-4.0, 1.2, -7.5), vec2_t(1.5, 2.4));
+    r_LinkPortals(portal0, portal1);
+
+    struct portal_t *portal;
+
+    portal = r_GetPortalPointer(portal0);
+    portal->orientation = rotate_y(0.5);
+
+    portal = r_GetPortalPointer(portal1);
+    portal->orientation = rotate_y(-0.5);
 
     //portal->orientation = rotate_x(-0.5);
     //portal->orientation = rotate(vec3_t(1.0, 0.0, 0.0), -0.5);
@@ -119,12 +119,11 @@ int fe_Frontend(void *data)
 
       /*  portal->position.y = pos + sin(angle) * 2.0;
         angle += 0.009;*/
-
         be_QueueCmd(BE_CMD_UPDATE_INPUT, NULL, 0);
         be_WaitEmptyQueue();
 
         player_UpdatePlayers();
-        phy_UpdateColliders();
+        phy_Step();
         player_PostUpdatePlayers();
 
         be_Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

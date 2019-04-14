@@ -59,9 +59,9 @@ void r_VisibleWorldOnView(struct view_t *view)
 
     be_DrawLit(cmd_buffer);
 
-    cmd_buffer = r_AllocCommandBuffer();
-    cmd_buffer->view_matrix = view->view_matrix * view->projection_matrix;
-    be_DrawDebug(cmd_buffer);
+//    cmd_buffer = r_AllocCommandBuffer();
+//    cmd_buffer->view_matrix = view->view_matrix * view->projection_matrix;
+//    be_DrawDebug(cmd_buffer);
 
 
     if(current_recursion < r_renderer.max_recursion)
@@ -247,9 +247,9 @@ int r_IsPortalVisible(int portal_handle, struct view_t *view)
     {
         corners[j] = corners[j] * model_view_projection_matrix;
 
-        if(corners[j].w < view->frustum.znear)
+        if(corners[j].w < 0.0001)
         {
-            corners[j].w = view->frustum.znear;
+            corners[j].w = 0.0001;
             positive_z++;
         }
 

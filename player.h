@@ -24,6 +24,8 @@ void player_Shutdown();
 
 int player_CreatePlayer(char *name, vec3_t position);
 
+struct player_t *player_GetPlayerPointer(int player_handle);
+
 void player_UpdatePlayers();
 
 void player_PostUpdatePlayers();
