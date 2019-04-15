@@ -117,6 +117,8 @@ struct view_t *r_CreateView()
     view->orientation.identity();
     view->position = vec3_t(0.0, 0.0, 0.0);
 
+    view->near_plane = vec4_t(0.0, 0.0, -1.0, 0.1);
+
     r_Perspective(0.5, (float)r_renderer.renderer_width / (float)r_renderer.renderer_height, 0.1, 500.0, &view->projection_matrix, &view->frustum);
 
     view->next = r_renderer.views;

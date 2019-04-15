@@ -44,11 +44,16 @@ struct draw_command_buffer_t
     struct list_t draw_commands;
     struct list_t indices;
     mat4_t view_matrix;
+    vec4_t near_plane;
+
+    int used;
 };
 
 struct light_buffer_t
 {
     struct list_t lights;
+
+    int used;
 };
 
 struct view_t

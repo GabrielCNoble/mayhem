@@ -24,4 +24,6 @@ struct light_buffer_t *r_AllocLightBuffer();
 
 void r_ReclaimCommandBuffers();
 
+void r_ReclaimLightBuffers();
+
 #endif // R_VIS_H

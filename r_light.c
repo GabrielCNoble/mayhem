@@ -76,6 +76,8 @@ void r_UploadLights(struct light_buffer_t *light_buffer)
         glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(struct light_t) * light_buffer->lights.cursor, light_buffer->lights.buffer);
         glBufferSubData(GL_UNIFORM_BUFFER, sizeof(struct light_t) * 64, sizeof(int), &light_buffer->lights.cursor);
     }
+
+    light_buffer->used = 1;
 }
 
 void r_EnableLightWrites()

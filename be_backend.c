@@ -67,6 +67,8 @@ void be_RunBackend()
     glEnable(GL_CULL_FACE);
     glEnable(GL_STENCIL_TEST);
     glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_CLIP_DISTANCE0);
+//    glEnable(GL_CLIP_PLANE0);
 
     r_renderer.current_stencil = 0;
 

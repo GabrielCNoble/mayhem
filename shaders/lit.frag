@@ -21,12 +21,18 @@ layout(std140) uniform r_LightsUniformBlock
 };
 
 uniform vec4 r_BaseColor;
+uniform vec4 r_NearPlane;
 
 void main()
 {
     int i;
 
     vec3 color = vec3(0);
+
+    if(dot(pos.xyz, r_NearPlane.xyz) + r_NearPlane.w < 0.0)
+    {
+        discard;
+    }
 
     for(i = 0; i < r_LightInterface.r_LightCount; i++)
     {

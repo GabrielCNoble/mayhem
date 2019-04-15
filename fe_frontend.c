@@ -36,7 +36,7 @@ int fe_Frontend(void *data)
 
    // int shd = fe_LoadShader("shaders/test");
 
-    player_index = player_CreatePlayer("default", vec3_t(3.0, 0.22, 0.0));
+    player_index = player_CreatePlayer("default", vec3_t(0.0, 1.22, 2.0));
     player_SetActivePlayer(player_index);
 //
 //    player_CreatePlayer("default1", vec3_t(4.0, 0.22, 0.0));
@@ -50,7 +50,7 @@ int fe_Frontend(void *data)
     in_RegisterKey(SDL_SCANCODE_SPACE);
     in_RegisterKey(SDL_SCANCODE_ESCAPE);
 
-    w_LoadLevel("test4.obj");
+    w_LoadLevel("test6.obj");
 
 //    cmd_buffer.draw_commands.init(sizeof(struct draw_command_t), 32);
 
@@ -69,42 +69,53 @@ int fe_Frontend(void *data)
     r_CreateLight(vec3_t(5.0, 1.2, 0.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
     r_CreateLight(vec3_t(-5.0, 1.2, -3.0), vec3_t(1.0, 0.4, 0.2), 0.3, 20.0);
     r_CreateLight(vec3_t(0.0, 8.2, 1.5), vec3_t(0.2, 0.4, 1.0), 0.3, 20.0);
+//
+    int portal0 = r_CreatePortal(vec3_t(0.0, 1.0, -0.8), vec2_t(1.5, 2.2));
+    int portal1 = r_CreatePortal(vec3_t(0.0, -5.23, -7.6), vec2_t(1.5, 2.2));
+    r_LinkPortals(portal0, portal1);
 
-//    int portal0 = r_CreatePortal(vec3_t(1.8, 1.2, 7.5), vec2_t(1.5, 2.4));
-//    int portal1 = r_CreatePortal(vec3_t(3.8, 1.2, -7.5), vec2_t(1.5, 2.4));
-//    r_LinkPortals(portal0, portal1);
-//
-//    int portal2 = r_CreatePortal(vec3_t(3.8, 1.2, 7.5), vec2_t(1.5, 2.4));
-//    int portal3 = r_CreatePortal(vec3_t(0.0, 8.5, 0.6), vec2_t(1.5, 2.4));
-//    r_LinkPortals(portal2, portal3);
+    int portal2 = r_CreatePortal(vec3_t(0.0, -5.23, 7.6), vec2_t(1.5, 2.2));
+    int portal3 = r_CreatePortal(vec3_t(0.0, 1.0, 0.8), vec2_t(1.5, 2.2));
+    r_LinkPortals(portal2, portal3);
 //
 //
-//    struct portal_t *portal;
+    struct portal_t *portal;
 //
 //
 //    portal = r_GetPortalPointer(portal0);
 //    portal->orientation = rotate_y(-0.5);
 //
-//    portal = r_GetPortalPointer(portal1);
-//    portal->orientation = rotate_y(0.5);
+    portal = r_GetPortalPointer(portal1);
+    portal->orientation = rotate_y(1.0);
 //
 //    portal = r_GetPortalPointer(portal2);
 //    portal->orientation = rotate_y(0.5);
 //
-//    portal = r_GetPortalPointer(portal3);
+    portal = r_GetPortalPointer(portal3);
+    portal->orientation = rotate_y(1.0);
+
+//    int portal0 = r_CreatePortal(vec3_t(0.0, 0.2, -5.8), vec2_t(1.8, 2.8));
+//    int portal1 = r_CreatePortal(vec3_t(0.0, 0.2, 5.8), vec2_t(1.8, 2.8));
+//    r_LinkPortals(portal0, portal1);
+//
+//    struct portal_t *portal;
+//
+//    portal = r_GetPortalPointer(portal0);
 //    portal->orientation = rotate_y(1.0);
+//    portal = r_GetPortalPointer(portal1);
+//
+//
+//    portal0 = r_CreatePortal(vec3_t(5.8, 0.2, 0.0), vec2_t(1.8, 2.8));
+//    portal1 = r_CreatePortal(vec3_t(-5.8, 0.2, 0.0), vec2_t(1.8, 2.8));
+//    r_LinkPortals(portal0, portal1);
+//
+//    portal = r_GetPortalPointer(portal0);
+//    portal->orientation = rotate_y(0.5);
+//    portal = r_GetPortalPointer(portal1);
+//    portal->orientation = rotate_y(-0.5);
 
-    int portal0 = r_CreatePortal(vec3_t(4.0, 1.2, -7.5), vec2_t(1.5, 2.4));
-    int portal1 = r_CreatePortal(vec3_t(-4.0, 1.2, -7.5), vec2_t(1.5, 2.4));
-    r_LinkPortals(portal0, portal1);
 
-    struct portal_t *portal;
-
-    portal = r_GetPortalPointer(portal0);
-    portal->orientation = rotate_y(0.5);
-
-    portal = r_GetPortalPointer(portal1);
-    portal->orientation = rotate_y(-0.5);
+    //portal->orientation = rotate_y(-1.0);
 
     //portal->orientation = rotate_x(-0.5);
     //portal->orientation = rotate(vec3_t(1.0, 0.0, 0.0), -0.5);

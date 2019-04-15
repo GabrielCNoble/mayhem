@@ -139,6 +139,8 @@ void r_DrawDebug(struct draw_command_buffer_t *cmd_buffer, int options)
     glEnd();
     glEnable(GL_CULL_FACE);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    cmd_buffer->used = 1;
 }
 
 void r_DrawLit(struct draw_command_buffer_t *cmd_buffer)
@@ -156,6 +158,7 @@ void r_DrawLit(struct draw_command_buffer_t *cmd_buffer)
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
     r_DefaultUniformMatrix4fv(r_ViewMatrix, (float *)cmd_buffer->view_matrix.floats);
+    r_DefaultUniform4fv(r_NearPlane, (float *)cmd_buffer->near_plane.floats);
 
     for(i = 0; i < c; i++)
     {
@@ -163,6 +166,8 @@ void r_DrawLit(struct draw_command_buffer_t *cmd_buffer)
         r_DefaultUniformMatrix4fv(r_ModelViewProjectionMatrix, (float *)draw_cmds[i].model_view_projection_matrix.floats);
         glDrawArrays(GL_TRIANGLES, draw_cmds[i].batch.start, draw_cmds[i].batch.count);
     }
+
+    cmd_buffer->used = 1;
 }
 
 void r_PortalStencil(struct draw_command_buffer_t *cmd_buffer, int remove)
@@ -176,6 +181,8 @@ void r_PortalStencil(struct draw_command_buffer_t *cmd_buffer, int remove)
 
     r_SetShader(r_renderer.portal_stencil_shader);
     r_DefaultUniformMatrix4fv(r_ModelViewProjectionMatrix, (float *) &cmd->model_view_projection_matrix.floats);
+    r_DefaultUniformMatrix4fv(r_ViewMatrix, (float *) cmd_buffer->view_matrix.floats);
+    r_DefaultUniform4fv(r_NearPlane, (float *) cmd_buffer->near_plane.floats);
     glStencilOp(GL_KEEP, GL_KEEP, remove ? GL_DECR : GL_INCR);
     glStencilFunc(GL_EQUAL, r_renderer.current_stencil, 0xff);
     remove ? r_renderer.current_stencil-- : r_renderer.current_stencil++;
@@ -193,6 +200,8 @@ void r_PortalStencil(struct draw_command_buffer_t *cmd_buffer, int remove)
     {
         r_SetShader(r_renderer.clear_portal_depth_shader);
         r_DefaultUniformMatrix4fv(r_ModelViewProjectionMatrix, (float *) &cmd->model_view_projection_matrix.floats);
+        r_DefaultUniformMatrix4fv(r_ViewMatrix, (float *) cmd_buffer->view_matrix.floats);
+        r_DefaultUniform4fv(r_NearPlane, (float *) cmd_buffer->near_plane.floats);
 
         glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
         glStencilFunc(GL_EQUAL, r_renderer.current_stencil, 0xff);
@@ -203,6 +212,7 @@ void r_PortalStencil(struct draw_command_buffer_t *cmd_buffer, int remove)
     }
     glDisable(GL_DEPTH_CLAMP);
 
+    cmd_buffer->used = 1;
 }
 
 void r_Clear(int mask)

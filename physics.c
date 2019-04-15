@@ -499,6 +499,15 @@ void phy_GenerateColliderCollisionPairsRecursive(int cur_node_index, int node_in
             }
             else
             {
+                if(cur_node->children[0] == node_index ||
+                   cur_node->children[1] == node_index)
+                {
+                    /* sometimes, when a node gets away too quickly, it won't intersect the root of
+                    the dbvh tree. This causes the node to get paired with the root, which messes up the
+                    hierarchy... */
+                    return;
+                }
+
                 parent = phy_GetDbvhNodePointer(node->parent);
                 sibling_index = parent->children[0] == node_index;
                 sibling = phy_GetDbvhNodePointer(parent->children[sibling_index]);
@@ -516,11 +525,17 @@ void phy_GenerateColliderCollisionPairsRecursive(int cur_node_index, int node_in
 
                 parent->children[sibling_index] = cur_node_index;
 
+                if(cur_node->parent != -1)
+                {
+                    parent_parent = phy_GetDbvhNodePointer(cur_node->parent);
+                    parent_parent->children[parent_parent->children[0] != cur_node_index] = node->parent;
+                }
+                else
+                {
+                    phy_dbvh_root = node->parent;
+                }
 
-                parent_parent = phy_GetDbvhNodePointer(cur_node->parent);
-                parent_parent->children[parent_parent->children[0] != cur_node_index] = node->parent;
                 parent->parent = cur_node->parent;
-
                 cur_node->parent = node->parent;
             }
         }

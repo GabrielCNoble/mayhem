@@ -9,9 +9,11 @@
 #include <stdio.h>
 
 
+#define R_MAX_COMMAND_BUFFERS 8192
+#define R_MAX_LIGHT_BUFFERS 8192
 extern struct list_t w_world_batches;
-struct stack_list_t r_command_buffers(sizeof(struct draw_command_buffer_t), 8192);
-struct stack_list_t r_light_buffers(sizeof(struct light_buffer_t), 8192);
+struct stack_list_t r_command_buffers(sizeof(struct draw_command_buffer_t), R_MAX_COMMAND_BUFFERS);
+struct stack_list_t r_light_buffers(sizeof(struct light_buffer_t), R_MAX_LIGHT_BUFFERS);
 
 extern struct stack_list_t r_portals;
 extern struct stack_list_t r_lights;
@@ -36,8 +38,12 @@ void r_VisibleWorldOnView(struct view_t *view)
     struct light_buffer_t *light_buffer;
     struct draw_command_t cmd;
     int i;
+    int j;
 
     vec4_t view_space_pos;
+    mat4_t view_projection_matrix;
+
+    struct view_t cur_view;
 
 
     struct portal_t *portals;
@@ -55,9 +61,12 @@ void r_VisibleWorldOnView(struct view_t *view)
 
     cmd_buffer = r_AllocCommandBuffer();
     cmd_buffer->view_matrix = view->view_matrix;
+    cmd_buffer->near_plane = view->near_plane;
     r_VisibleWorldTrianglesOnView(view, cmd_buffer);
 
     be_DrawLit(cmd_buffer);
+
+    cur_view = *view;
 
 //    cmd_buffer = r_AllocCommandBuffer();
 //    cmd_buffer->view_matrix = view->view_matrix * view->projection_matrix;
@@ -70,18 +79,20 @@ void r_VisibleWorldOnView(struct view_t *view)
         {
             if(portals[i].view && portals[i].linked != -1)
             {
-                if(!r_IsPortalVisible(i, view))
+                if(!r_IsPortalVisible(i, &cur_view))
                 {
                     continue;
                 }
 
                 cmd_buffer = r_AllocCommandBuffer();
                 cmd.batch.start = r_GetAllocStart(portals[i].handle) / sizeof(struct vertex_t);
-                cmd.model_view_projection_matrix = mat4_t(portals[i].orientation, portals[i].position) * view->view_projection_matrix;
+                cmd.model_view_projection_matrix = mat4_t(portals[i].orientation, portals[i].position) * cur_view.view_projection_matrix;
                 cmd_buffer->draw_commands.add(&cmd);
+                cmd_buffer->view_matrix = mat4_t(portals[i].orientation, portals[i].position) * cur_view.view_matrix;
+                cmd_buffer->near_plane = cur_view.near_plane;
 
                 be_AddPortalStencil(cmd_buffer);
-                r_ComputePortalView(i, view);
+                r_ComputePortalView(i, &cur_view);
                 r_VisibleWorldOnView(portals[i].view);
                 be_RemPortalStencil(cmd_buffer);
             }
@@ -283,6 +294,14 @@ struct draw_command_buffer_t *r_AllocCommandBuffer()
     struct draw_command_buffer_t *cmd_buffer;
     int cmd_buffer_index;
 
+    if(r_command_buffers.cursor >= R_MAX_COMMAND_BUFFERS)
+    {
+        while(r_command_buffers.free_top < 0)
+        {
+            r_ReclaimCommandBuffers();
+        }
+    }
+
     cmd_buffer_index = r_command_buffers.add(NULL);
     cmd_buffer = (struct draw_command_buffer_t *)r_command_buffers.get(cmd_buffer_index);
 
@@ -297,6 +316,7 @@ struct draw_command_buffer_t *r_AllocCommandBuffer()
     }
 
     cmd_buffer->draw_commands.cursor = 0;
+    cmd_buffer->used = 0;
 
     return cmd_buffer;
 }
@@ -305,6 +325,14 @@ struct light_buffer_t *r_AllocLightBuffer()
 {
     struct light_buffer_t *light_buffer;
     int light_buffer_index;
+
+    if(r_light_buffers.cursor >= R_MAX_LIGHT_BUFFERS)
+    {
+        while(r_light_buffers.free_top < 0)
+        {
+            r_ReclaimLightBuffers();
+        }
+    }
 
     light_buffer_index = r_light_buffers.add(NULL);
     light_buffer = (struct light_buffer_t *)r_light_buffers.get(light_buffer_index);
@@ -321,8 +349,36 @@ struct light_buffer_t *r_AllocLightBuffer()
 
 void r_ReclaimCommandBuffers()
 {
-    r_command_buffers.cursor = 0;
-    r_command_buffers.free_top = -1;
+    int i;
+    struct draw_command_buffer_t *cmd_buffers;
+
+    cmd_buffers = (struct draw_command_buffer_t *)r_command_buffers.buffer;
+
+    for(i = 0; i < r_command_buffers.cursor; i++)
+    {
+        if(cmd_buffers[i].used)
+        {
+            cmd_buffers[i].used = 0;
+            r_command_buffers.remove(i);
+        }
+    }
+}
+
+void r_ReclaimLightBuffers()
+{
+    int i;
+    struct light_buffer_t *light_buffers;
+
+    light_buffers = (struct light_buffer_t *)r_light_buffers.buffer;
+
+    for(i = 0; i < r_light_buffers.cursor; i++)
+    {
+        if(light_buffers[i].used)
+        {
+            light_buffers[i].used = 0;
+            r_light_buffers.remove(i);
+        }
+    }
 }
 
 

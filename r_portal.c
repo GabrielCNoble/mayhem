@@ -121,9 +121,11 @@ void r_ComputePortalView(int portal_index, struct view_t *view)
 {
     struct portal_t *portal;
     struct portal_t *linked;
-    mat3_t inverse_portal_orientation;
+    mat3_t inverse_orientation;
     vec3_t portal_view_pos;
     vec3_t portal_view_vec;
+    vec4_t near_normal;
+    vec4_t portal_vec;
 
     float t;
 
@@ -135,8 +137,8 @@ void r_ComputePortalView(int portal_index, struct view_t *view)
 
         portal_view_vec = portal->position - view->position;
 
-        inverse_portal_orientation = portal->orientation;
-        inverse_portal_orientation.transpose();
+        inverse_orientation = portal->orientation;
+        inverse_orientation.transpose();
 
         portal_view_pos.x = -dot(portal->orientation[0], portal_view_vec);
         portal_view_pos.y = dot(portal->orientation[1], portal_view_vec);
@@ -145,9 +147,16 @@ void r_ComputePortalView(int portal_index, struct view_t *view)
                                  -portal_view_pos[1] * linked->orientation[1] +
                                  -portal_view_pos[2] * linked->orientation[2] + linked->position;
 
-        portal->view->orientation = view->orientation * inverse_portal_orientation * linked->orientation * rotate(linked->orientation[1], 1.0);
+        portal->view->orientation = view->orientation * inverse_orientation *
+                                    linked->orientation * rotate(linked->orientation[1], 1.0);
 
+        r_UpdateView(portal->view);
 
+        portal_vec = vec4_t(linked->position, 1.0) * portal->view->view_matrix;
+        portal_vec.w = 0.0;
+
+        near_normal = vec4_t(-linked->orientation[2], 0.0) * portal->view->view_matrix;
+        portal->view->near_plane = vec4_t(near_normal.x, near_normal.y, near_normal.z, -dot(near_normal, portal_vec));
     }
 }
 
