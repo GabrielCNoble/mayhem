@@ -56,6 +56,11 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="matrix.h" />
+		<Unit filename="phy_col.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="phy_col.h" />
+		<Unit filename="phy_common.h" />
 		<Unit filename="physics.c">
 			<Option compilerVar="CPP" />
 		</Unit>

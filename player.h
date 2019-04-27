@@ -11,6 +11,8 @@ struct player_t
     float pitch;
     float yaw;
     vec3_t position;
+    vec3_t camera_position;
+    float camera_bob;
 
     struct collider_handle_t collider;
 
@@ -22,7 +24,7 @@ void player_Init();
 
 void player_Shutdown();
 
-int player_CreatePlayer(char *name, vec3_t position);
+int player_CreatePlayer(char *name, vec3_t position, vec3_t camera_position);
 
 struct player_t *player_GetPlayerPointer(int player_handle);
 

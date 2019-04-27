@@ -36,7 +36,7 @@ int fe_Frontend(void *data)
 
    // int shd = fe_LoadShader("shaders/test");
 
-    player_index = player_CreatePlayer("default", vec3_t(0.0, 1.22, 2.0));
+    player_index = player_CreatePlayer("default", vec3_t(0.0, 1.22, 2.0), vec3_t(0.0, 0.3, 0.0));
     player_SetActivePlayer(player_index);
 //
 //    player_CreatePlayer("default1", vec3_t(4.0, 0.22, 0.0));
@@ -50,26 +50,17 @@ int fe_Frontend(void *data)
     in_RegisterKey(SDL_SCANCODE_SPACE);
     in_RegisterKey(SDL_SCANCODE_ESCAPE);
 
-    w_LoadLevel("test6.obj");
-
-//    cmd_buffer.draw_commands.init(sizeof(struct draw_command_t), 32);
-
-//    for(i = 0; i < w_world_batches.cursor; i++)
-//    {
-//        batch = (struct draw_batch_t *)w_world_batches.get(i);
-//
-//        draw_cmd.batch.start = batch->start;
-//        draw_cmd.batch.count = batch->count;
-//        draw_cmd.batch.material = batch->material;
-//        draw_cmd.transform = NULL;
-//
-//        cmd_buffer.draw_commands.add(&draw_cmd);
-//    }
-
     r_CreateLight(vec3_t(5.0, 1.2, 0.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
     r_CreateLight(vec3_t(-5.0, 1.2, -3.0), vec3_t(1.0, 0.4, 0.2), 0.3, 20.0);
     r_CreateLight(vec3_t(0.0, 8.2, 1.5), vec3_t(0.2, 0.4, 1.0), 0.3, 20.0);
-//
+    r_CreateLight(vec3_t(0.0, -12.0, 0.0), vec3_t(0.2, 0.4, 1.0), 0.3, 20.0);
+
+    #define LEVEL_7
+
+    #if defined LEVEL_6
+
+    w_LoadLevel("test6.obj");
+
     int portal0 = r_CreatePortal(vec3_t(0.0, 1.0, -0.8), vec2_t(1.5, 2.2));
     int portal1 = r_CreatePortal(vec3_t(0.0, -5.23, -7.6), vec2_t(1.5, 2.2));
     r_LinkPortals(portal0, portal1);
@@ -77,22 +68,55 @@ int fe_Frontend(void *data)
     int portal2 = r_CreatePortal(vec3_t(0.0, -5.23, 7.6), vec2_t(1.5, 2.2));
     int portal3 = r_CreatePortal(vec3_t(0.0, 1.0, 0.8), vec2_t(1.5, 2.2));
     r_LinkPortals(portal2, portal3);
-//
-//
+
     struct portal_t *portal;
-//
-//
-//    portal = r_GetPortalPointer(portal0);
-//    portal->orientation = rotate_y(-0.5);
-//
+
     portal = r_GetPortalPointer(portal1);
     portal->orientation = rotate_y(1.0);
-//
-//    portal = r_GetPortalPointer(portal2);
-//    portal->orientation = rotate_y(0.5);
-//
+
     portal = r_GetPortalPointer(portal3);
     portal->orientation = rotate_y(1.0);
+
+    #elif defined LEVEL_7
+
+    w_LoadLevel("test7.obj");
+
+    int portal0 = r_CreatePortal(vec3_t(0.0, 4.6, -3.0), vec2_t(2.5, 2.5));
+    int portal1 = r_CreatePortal(vec3_t(0.0, -11.0, 5.0), vec2_t(2.5, 2.5));
+    r_LinkPortals(portal0, portal1);
+
+    int portal2 = r_CreatePortal(vec3_t(0.0, -13.6, -5.0), vec2_t(2.5, 2.5));
+    int portal3 = r_CreatePortal(vec3_t(0.0, 3.0, -3.0), vec2_t(2.5, 2.5));
+    r_LinkPortals(portal2, portal3);
+
+    struct portal_t *portal;
+
+    portal = r_GetPortalPointer(portal0);
+    portal->orientation = rotate_x(0.5);
+
+    portal = r_GetPortalPointer(portal1);
+    portal->orientation = rotate_x(-0.5);
+    rotate_y(portal->orientation, 1.0);
+
+    portal = r_GetPortalPointer(portal2);
+    portal->orientation = rotate_x(0.5);
+
+    portal = r_GetPortalPointer(portal3);
+    portal->orientation = rotate_x(-0.5);
+    rotate_y(portal->orientation, 1.0);
+    #endif
+
+    struct collider_handle_t collider = phy_CreateCollider(PHY_COLLIDER_TYPE_RIGID);
+    struct rigid_body_collider_t *collider_ptr = phy_GetRigidBodyColliderPointer(collider);
+    struct box_shape_t *box_shape;
+
+    collider_ptr->base.position = vec3_t(5.0, 3.0, -4.0);
+    collider_ptr->base.linear_velocity = vec3_t(0.0, 0.0, 0.0);
+    collider_ptr->collision_shape = phy_AllocCollisionShape(PHY_COLLISION_SHAPE_BOX);
+    collider_ptr->orientation = rotate_x(0.25);
+
+    box_shape = (struct box_shape_t *)phy_GetCollisionShapePointer(collider_ptr->collision_shape);
+    box_shape->size = vec3_t(1.0, 1.0, 1.0);
 
 //    int portal0 = r_CreatePortal(vec3_t(0.0, 0.2, -5.8), vec2_t(1.8, 2.8));
 //    int portal1 = r_CreatePortal(vec3_t(0.0, 0.2, 5.8), vec2_t(1.8, 2.8));
@@ -128,8 +152,10 @@ int fe_Frontend(void *data)
     {
         //portal->orientation = rotate_y(portal->orientation, angle);
 
-      /*  portal->position.y = pos + sin(angle) * 2.0;
-        angle += 0.009;*/
+        //collider_ptr->orientation = rotate_z(angle);
+
+      /*  portal->position.y = pos + sin(angle) * 2.0;*/
+        angle += 0.009;
         be_QueueCmd(BE_CMD_UPDATE_INPUT, NULL, 0);
         be_WaitEmptyQueue();
 

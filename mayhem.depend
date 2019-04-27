@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1555311622 source:d:\files\gabriel noble\compiler\mayhem\main.c
+1555382948 source:d:\files\gabriel noble\compiler\mayhem\main.c
 	"main.h"
 	<stdio.h>
 	<math.h>
@@ -424,7 +424,7 @@
 	"r_common.h"
 	"r_view.h"
 
-1555312432 source:d:\files\gabriel noble\compiler\mayhem\r_frame.c
+1556347486 source:d:\files\gabriel noble\compiler\mayhem\r_frame.c
 	"r_frame.h"
 	"r_verts.h"
 	"r_shader.h"
@@ -445,17 +445,18 @@
 	"r_common.h"
 	"list.h"
 
-1555199442 d:\files\gabriel noble\compiler\mayhem\player.h
+1556073317 d:\files\gabriel noble\compiler\mayhem\player.h
 	"vector.h"
 	"physics.h"
 
-1555199504 source:d:\files\gabriel noble\compiler\mayhem\player.c
+1556073605 source:d:\files\gabriel noble\compiler\mayhem\player.c
 	"player.h"
 	"stack_list.h"
 	"input.h"
 	"r_view.h"
 	<stdlib.h>
 	<string.h>
+	<math.h>
 
 1555178318 source:d:\files\gabriel noble\compiler\mayhem\list.c
 	"list.h"
@@ -466,8 +467,9 @@
 
 1553735920 d:\files\gabriel noble\compiler\mayhem\list.h
 
-1555300992 source:d:\files\gabriel noble\compiler\mayhem\physics.c
+1556390394 source:d:\files\gabriel noble\compiler\mayhem\physics.c
 	"physics.h"
+	"phy_col.h"
 	"stack_list.h"
 	<stdlib.h>
 	<string.h>
@@ -479,9 +481,8 @@
 	"player.h"
 	<stdio.h>
 
-1555199331 d:\files\gabriel noble\compiler\mayhem\physics.h
-	"vector.h"
-	"list.h"
+1556388510 d:\files\gabriel noble\compiler\mayhem\physics.h
+	"phy_common.h"
 
 1554059026 d:\files\gabriel noble\compiler\mayhem\w_main.h
 	"r_common.h"
@@ -561,7 +562,7 @@
 1554956159 d:\files\gabriel noble\compiler\mayhem\be_backend.h
 	"r_verts.h"
 
-1555311443 source:d:\files\gabriel noble\compiler\mayhem\fe_frontend.c
+1556389639 source:d:\files\gabriel noble\compiler\mayhem\fe_frontend.c
 	"fe_frontend.h"
 	"be_backend.h"
 	"input.h"
@@ -602,7 +603,7 @@
 
 1553982195 d:\files\gabriel noble\compiler\mayhem\ring_buffer.h
 
-1555311282 source:d:\files\gabriel noble\compiler\mayhem\r_vis.c
+1556347336 source:d:\files\gabriel noble\compiler\mayhem\r_vis.c
 	"r_vis.h"
 	"r_view.h"
 	"r_portal.h"
@@ -1247,4 +1248,16 @@
 1554650935 d:\files\gabriel noble\compiler\mayhem\r_light.h
 	"r_common.h"
 	"vector.h"
+
+1556386099 d:\files\gabriel noble\compiler\mayhem\phy_common.h
+	"vector.h"
+	"matrix.h"
+	"list.h"
+
+1556390370 source:d:\files\gabriel noble\compiler\mayhem\phy_col.c
+	"phy_col.h"
+	<stdio.h>
+
+1556390383 d:\files\gabriel noble\compiler\mayhem\phy_col.h
+	"phy_common.h"
 

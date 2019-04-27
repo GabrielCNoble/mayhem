@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 
 stack_list_t players;
@@ -22,7 +23,7 @@ void player_Shutdown()
 
 }
 
-int player_CreatePlayer(char *name, vec3_t position)
+int player_CreatePlayer(char *name, vec3_t position, vec3_t camera_position)
 {
     int player_index = -1;
 
@@ -37,9 +38,11 @@ int player_CreatePlayer(char *name, vec3_t position)
     {
         player->name = strdup(name);
         player->position = position;
+        player->camera_position = camera_position;
         player->pitch = 0.0;
         player->yaw = 0.0;
         player->collider = phy_CreateCollider(PHY_COLLIDER_TYPE_PLAYER);
+        player->camera_bob = 0.0;
 
         collider = (struct player_collider_t *)phy_GetColliderPointer(player->collider);
 
@@ -71,6 +74,8 @@ void player_PostUpdatePlayers()
     player_PostUpdateActivePlayer();
 }
 
+#define CAMERA_BOB_INCREMENT 0.20
+
 void player_UpdateActivePlayer()
 {
     struct player_t *player;
@@ -80,6 +85,8 @@ void player_UpdateActivePlayer()
     mat3_t yaw_matrix;
 
     vec3_t translation;
+
+    float camera_bob;
 
     if(active_player != -1)
     {
@@ -104,14 +111,18 @@ void player_UpdateActivePlayer()
 
             view->orientation = pitch_matrix * yaw_matrix;
 
+            camera_bob = 0.0;
+
             if(in_GetKeyStatus(SDL_SCANCODE_W) & KEY_STATUS_PRESSED)
             {
                 translation.z += -1.0;
+                camera_bob = player->camera_bob + CAMERA_BOB_INCREMENT;
             }
 
             if(in_GetKeyStatus(SDL_SCANCODE_S) & KEY_STATUS_PRESSED)
             {
                 translation.z += 1.0;
+                camera_bob = player->camera_bob + CAMERA_BOB_INCREMENT;
             }
 
 
@@ -119,13 +130,16 @@ void player_UpdateActivePlayer()
             if(in_GetKeyStatus(SDL_SCANCODE_A) & KEY_STATUS_PRESSED)
             {
                 translation.x += -1.0;
+                camera_bob = player->camera_bob + CAMERA_BOB_INCREMENT;
             }
 
             if(in_GetKeyStatus(SDL_SCANCODE_D) & KEY_STATUS_PRESSED)
             {
                 translation.x += 1.0;
+                camera_bob = player->camera_bob + CAMERA_BOB_INCREMENT;
             }
 
+            player->camera_bob = camera_bob;
 
             if(in_GetKeyStatus(SDL_SCANCODE_SPACE) & KEY_STATUS_JUST_PRESSED)
             {
@@ -165,7 +179,7 @@ void player_PostUpdateActivePlayer()
 
             player->position = collider->base.position;
 
-            view->position = player->position + vec3_t(0.0, 0.3, 0.0);
+            view->position = player->position + player->camera_position + vec3_t(0.0, sin(player->camera_bob) * 0.1, 0.0);
         }
     }
 }
