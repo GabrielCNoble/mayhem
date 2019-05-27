@@ -14,6 +14,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-std=gnu++11" />
 					<Add directory="libs/SDL/include" />
 					<Add directory="libs/GLEW/include" />
 				</Compiler>
@@ -31,6 +32,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-Wno-write-strings" />
 		</Compiler>
 		<Unit filename="be_backend.c">
 			<Option compilerVar="CPP" />
@@ -51,7 +53,9 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CPP" />
 		</Unit>
-		<Unit filename="main.h" />
+		<Unit filename="main.h">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="matrix.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -86,6 +90,10 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="r_portal.h" />
+		<Unit filename="r_raytrace.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_raytrace.h" />
 		<Unit filename="r_shader.c">
 			<Option compilerVar="CPP" />
 		</Unit>

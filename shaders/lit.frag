@@ -7,6 +7,7 @@ struct light_t
 {
     vec4 pos_radius;
     vec4 col_energy;
+    vec4 w_pos;
 };
 
 struct light_interface_t

@@ -20,7 +20,7 @@ float static normalized_mouse_dy;
 
 int registered_cursor = 0;
 unsigned short key_status[SDL_NUM_SCANCODES] = {KEY_STATUS_NONE};
-unsigned int registered_keys[SDL_NUM_SCANCODES];
+int registered_keys[SDL_NUM_SCANCODES];
 
 
 void in_UpdateInput()

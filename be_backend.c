@@ -73,7 +73,7 @@ void be_RunBackend()
     r_renderer.current_stencil = 0;
 
     r_EnableVertsReads();
-    r_EnableLightWrites();
+//    r_EnableLightWrites();
 
     while(1)
     {
@@ -235,6 +235,34 @@ void be_RemPortalStencil(struct draw_command_buffer_t *cmd_buffer)
 void be_UploadLights(struct light_buffer_t *light_buffer)
 {
     be_QueueCmd(BE_CMD_UPLOAD_LIGHTS, &light_buffer, sizeof(light_buffer));
+}
+
+void be_UploadTriangles(vec3_t *vertices, int count)
+{
+    struct
+    {
+        vec3_t *vertices;
+        int count;
+    }data;
+
+    data.vertices = vertices;
+    data.count = count;
+
+    be_QueueCmd(BE_CMD_UPLOAD_TRIANGLES, &data, sizeof(data));
+}
+
+void be_UploadTriangleIndices(unsigned int *indices, int count)
+{
+    struct
+    {
+        unsigned int *indices;
+        int count;
+    }data;
+
+    data.indices = indices;
+    data.count = count;
+
+    be_QueueCmd(BE_CMD_UPLOAD_TRIANGLE_INDICES, &data, sizeof(data));
 }
 
 void be_WaitEmptyQueue()

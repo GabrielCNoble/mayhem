@@ -20,6 +20,7 @@ void r_InitShader()
     #define STRFY(x) #x
     r_default_uniform_names[r_ModelViewProjectionMatrix] = STRFY(r_ModelViewProjectionMatrix);
     r_default_uniform_names[r_ViewMatrix] = STRFY(r_ViewMatrix);
+    r_default_uniform_names[r_ViewModelMatrix] = STRFY(r_ViewModelMatrix);
     r_default_uniform_names[r_BaseColor] = STRFY(r_BaseColor);
     r_default_uniform_names[r_NearPlane] = STRFY(r_NearPlane);
     //r_default_uniform_names[r_LightCount] = STRFY(r_LightCount);
@@ -150,7 +151,7 @@ int r_CompileShaderSource(int shader_handle, char *source)
     char *log;
     int log_len;
 
-    int i;
+    unsigned int i;
 
     char *vertex_source;
     char *fragment_source;
@@ -214,7 +215,17 @@ int r_CompileShaderSource(int shader_handle, char *source)
 
     if((i = glGetUniformBlockIndex(shader->program, "r_LightsUniformBlock")) != GL_INVALID_INDEX)
     {
-        glUniformBlockBinding(shader->program, i, 0);
+        glUniformBlockBinding(shader->program, i, R_LIGHTS_UNIFORM_BUFFER_BINDING);
+    }
+
+    if((i = glGetUniformBlockIndex(shader->program, "r_TrianglesUniformBlock")) != GL_INVALID_INDEX)
+    {
+        glUniformBlockBinding(shader->program, i, R_TRIANGLES_UNIFORM_BUFFER_BINDING);
+    }
+
+    if((i = glGetUniformBlockIndex(shader->program, "r_TriangleIndicesUniformBlock")) != GL_INVALID_INDEX)
+    {
+        glUniformBlockBinding(shader->program, i, R_TRIANGLE_INDICES_UNIFORM_BUFFER_BINDING);
     }
 
     return 1;

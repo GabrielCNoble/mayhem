@@ -3,30 +3,19 @@
 
 #include "vector.h"
 #include "physics.h"
-
-
-struct player_t
-{
-
-    float pitch;
-    float yaw;
-    vec3_t position;
-    vec3_t camera_position;
-    float camera_bob;
-
-    struct collider_handle_t collider;
-
-    char *name;
-};
+#include "r_view.h"
+#include "pla_common.h"
 
 
 void player_Init();
 
 void player_Shutdown();
 
-int player_CreatePlayer(char *name, vec3_t position, vec3_t camera_position);
+struct player_view_t *player_CreateView();
 
-struct player_t *player_GetPlayerPointer(int player_handle);
+struct player_handle_t player_CreatePlayer(char *name, vec3_t position, vec3_t camera_position);
+
+struct player_t *player_GetPlayerPointer(struct player_handle_t player_handle);
 
 void player_UpdatePlayers();
 
@@ -36,7 +25,7 @@ void player_UpdateActivePlayer();
 
 void player_PostUpdateActivePlayer();
 
-void player_SetActivePlayer(int player_index);
+void player_SetActivePlayer(struct player_handle_t player);
 
 
 #endif // PLAYER_H

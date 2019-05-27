@@ -15,7 +15,6 @@ extern struct stack_list_t phy_colliders[PHY_COLLIDER_TYPE_NONE];
 extern struct stack_list_t phy_dbvh_nodes;
 extern int phy_dbvh_root;
 
-
 void r_DrawDbvh(int node_index)
 {
     struct dbvh_node_t *node;
@@ -56,6 +55,16 @@ void r_DrawDbvh(int node_index)
         r_DrawDbvh(node->children[0]);
         r_DrawDbvh(node->children[1]);
     }
+}
+
+void r_InitFrame()
+{
+
+}
+
+void r_ShutdownFrame()
+{
+
 }
 
 void r_DrawDebug(struct draw_command_buffer_t *cmd_buffer, int options)
@@ -289,6 +298,11 @@ void r_PortalStencil(struct draw_command_buffer_t *cmd_buffer, int remove)
     glDisable(GL_DEPTH_CLAMP);
 
     cmd_buffer->used = 1;
+}
+
+void r_DrawRaytracedShadows(struct draw_command_buffer_t *cmd_buffer)
+{
+
 }
 
 void r_Clear(int mask)

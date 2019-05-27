@@ -7,6 +7,7 @@ enum R_SHADER_DEFAULT_UNIFORMS
 {
     r_ModelViewProjectionMatrix,
     r_ViewMatrix,
+    r_ViewModelMatrix,
     r_BaseColor,
     r_NearPlane,
     //r_LightCount,

@@ -28,7 +28,7 @@ list_t::~list_t()
     }
 }
 
-void list_t::init(int elem_size, int init_size)
+void list_t::init(unsigned int elem_size, unsigned int init_size)
 {
     this->elem_size = elem_size;
     this->size = init_size;
@@ -41,7 +41,7 @@ void list_t::init(int elem_size, int init_size)
     }
 }
 
-void list_t::resize(int new_size)
+void list_t::resize(unsigned int new_size)
 {
     void *new_buffer;
 
@@ -81,7 +81,7 @@ int list_t::add(void *data)
 }
 
 
-void list_t::remove(int index)
+void list_t::remove(unsigned int index)
 {
     void *src;
     void *dst;
@@ -100,7 +100,7 @@ void list_t::remove(int index)
     }
 }
 
-void list_t::remove_move(int index)
+void list_t::remove_move(unsigned int index)
 {
     void *src;
     void *dst;
@@ -115,7 +115,7 @@ void list_t::remove_move(int index)
 }
 
 
-void *list_t::get(int index)
+void *list_t::get(unsigned int index)
 {
     void *ret = NULL;
 

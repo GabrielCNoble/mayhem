@@ -18,6 +18,8 @@ enum BE_BACKEND_CMD
     BE_CMD_LOAD_TEXTURE,
     BE_CMD_MEMCPY_TO,
     BE_CMD_UPLOAD_LIGHTS,
+    BE_CMD_UPLOAD_TRIANGLES,
+    BE_CMD_UPLOAD_TRIANGLE_INDICES,
 
     BE_CMD_DRAW_LIT,
     BE_CMD_DRAW_DBG,
@@ -66,6 +68,12 @@ void be_AddPortalStencil(struct draw_command_buffer_t *cmd_buffer);
 void be_RemPortalStencil(struct draw_command_buffer_t *cmd_buffer);
 
 void be_UploadLights(struct light_buffer_t *light_buffer);
+
+void be_UploadTriangles(vec3_t *vertices, int count);
+
+void be_UploadTriangleIndices(unsigned int *indices, int count);
+
+void be_UploadWorldTris();
 
 void be_EnableVertsReads();
 

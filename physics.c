@@ -190,7 +190,7 @@ struct rigid_body_collider_t *phy_GetRigidBodyColliderPointer(struct collider_ha
 struct collision_shape_handle_t phy_AllocCollisionShape(int shape)
 {
     struct base_shape_t *shape_ptr;
-    struct collision_shape_handle_t handle = INVALID_COLLISION_HANDLE;
+    struct collision_shape_handle_t handle = INVALID_COLLISION_SHAPE_HANDLE;
 
     if(shape < PHY_COLLISION_SHAPE_NONE)
     {
@@ -250,7 +250,7 @@ void phy_Step()
 //
 //    struct collision_pair_t *collision_pairs;
 
-    int i;
+    unsigned int i;
     struct collision_pair_t *collision_pairs;
 
 
@@ -270,8 +270,8 @@ void phy_Step()
     struct collision_pair_t *pair0;
     struct collision_pair_t *pair1;
 
-    int type;
-    int c;
+    unsigned int type;
+    unsigned int c;
 
     phy_collision_pairs.cursor = 0;
 
@@ -838,8 +838,8 @@ void phy_GenerateCollisionPairs()
     struct collision_pair_t *pair1;
 
     int type;
-    int i;
-    int c;
+    unsigned int i;
+    unsigned int c;
 
     phy_collision_pairs.cursor = 0;
 
@@ -1194,7 +1194,7 @@ void phy_StaticColliderBvh(struct collider_handle_t static_collider)
     struct bvh_node_t *new_node = NULL;
     struct bvh_node_t *nodes = NULL;
     vec3_t *vertices;
-    int i;
+    unsigned int i;
     int j;
 
     collider = phy_GetStaticColliderPointer(static_collider);
@@ -1327,7 +1327,7 @@ struct list_t contact_points(sizeof(struct contact_point_t), MAX_CONTACT_POINTS)
 
 struct list_t *phy_FindContactPointsPlayerStatic(struct collider_handle_t player_collider, struct collider_handle_t static_collider)
 {
-    int i;
+    unsigned int i;
     int j;
     struct player_collider_t *collider;
     struct static_collider_t *static_col;
@@ -1410,7 +1410,7 @@ struct list_t *phy_FindContactPointsRigidStatic(struct collider_handle_t rigid_b
     vec3_t static_rigid_vec;
     struct list_t *triangles;
     struct collision_triangle_t *triangle;
-    int i;
+    unsigned int i;
     float dist;
     float radius;
     vec3_t diag;
@@ -1583,7 +1583,7 @@ void phy_SortContactPoints(struct contact_point_t *contacts, int left, int right
 void phy_CollidePlayerStatic(struct collider_handle_t player_collider, struct collider_handle_t static_collider)
 {
     struct list_t *contacts;
-    int i;
+    unsigned int i;
     int j;
     int k;
     int deepest_index;
@@ -1691,7 +1691,7 @@ void phy_CollidePlayerPortal(struct collider_handle_t player_collider, struct co
     vec3_t portal_capsule_vec;
     vec3_t offset;
 
-    int i;
+    unsigned int i;
 
     player = phy_GetPlayerColliderPointer(player_collider);
     portal = phy_GetPortalColliderPointer(portal_collider);

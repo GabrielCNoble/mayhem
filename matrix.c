@@ -2,7 +2,6 @@
 #include <math.h>
 
 
-
 mat4_t::mat4_t()
 {
 

@@ -10,7 +10,7 @@
 
 
 stack_list_t players;
-int active_player = -1;
+struct player_handle_t active_player = INVALID_PLAYER_HANDLE;
 
 
 void player_Init()
@@ -23,16 +23,17 @@ void player_Shutdown()
 
 }
 
-int player_CreatePlayer(char *name, vec3_t position, vec3_t camera_position)
+struct player_handle_t player_CreatePlayer(char *name, vec3_t position, vec3_t camera_position)
 {
-    int player_index = -1;
+//    int player_index = -1;
 
+    struct player_handle_t player_handle = INVALID_PLAYER_HANDLE;
     struct player_t *player;
     struct player_collider_t *collider;
 
-    player_index = players.add(NULL);
+    player_handle.player_index = players.add(NULL);
 
-    player = (struct player_t *)players.get(player_index);
+    player = (struct player_t *)players.get(player_handle.player_index);
 
     if(player)
     {
@@ -49,18 +50,16 @@ int player_CreatePlayer(char *name, vec3_t position, vec3_t camera_position)
         collider->height = 1.0;
         collider->radius = 0.2;
         collider->base.position = position;
-        collider->player_handle = player_index;
+        collider->player_handle = player_handle;
     }
 
-    return player_index;
+    return player_handle;
 }
 
-struct player_t *player_GetPlayerPointer(int player_handle)
+struct player_t *player_GetPlayerPointer(struct player_handle_t player_handle)
 {
     struct player_t *player;
-
-    player = (struct player_t *)players.get(player_handle);
-
+    player = (struct player_t *)players.get(player_handle.player_index);
     return player;
 }
 
@@ -74,7 +73,7 @@ void player_PostUpdatePlayers()
     player_PostUpdateActivePlayer();
 }
 
-#define CAMERA_BOB_INCREMENT 0.20
+#define CAMERA_BOB_INCREMENT 0.25
 
 void player_UpdateActivePlayer()
 {
@@ -88,9 +87,9 @@ void player_UpdateActivePlayer()
 
     float camera_bob;
 
-    if(active_player != -1)
+    if(active_player.player_index != INVALID_PLAYER_INDEX)
     {
-        player = (struct player_t *)players.get(active_player);
+        player = (struct player_t *)players.get(active_player.player_index);
 
         if(player)
         {
@@ -168,9 +167,9 @@ void player_PostUpdateActivePlayer()
 
     vec3_t translation;
 
-    if(active_player != -1)
+    if(active_player.player_index != INVALID_PLAYER_INDEX)
     {
-        player = (struct player_t *)players.get(active_player);
+        player = (struct player_t *)players.get(active_player.player_index);
 
         if(player)
         {
@@ -184,9 +183,9 @@ void player_PostUpdateActivePlayer()
     }
 }
 
-void player_SetActivePlayer(int player_index)
+void player_SetActivePlayer(struct player_handle_t player)
 {
-    active_player = player_index;
+    active_player = player;
 }
 
 

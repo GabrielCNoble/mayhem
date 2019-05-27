@@ -61,7 +61,56 @@ void r_Init()
 
     r_InitVerts();
     r_InitShader();
-    r_InitLights();
+
+
+    r_renderer.uniform_buffers[R_LIGHTS_UNIFORM_BUFFER_BINDING].offset = 0;
+    r_renderer.uniform_buffers[R_LIGHTS_UNIFORM_BUFFER_BINDING].size = sizeof(struct light_interface_t);
+//
+//    r_renderer.uniform_buffers[R_TRIANGLES_UNIFORM_BUFFER_BINDING].offset = sizeof(struct light_interface_t);
+//    r_renderer.uniform_buffers[R_TRIANGLES_UNIFORM_BUFFER_BINDING].size = sizeof(struct triangle_interface_t);
+//
+//    r_renderer.uniform_buffers[R_TRIANGLE_INDICES_UNIFORM_BUFFER_BINDING].offset = sizeof(struct light_interface_t) +
+//                                                                                   sizeof(struct triangle_interface_t);
+//    r_renderer.uniform_buffers[R_TRIANGLE_INDICES_UNIFORM_BUFFER_BINDING].size = sizeof(struct triangle_indice_interface_t);
+
+
+//    int uniform_buffer_size = sizeof(struct light_interface_t) +
+//                              sizeof(struct triangle_interface_t) +
+//                              sizeof(struct triangle_indice_interface_t);
+
+
+    int uniform_buffer_size = sizeof(struct light_interface_t);
+
+    glGenBuffers(1, &r_renderer.uniform_buffer);
+    glBindBuffer(GL_UNIFORM_BUFFER, r_renderer.uniform_buffer);
+    glBufferData(GL_UNIFORM_BUFFER, uniform_buffer_size, NULL, GL_STREAM_DRAW);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, r_renderer.uniform_buffer, 0, uniform_buffer_size);
+
+
+//    for(int i = 0; i < R_TRIANGLE_INDICES_UNIFORM_BUFFER_BINDING; i++)
+//    {
+//        int size = r_renderer.uniform_buffers[i].size;
+//        int offset = r_renderer.uniform_buffers[i].offset;
+//        glBindBufferRange(GL_UNIFORM_BUFFER, i, r_renderer.uniform_buffer, offset, size);
+//    }
+
+
+//
+//    glGenFramebuffers(1, &r_renderer.raytrace_framebuffer);
+//    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, r_renderer.raytrace_framebuffer);
+
+//
+//    glGenTextures(1, &r_renderer.raytrace_colorbuffer);
+//    glBindTexture(GL_TEXTURE_2D, r_renderer.raytrace_colorbuffer);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED)
+
 }
 
 void r_Shutdown()

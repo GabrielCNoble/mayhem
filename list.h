@@ -9,8 +9,8 @@ class list_t
     public:
 
     void *buffer;
-    int size;
-    int cursor;
+    unsigned int size;
+    unsigned int cursor;
     unsigned int elem_size;
 
     list_t();
@@ -19,17 +19,17 @@ class list_t
 
     ~list_t();
 
-    void init(int elem_size, int init_size);
+    void init(unsigned int elem_size, unsigned int init_size);
 
-    void resize(int new_size);
+    void resize(unsigned int new_size);
 
     int add(void *data);
 
-    void remove(int index);
+    void remove(unsigned int index);
 
-    void remove_move(int index);
+    void remove_move(unsigned int index);
 
-    void *get(int index);
+    void *get(unsigned int index);
 
     void * operator [] (int index);
 };

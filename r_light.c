@@ -4,20 +4,22 @@
 
 #include <stdio.h>
 
+extern struct renderer_t r_renderer;
+
 
 struct stack_list_t r_lights(sizeof(struct light_t), 32);
-unsigned int r_light_uniform_buffer;
+//unsigned int r_light_uniform_buffer;
 
 void r_InitLights()
 {
-    glGenBuffers(1, &r_light_uniform_buffer);
-    glBindBuffer(GL_UNIFORM_BUFFER, r_light_uniform_buffer);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(struct light_t) * 128, NULL, GL_DYNAMIC_DRAW);
+//    glGenBuffers(1, &r_renderer.r_light_uniform_buffer);
+//    glBindBuffer(GL_UNIFORM_BUFFER, r_renderer.r_light_uniform_buffer);
+//    glBufferData(GL_UNIFORM_BUFFER, sizeof(struct light_t) * 128, NULL, GL_DYNAMIC_DRAW);
 }
 
 void r_ShutdownLights()
 {
-    glDeleteBuffers(1, &r_light_uniform_buffer);
+//    glDeleteBuffers(1, &r_renderer.r_light_uniform_buffer);
 }
 
 int r_CreateLight(vec3_t position, vec3_t color, float energy, float radius)
@@ -71,24 +73,20 @@ struct light_t *r_GetLightPointer(int light_handle)
 
 void r_UploadLights(struct light_buffer_t *light_buffer)
 {
+    int start;
+
     if(light_buffer->lights.cursor)
     {
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(struct light_t) * light_buffer->lights.cursor, light_buffer->lights.buffer);
-        glBufferSubData(GL_UNIFORM_BUFFER, sizeof(struct light_t) * 64, sizeof(int), &light_buffer->lights.cursor);
+        start = r_renderer.uniform_buffers[R_LIGHTS_UNIFORM_BUFFER_BINDING].offset;
+
+        glBufferSubData(GL_UNIFORM_BUFFER, start, sizeof(struct light_t) * light_buffer->lights.cursor, light_buffer->lights.buffer);
+        glBufferSubData(GL_UNIFORM_BUFFER, start + sizeof(struct light_t) * 64, sizeof(int), &light_buffer->lights.cursor);
     }
 
     light_buffer->used = 1;
 }
 
-void r_EnableLightWrites()
-{
-    glBindBufferBase(GL_UNIFORM_BUFFER, 0, r_light_uniform_buffer);
-}
 
-void r_DisableLightWrites()
-{
-    glBindBufferBase(GL_UNIFORM_BUFFER, 0, 0);
-}
 
 
 

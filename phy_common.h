@@ -1,22 +1,11 @@
 #ifndef PHY_COMMON_H
 #define PHY_COMMON_H
 
-
+#include "handle.h"
 #include "vector.h"
 #include "matrix.h"
 #include "list.h"
-
-
-struct collider_handle_t
-{
-    unsigned type : 3;
-    unsigned index : 29;
-};
-
-#define INVALID_COLLIDER_INDEX  0x1fffffff
-#define COLLIDER_HANDLE(type, index)(struct collider_handle_t){type, index}
-#define INVALID_COLLIDER_HANDLE COLLIDER_HANDLE(PHY_COLLIDER_TYPE_NONE, INVALID_COLLIDER_INDEX)
-
+#include "pla_common.h"
 
 /*
 ============================================
@@ -126,9 +115,7 @@ enum PHY_PLAYER_COLLIDER_FLAGS
 struct player_collider_t
 {
     struct base_collider_t base;
-
-    int player_handle;
-
+    struct player_handle_t player_handle;
     float height;
     float radius;
     int flags;
@@ -165,16 +152,6 @@ enum PHY_COLLISION_SHAPES
     PHY_COLLISION_SHAPE_NONE,
 };
 
-
-struct collision_shape_handle_t
-{
-    unsigned type : 3;
-    unsigned index : 28;
-};
-
-#define COLLISION_SHAPE_HANDLE(type, index)(struct collision_shape_handle_t){type, index}
-#define INVALID_COLLISION_SHAPE_INDEX 0x1fffffff
-#define INVALID_COLLISION_HANDLE COLLISION_SHAPE_HANDLE(PHY_COLLISION_SHAPE_NONE, INVALID_COLLISION_SHAPE_INDEX)
 
 
 
