@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
 
     r_Init();
     w_Init();
+    ent_Init();
     player_Init();
     phy_Init();
 

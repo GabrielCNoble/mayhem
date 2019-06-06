@@ -72,7 +72,7 @@ void phy_Shutdown()
 
 struct collider_handle_t phy_CreateCollider(int type)
 {
-    struct collider_handle_t handle = INVALID_COLLIDER_HANDLE;
+    struct collider_handle_t handle = PHY_INVALID_COLLIDER_HANDLE;
     struct base_collider_t *collider;
 
     if(type >= PHY_COLLIDER_TYPE_PLAYER && type < PHY_COLLIDER_TYPE_NONE)
@@ -122,7 +122,7 @@ struct base_collider_t *phy_GetColliderPointer(struct collider_handle_t collider
 
     if(collider.type >= PHY_COLLIDER_TYPE_PLAYER && collider.type < PHY_COLLIDER_TYPE_NONE)
     {
-        if(collider.index != INVALID_COLLIDER_INDEX)
+        if(collider.index != PHY_INVALID_COLLIDER_INDEX)
         {
             collider_ptr = (struct base_collider_t *)phy_colliders[collider.type].get(collider.index);
 
@@ -190,7 +190,7 @@ struct rigid_body_collider_t *phy_GetRigidBodyColliderPointer(struct collider_ha
 struct collision_shape_handle_t phy_AllocCollisionShape(int shape)
 {
     struct base_shape_t *shape_ptr;
-    struct collision_shape_handle_t handle = INVALID_COLLISION_SHAPE_HANDLE;
+    struct collision_shape_handle_t handle = PHY_INVALID_COLLISION_SHAPE_HANDLE;
 
     if(shape < PHY_COLLISION_SHAPE_NONE)
     {
@@ -343,7 +343,7 @@ void phy_Step()
                         continue;
                     }
 
-                    phy_GenerateColliderCollisionPairs(COLLIDER_HANDLE(type, i));
+                    phy_GenerateColliderCollisionPairs(PHY_COLLIDER_HANDLE(type, i));
                 }
             break;
         }
@@ -485,7 +485,7 @@ int phy_AllocDbvhNode()
     node->parent = -1;
     node->children[0] = -1;
     node->children[1] = -1;
-    node->collider = INVALID_COLLIDER_HANDLE;
+    node->collider = PHY_INVALID_COLLIDER_HANDLE;
 
     return node_index;
 }
@@ -546,7 +546,7 @@ void phy_GenerateColliderCollisionPairsRecursive(int cur_node_index, int node_in
         {
             if(node->max.z >= cur_node->min.z && node->min.z <= cur_node->max.z)
             {
-                if(cur_node->collider.index != INVALID_COLLIDER_INDEX)
+                if(cur_node->collider.index != PHY_INVALID_COLLIDER_INDEX)
                 {
                     /* leaf node... */
                     if(node->collider.type < cur_node->collider.type)
@@ -675,7 +675,7 @@ void phy_RecomputeVolumesRecursive(int node_index)
 
     if(node)
     {
-        if(node->collider.index == INVALID_COLLIDER_INDEX)
+        if(node->collider.index == PHY_INVALID_COLLIDER_INDEX)
         {
             phy_DbvhNodesVolume(node->children[0], node->children[1], &node->max, &node->min);
         }
@@ -862,7 +862,7 @@ void phy_GenerateCollisionPairs()
 
                     player_collider->base.position += player_collider->base.linear_velocity;
 
-                    phy_GenerateColliderCollisionPairs(COLLIDER_HANDLE(PHY_COLLIDER_TYPE_PLAYER, i));
+                    phy_GenerateColliderCollisionPairs(PHY_COLLIDER_HANDLE(PHY_COLLIDER_TYPE_PLAYER, i));
                 }
             break;
 
@@ -876,7 +876,7 @@ void phy_GenerateCollisionPairs()
                         continue;
                     }
 
-                    phy_GenerateColliderCollisionPairs(COLLIDER_HANDLE(PHY_COLLIDER_TYPE_STATIC, i));
+                    phy_GenerateColliderCollisionPairs(PHY_COLLIDER_HANDLE(PHY_COLLIDER_TYPE_STATIC, i));
                 }
             break;
 
@@ -890,7 +890,7 @@ void phy_GenerateCollisionPairs()
                         continue;
                     }
 
-                    phy_GenerateColliderCollisionPairs(COLLIDER_HANDLE(PHY_COLLIDER_TYPE_PORTAL, i));
+                    phy_GenerateColliderCollisionPairs(PHY_COLLIDER_HANDLE(PHY_COLLIDER_TYPE_PORTAL, i));
                 }
             break;
 
@@ -904,7 +904,7 @@ void phy_GenerateCollisionPairs()
                         continue;
                     }
 
-                    phy_GenerateColliderCollisionPairs(COLLIDER_HANDLE(PHY_COLLIDER_TYPE_RIGID, i));
+                    phy_GenerateColliderCollisionPairs(PHY_COLLIDER_HANDLE(PHY_COLLIDER_TYPE_RIGID, i));
                 }
             break;
         }
@@ -1680,58 +1680,58 @@ void phy_CollidePlayerStatic(struct collider_handle_t player_collider, struct co
 
 void phy_CollidePlayerPortal(struct collider_handle_t player_collider, struct collider_handle_t portal_collider)
 {
-    struct player_collider_t *player;
-    struct portal_collider_t *portal;
-    struct portal_t *portal_ptr;
-    struct player_t *player_ptr;
-
-    struct list_t *contacts;
-    struct contact_point_t *contact;
-
-    vec3_t portal_capsule_vec;
-    vec3_t offset;
-
-    unsigned int i;
-
-    player = phy_GetPlayerColliderPointer(player_collider);
-    portal = phy_GetPortalColliderPointer(portal_collider);
-
-    if(portal && player)
-    {
-        contacts = phy_FindContactPointsPlayerPortal(player_collider, portal_collider);
-
-        if(contacts->cursor)
-        {
-            portal_ptr = r_GetPortalPointer(portal->portal_handle);
-            player_ptr = player_GetPlayerPointer(player->player_handle);
-
-            for(i = 0; i < contacts->cursor; i++)
-            {
-                contact = (struct contact_point_t *)contacts->get(i);
-
-                if(dot(player->base.position + player_ptr->camera_position - portal_ptr->position, portal_ptr->orientation[2]) > 0.0)
-                {
-                    portal_ptr = r_GetPortalPointer(portal_ptr->linked);
-
-                    portal_capsule_vec = player->base.position - portal->base.position;
-
-                    offset[0] = dot(portal_capsule_vec, portal_ptr->orientation[0]);
-                    offset[1] = dot(portal_capsule_vec, portal_ptr->orientation[1]);
-                    offset[2] = 0.0;
-
-                    player->base.position = portal_ptr->position +
-                                            offset[0] * portal_ptr->orientation[0] +
-                                            offset[1] * portal_ptr->orientation[1] -
-                                            portal_ptr->orientation[2] * 0.3;
-
-                    //printf("%f\n", dot(contact->normal, portal_ptr->orientation[2]));
-
-                    break;
-                }
-                //printf("[%f %f %f]\n", contact->normal[0], contact->normal[1], contact->normal[2]);
-            }
-        }
-    }
+//    struct player_collider_t *player;
+//    struct portal_collider_t *portal;
+//    struct portal_t *portal_ptr;
+//    struct player_t *player_ptr;
+//
+//    struct list_t *contacts;
+//    struct contact_point_t *contact;
+//
+//    vec3_t portal_capsule_vec;
+//    vec3_t offset;
+//
+//    unsigned int i;
+//
+//    player = phy_GetPlayerColliderPointer(player_collider);
+//    portal = phy_GetPortalColliderPointer(portal_collider);
+//
+//    if(portal && player)
+//    {
+//        contacts = phy_FindContactPointsPlayerPortal(player_collider, portal_collider);
+//
+//        if(contacts->cursor)
+//        {
+//            portal_ptr = r_GetPortalPointer(portal->portal_handle);
+//            player_ptr = player_GetPlayerPointer(player->player_handle);
+//
+//            for(i = 0; i < contacts->cursor; i++)
+//            {
+//                contact = (struct contact_point_t *)contacts->get(i);
+//
+//                if(dot(player->base.position + player_ptr->camera_position - portal_ptr->position, portal_ptr->orientation[2]) > 0.0)
+//                {
+//                    portal_ptr = r_GetPortalPointer(portal_ptr->linked);
+//
+//                    portal_capsule_vec = player->base.position - portal->base.position;
+//
+//                    offset[0] = dot(portal_capsule_vec, portal_ptr->orientation[0]);
+//                    offset[1] = dot(portal_capsule_vec, portal_ptr->orientation[1]);
+//                    offset[2] = 0.0;
+//
+//                    player->base.position = portal_ptr->position +
+//                                            offset[0] * portal_ptr->orientation[0] +
+//                                            offset[1] * portal_ptr->orientation[1] -
+//                                            portal_ptr->orientation[2] * 0.3;
+//
+//                    //printf("%f\n", dot(contact->normal, portal_ptr->orientation[2]));
+//
+//                    break;
+//                }
+//                //printf("[%f %f %f]\n", contact->normal[0], contact->normal[1], contact->normal[2]);
+//            }
+//        }
+//    }
 }
 
 void phy_ColliderRigidStatic(struct collider_handle_t rigid_collider, struct collider_handle_t static_collider)

@@ -38,10 +38,15 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="be_backend.h" />
+		<Unit filename="ent.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="ent.h" />
 		<Unit filename="fe_frontend.c">
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="fe_frontend.h" />
+		<Unit filename="handle.h" />
 		<Unit filename="input.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -60,6 +65,10 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="matrix.h" />
+		<Unit filename="mdl.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="mdl.h" />
 		<Unit filename="phy_col.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -69,6 +78,7 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="physics.h" />
+		<Unit filename="pla_common.h" />
 		<Unit filename="player.c">
 			<Option compilerVar="CPP" />
 		</Unit>

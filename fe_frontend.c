@@ -161,6 +161,8 @@ int fe_Frontend(void *data)
 
         player_UpdatePlayers();
         phy_Step();
+        ent_UpdatePhysicsComponents();
+        ent_UpdateTransformComponents();
         player_PostUpdatePlayers();
 
         be_Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

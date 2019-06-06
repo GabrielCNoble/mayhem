@@ -29,6 +29,9 @@ struct player_handle_t player_CreatePlayer(char *name, vec3_t position, vec3_t c
 
     struct player_handle_t player_handle = INVALID_PLAYER_HANDLE;
     struct player_t *player;
+    struct entity_t *player_entity;
+    struct transform_component_t *transform_component;
+    struct physics_component_t *physics_component;
     struct player_collider_t *collider;
 
     player_handle.player_index = players.add(NULL);
@@ -42,15 +45,26 @@ struct player_handle_t player_CreatePlayer(char *name, vec3_t position, vec3_t c
         player->camera_position = camera_position;
         player->pitch = 0.0;
         player->yaw = 0.0;
-        player->collider = phy_CreateCollider(PHY_COLLIDER_TYPE_PLAYER);
         player->camera_bob = 0.0;
 
-        collider = (struct player_collider_t *)phy_GetColliderPointer(player->collider);
+
+        player->entity = ent_CreateEntityInstance();
+        player_entity = ent_GetEntityPointer(player->entity);
+
+        ent_AddComponent(player->entity, ENT_COMPONENT_TYPE_TRANSFORM);
+        ent_AddComponent(player->entity, ENT_COMPONENT_TYPE_PHYSICS);
+
+        transform_component = (struct transform_component_t *)ent_GetComponentPointer(player_entity->components[ENT_COMPONENT_TYPE_TRANSFORM]);
+        physics_component = (struct physics_component_t *)ent_GetComponentPointer(player_entity->components[ENT_COMPONENT_TYPE_PHYSICS]);
+
+        transform_component->position = position;
+
+        physics_component->collider = phy_CreateCollider(PHY_COLLIDER_TYPE_PLAYER);
+        collider = (struct player_collider_t *)phy_GetColliderPointer(physics_component->collider);
 
         collider->height = 1.0;
         collider->radius = 0.2;
         collider->base.position = position;
-        collider->player_handle = player_handle;
     }
 
     return player_handle;
@@ -82,6 +96,8 @@ void player_UpdateActivePlayer()
     vec2_t mouse_delta;
     mat3_t pitch_matrix;
     mat3_t yaw_matrix;
+    struct entity_t *player_entity;
+    struct physics_component_t *physics_component;
 
     vec3_t translation;
 
@@ -107,6 +123,9 @@ void player_UpdateActivePlayer()
             yaw_matrix = rotate_y(player->yaw);
 
             view = r_GetActiveView();
+
+            player_entity = ent_GetEntityPointer(player->entity);
+            physics_component = (struct physics_component_t *)ent_GetComponentPointer(player_entity->components[ENT_COMPONENT_TYPE_PHYSICS]);
 
             view->orientation = pitch_matrix * yaw_matrix;
 
@@ -142,12 +161,12 @@ void player_UpdateActivePlayer()
 
             if(in_GetKeyStatus(SDL_SCANCODE_SPACE) & KEY_STATUS_JUST_PRESSED)
             {
-                phy_Jump(player->collider);
+                phy_Jump(physics_component->collider);
             }
 
             translation = (normalize(translation) * yaw_matrix) * 0.016;
 
-            phy_Move(player->collider, translation);
+            phy_Move(physics_component->collider, translation);
 
             //collider = (struct player_collider_t *)phy_GetColliderPointer(player->collider);
 
@@ -160,6 +179,9 @@ void player_PostUpdateActivePlayer()
 {
     struct player_t *player;
     struct player_collider_t *collider;
+    struct entity_t *player_entity;
+    struct physics_component_t *physics_component;
+    struct transform_component_t *transform_component;
     struct view_t *view;
     vec2_t mouse_delta;
     mat3_t pitch_matrix;
@@ -173,12 +195,16 @@ void player_PostUpdateActivePlayer()
 
         if(player)
         {
-            collider = (struct player_collider_t *)phy_GetColliderPointer(player->collider);
+//            collider = (struct player_collider_t *)phy_GetColliderPointer(player->collider);
             view = r_GetActiveView();
-
-            player->position = collider->base.position;
-
-            view->position = player->position + player->camera_position + vec3_t(0.0, sin(player->camera_bob) * 0.1, 0.0);
+            player_entity = ent_GetEntityPointer(player->entity);
+            transform_component = (struct transform_component_t *)ent_GetComponentPointer(player_entity->components[ENT_COMPONENT_TYPE_TRANSFORM]);
+            view->position = transform_component->position + player->camera_position + vec3_t(0.0, sin(player->camera_bob) * 0.1, 0.0);
+//            physics_component = ent_GetComponentPointer(player_entity->components[ENT_COMPONENT_TYPE_PHYSICS]);
+//            collider = (struct player_collider_t *)phy_GetColliderPointer(physics_component->collider);
+//            player->position = collider->base.position;
+//
+//            view->position = player->position + player->camera_position + vec3_t(0.0, sin(player->camera_bob) * 0.1, 0.0);
         }
     }
 }

@@ -1,11 +1,11 @@
 # depslib dependency file v1.0
-1555382948 source:d:\files\gabriel noble\compiler\mayhem\main.c
+1559014917 source:d:\files\gabriel noble\compiler\mayhem\main.c
 	"main.h"
 	<stdio.h>
 	<math.h>
 	<stdarg.h>
 
-1553915813 d:\files\gabriel noble\compiler\mayhem\main.h
+1559014925 d:\files\gabriel noble\compiler\mayhem\main.h
 	"SDL2\SDL.h"
 	"vector.h"
 	"matrix.h"
@@ -17,6 +17,7 @@
 	"s_aux.h"
 	"be_backend.h"
 	"fe_frontend.h"
+	"ent.h"
 
 1554384560 source:d:\files\gabriel noble\compiler\mayhem\vector.c
 	"vector.h"
@@ -451,7 +452,7 @@
 	"r_view.h"
 	"pla_common.h"
 
-1558894766 source:d:\files\gabriel noble\compiler\mayhem\player.c
+1559794380 source:d:\files\gabriel noble\compiler\mayhem\player.c
 	"player.h"
 	"stack_list.h"
 	"input.h"
@@ -469,7 +470,7 @@
 
 1556937234 d:\files\gabriel noble\compiler\mayhem\list.h
 
-1556937928 source:d:\files\gabriel noble\compiler\mayhem\physics.c
+1559790079 source:d:\files\gabriel noble\compiler\mayhem\physics.c
 	"physics.h"
 	"phy_col.h"
 	"stack_list.h"
@@ -564,7 +565,7 @@
 1556984745 d:\files\gabriel noble\compiler\mayhem\be_backend.h
 	"r_verts.h"
 
-1558894357 source:d:\files\gabriel noble\compiler\mayhem\fe_frontend.c
+1559793718 source:d:\files\gabriel noble\compiler\mayhem\fe_frontend.c
 	"fe_frontend.h"
 	"be_backend.h"
 	"input.h"
@@ -1251,12 +1252,10 @@
 	"r_common.h"
 	"vector.h"
 
-1558894922 d:\files\gabriel noble\compiler\mayhem\phy_common.h
-	"handle.h"
+1559789859 d:\files\gabriel noble\compiler\mayhem\phy_common.h
 	"vector.h"
 	"matrix.h"
 	"list.h"
-	"pla_common.h"
 
 1556390601 source:d:\files\gabriel noble\compiler\mayhem\phy_col.c
 	"phy_col.h"
@@ -1276,10 +1275,28 @@
 1556985178 d:\files\gabriel noble\compiler\mayhem\r_raytrace.h
 	"vector.h"
 
-1558934795 d:\files\gabriel noble\compiler\mayhem\handle.h
+1559022345 d:\files\gabriel noble\compiler\mayhem\handle.h
 
-1558894709 d:\files\gabriel noble\compiler\mayhem\pla_common.h
+1559789144 d:\files\gabriel noble\compiler\mayhem\pla_common.h
+	"ent.h"
+
+1559793312 d:\files\gabriel noble\compiler\mayhem\ent.h
+	"vector.h"
+	"matrix.h"
 	"phy_common.h"
-	"r_common.h"
-	"handle.h"
+	"mdl.h"
+
+1559794492 source:d:\files\gabriel noble\compiler\mayhem\ent.c
+	"ent.h"
+	"stack_list.h"
+	"physics.h"
+	<stdio.h>
+
+1559021907 d:\files\gabriel noble\compiler\mayhem\mdl.h
+	"r_verts.h"
+
+1559021932 source:d:\files\gabriel noble\compiler\mayhem\mdl.c
+	"mdl.h"
+	"stack_list.h"
+	<stdio.h>
 
