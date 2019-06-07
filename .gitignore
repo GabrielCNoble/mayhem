@@ -1,0 +1,12 @@
+*.o
+*.txt
+*.exe
+*.obj
+*.mtl
+*.dll
+
+common/common/
+common/gmath/
+common/containers/
+common/libs/
+models

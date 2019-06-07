@@ -1,0 +1,1987 @@
+# depslib dependency file v1.0
+1559014917 source:d:\files\gabriel noble\compiler\mayhem\main.c
+	"main.h"
+	<stdio.h>
+	<math.h>
+	<stdarg.h>
+
+1559014925 d:\files\gabriel noble\compiler\mayhem\main.h
+	"SDL2\SDL.h"
+	"vector.h"
+	"matrix.h"
+	"r_main.h"
+	"w_main.h"
+	"input.h"
+	"player.h"
+	"physics.h"
+	"s_aux.h"
+	"be_backend.h"
+	"fe_frontend.h"
+	"ent.h"
+
+1554384560 source:d:\files\gabriel noble\compiler\mayhem\vector.c
+	"vector.h"
+	"matrix.h"
+	<math.h>
+
+1555309013 d:\files\gabriel noble\compiler\mayhem\vector.h
+
+1556936465 source:d:\files\gabriel noble\compiler\mayhem\matrix.c
+	"matrix.h"
+	<math.h>
+
+1556935751 d:\files\gabriel noble\compiler\mayhem\matrix.h
+	"vector.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_assert.h"
+	"SDL_atomic.h"
+	"SDL_audio.h"
+	"SDL_clipboard.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_filesystem.h"
+	"SDL_gamecontroller.h"
+	"SDL_haptic.h"
+	"SDL_hints.h"
+	"SDL_joystick.h"
+	"SDL_loadso.h"
+	"SDL_log.h"
+	"SDL_messagebox.h"
+	"SDL_mutex.h"
+	"SDL_power.h"
+	"SDL_render.h"
+	"SDL_rwops.h"
+	"SDL_sensor.h"
+	"SDL_shape.h"
+	"SDL_system.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_version.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<wchar.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<math.h>
+	<float.h>
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	<sal.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_config.h
+	"SDL_platform.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_platform.h
+	"AvailabilityMacros.h"
+	"TargetConditionals.h"
+	<winapifamily.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\begin_code.h
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\close_code.h
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_assert.h
+	"SDL_config.h"
+	"begin_code.h"
+	<signal.h>
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_atomic.h
+	"SDL_stdinc.h"
+	"SDL_platform.h"
+	"begin_code.h"
+	<mbarrier.h>
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_atomic.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	<process.h>
+	<stdlib.h>
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_clipboard.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	<intrin.h>
+	<intrin.h>
+	<altivec.h>
+	<arm_neon.h>
+	<mm3dnow.h>
+	<immintrin.h>
+	<mmintrin.h>
+	<xmmintrin.h>
+	<emmintrin.h>
+	<pmmintrin.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_quit.h"
+	"SDL_gesture.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_pixels.h
+	"SDL_stdinc.h"
+	"SDL_endian.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_rect.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_pixels.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_surface.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_blendmode.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_blendmode.h
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keycode.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_keycode.h
+	"SDL_stdinc.h"
+	"SDL_scancode.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_scancode.h
+	"SDL_stdinc.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_gamecontroller.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_gesture.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_touch.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_filesystem.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_haptic.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_hints.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_log.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_messagebox.h
+	"SDL_stdinc.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_power.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_render.h
+	"SDL_stdinc.h"
+	"SDL_rect.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_sensor.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_shape.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_system.h
+	"SDL_stdinc.h"
+	"SDL_keyboard.h"
+	"SDL_render.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\libs\sdl\include\sdl2\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1558812250 source:d:\files\gabriel noble\compiler\mayhem\r_main.c
+	"r_main.h"
+	"r_surf.h"
+	"r_shader.h"
+	"r_light.h"
+	<stdio.h>
+	<stdlib.h>
+
+1553915822 d:\files\gabriel noble\compiler\mayhem\r_main.h
+	"r_common.h"
+	"r_view.h"
+	"r_frame.h"
+	"r_verts.h"
+	"r_shader.h"
+
+1558894081 d:\files\gabriel noble\compiler\mayhem\r_common.h
+	"SDL2\SDL.h"
+	"GL\glew.h"
+	"matrix.h"
+	"list.h"
+
+1501547140 d:\files\gabriel noble\compiler\mayhem\libs\glew\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1553385403 source:d:\files\gabriel noble\compiler\mayhem\stack_list.c
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+
+1552956336 d:\files\gabriel noble\compiler\mayhem\stack_list.h
+
+1558895394 source:d:\files\gabriel noble\compiler\mayhem\r_view.c
+	"r_view.h"
+	<math.h>
+	<stdlib.h>
+
+1558895397 d:\files\gabriel noble\compiler\mayhem\r_view.h
+	"r_common.h"
+	"matrix.h"
+
+1556986176 d:\files\gabriel noble\compiler\mayhem\r_frame.h
+	"r_common.h"
+	"r_view.h"
+
+1556986214 source:d:\files\gabriel noble\compiler\mayhem\r_frame.c
+	"r_frame.h"
+	"r_verts.h"
+	"r_shader.h"
+	"r_surf.h"
+	"matrix.h"
+	"physics.h"
+	"stack_list.h"
+	<stdlib.h>
+	<stdio.h>
+
+1552957319 d:\files\gabriel noble\compiler\mayhem\input.h
+	"vector.h"
+
+1556937264 source:d:\files\gabriel noble\compiler\mayhem\input.c
+	"input.h"
+	"SDL2\SDL.h"
+	"SDL2\SDL_mouse.h"
+	"r_common.h"
+	"list.h"
+
+1558894952 d:\files\gabriel noble\compiler\mayhem\player.h
+	"vector.h"
+	"physics.h"
+	"r_view.h"
+	"pla_common.h"
+
+1559794380 source:d:\files\gabriel noble\compiler\mayhem\player.c
+	"player.h"
+	"stack_list.h"
+	"input.h"
+	"r_view.h"
+	<stdlib.h>
+	<string.h>
+	<math.h>
+
+1556937230 source:d:\files\gabriel noble\compiler\mayhem\list.c
+	"list.h"
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+
+1556937234 d:\files\gabriel noble\compiler\mayhem\list.h
+
+1559790079 source:d:\files\gabriel noble\compiler\mayhem\physics.c
+	"physics.h"
+	"phy_col.h"
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<float.h>
+	"r_common.h"
+	"r_view.h"
+	"r_portal.h"
+	"player.h"
+	<stdio.h>
+
+1556388510 d:\files\gabriel noble\compiler\mayhem\physics.h
+	"phy_common.h"
+
+1554059026 d:\files\gabriel noble\compiler\mayhem\w_main.h
+	"r_common.h"
+	"vector.h"
+	"physics.h"
+
+1555178646 source:d:\files\gabriel noble\compiler\mayhem\w_main.c
+	"w_main.h"
+	"r_common.h"
+	"r_verts.h"
+	"s_aux.h"
+	"physics.h"
+	"be_backend.h"
+	<stdlib.h>
+	<math.h>
+	<float.h>
+
+1555180165 source:d:\files\gabriel noble\compiler\mayhem\s_aux.c
+	"s_aux.h"
+	<stdlib.h>
+	<string.h>
+
+1553653420 d:\files\gabriel noble\compiler\mayhem\s_aux.h
+	<stdio.h>
+	"vector.h"
+	"list.h"
+	"r_common.h"
+	"r_surf.h"
+
+1553475593 source:d:\files\gabriel noble\compiler\mayhem\r_material.c
+	"r_material.h"
+	"stack_list.h"
+	"list.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1553475469 d:\files\gabriel noble\compiler\mayhem\r_material.h
+	"vector.h"
+
+1554032527 source:d:\files\gabriel noble\compiler\mayhem\r_surf.c
+	"r_surf.h"
+	"r_shader.h"
+	"stack_list.h"
+	"list.h"
+	"r_common.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1554000415 d:\files\gabriel noble\compiler\mayhem\r_surf.h
+	"vector.h"
+
+1554082864 d:\files\gabriel noble\compiler\mayhem\r_verts.h
+	"vector.h"
+
+1554650885 source:d:\files\gabriel noble\compiler\mayhem\r_verts.c
+	"r_verts.h"
+	"stack_list.h"
+	"list.h"
+	<string.h>
+	"r_common.h"
+
+1556988780 source:d:\files\gabriel noble\compiler\mayhem\be_backend.c
+	"be_backend.h"
+	"r_common.h"
+	"r_frame.h"
+	"r_shader.h"
+	"r_light.h"
+	"input.h"
+	"SDL2/SDL_atomic.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<stdarg.h>
+
+1556984745 d:\files\gabriel noble\compiler\mayhem\be_backend.h
+	"r_verts.h"
+
+1559793718 source:d:\files\gabriel noble\compiler\mayhem\fe_frontend.c
+	"fe_frontend.h"
+	"be_backend.h"
+	"input.h"
+	"r_view.h"
+	"r_verts.h"
+	"r_common.h"
+	"r_shader.h"
+	"r_portal.h"
+	"r_light.h"
+	"r_vis.h"
+	"s_aux.h"
+	"w_main.h"
+	"player.h"
+	"physics.h"
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
+1553983044 d:\files\gabriel noble\compiler\mayhem\fe_frontend.h
+
+1556985704 d:\files\gabriel noble\compiler\mayhem\r_shader.h
+
+1556985731 source:d:\files\gabriel noble\compiler\mayhem\r_shader.c
+	"r_shader.h"
+	"r_common.h"
+	"r_verts.h"
+	"stack_list.h"
+	"s_aux.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
+1553982887 source:d:\files\gabriel noble\compiler\mayhem\ring_buffer.c
+	"ring_buffer.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
+1553982195 d:\files\gabriel noble\compiler\mayhem\ring_buffer.h
+
+1558812793 source:d:\files\gabriel noble\compiler\mayhem\r_vis.c
+	"r_vis.h"
+	"r_view.h"
+	"r_portal.h"
+	"r_light.h"
+	"list.h"
+	"be_backend.h"
+	"stack_list.h"
+	<stdio.h>
+
+1555294343 d:\files\gabriel noble\compiler\mayhem\r_vis.h
+	"r_common.h"
+
+1555310543 source:d:\files\gabriel noble\compiler\mayhem\r_portal.c
+	"r_portal.h"
+	"stack_list.h"
+	"r_verts.h"
+	"be_backend.h"
+	<stdio.h>
+
+1555138341 d:\files\gabriel noble\compiler\mayhem\r_portal.h
+	"r_view.h"
+	"r_verts.h"
+	"vector.h"
+	"matrix.h"
+	"physics.h"
+
+1554343802 source:c:\users\gabriel\documents\mayhem\be_backend.c
+	"be_backend.h"
+	"r_common.h"
+	"r_frame.h"
+	"r_shader.h"
+	"input.h"
+	"SDL2/SDL_atomic.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<stdarg.h>
+
+1554336953 c:\users\gabriel\documents\mayhem\be_backend.h
+	"r_verts.h"
+
+1554082864 c:\users\gabriel\documents\mayhem\r_verts.h
+	"vector.h"
+
+1554062805 c:\users\gabriel\documents\mayhem\vector.h
+
+1554345259 c:\users\gabriel\documents\mayhem\r_common.h
+	"SDL2\SDL.h"
+	"GL\glew.h"
+	"matrix.h"
+	"list.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_assert.h"
+	"SDL_atomic.h"
+	"SDL_audio.h"
+	"SDL_clipboard.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_filesystem.h"
+	"SDL_gamecontroller.h"
+	"SDL_haptic.h"
+	"SDL_hints.h"
+	"SDL_joystick.h"
+	"SDL_loadso.h"
+	"SDL_log.h"
+	"SDL_messagebox.h"
+	"SDL_mutex.h"
+	"SDL_power.h"
+	"SDL_render.h"
+	"SDL_rwops.h"
+	"SDL_sensor.h"
+	"SDL_shape.h"
+	"SDL_system.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_version.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<wchar.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<math.h>
+	<float.h>
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	<sal.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_config.h
+	"SDL_platform.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_platform.h
+	"AvailabilityMacros.h"
+	"TargetConditionals.h"
+	<winapifamily.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\begin_code.h
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\close_code.h
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_assert.h
+	"SDL_config.h"
+	"begin_code.h"
+	<signal.h>
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_atomic.h
+	"SDL_stdinc.h"
+	"SDL_platform.h"
+	"begin_code.h"
+	<mbarrier.h>
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_atomic.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	<process.h>
+	<stdlib.h>
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_clipboard.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	<intrin.h>
+	<intrin.h>
+	<altivec.h>
+	<arm_neon.h>
+	<mm3dnow.h>
+	<immintrin.h>
+	<mmintrin.h>
+	<xmmintrin.h>
+	<emmintrin.h>
+	<pmmintrin.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_quit.h"
+	"SDL_gesture.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_pixels.h
+	"SDL_stdinc.h"
+	"SDL_endian.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_rect.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_pixels.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_surface.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_blendmode.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_blendmode.h
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keycode.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_keycode.h
+	"SDL_stdinc.h"
+	"SDL_scancode.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_scancode.h
+	"SDL_stdinc.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_gamecontroller.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_gesture.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_touch.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_filesystem.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_haptic.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_hints.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_log.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_messagebox.h
+	"SDL_stdinc.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_power.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_render.h
+	"SDL_stdinc.h"
+	"SDL_rect.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_sensor.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_shape.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_system.h
+	"SDL_stdinc.h"
+	"SDL_keyboard.h"
+	"SDL_render.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 c:\users\gabriel\documents\mayhem\libs\sdl\include\sdl2\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1501547140 c:\users\gabriel\documents\mayhem\libs\glew\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1554085136 c:\users\gabriel\documents\mayhem\matrix.h
+	"vector.h"
+
+1553735920 c:\users\gabriel\documents\mayhem\list.h
+
+1554343670 c:\users\gabriel\documents\mayhem\r_frame.h
+	"r_common.h"
+	"r_view.h"
+
+1554209928 c:\users\gabriel\documents\mayhem\r_view.h
+	"r_common.h"
+	"matrix.h"
+
+1554083992 c:\users\gabriel\documents\mayhem\r_shader.h
+
+1552957319 c:\users\gabriel\documents\mayhem\input.h
+	"vector.h"
+
+1554337352 source:c:\users\gabriel\documents\mayhem\fe_frontend.c
+	"fe_frontend.h"
+	"be_backend.h"
+	"input.h"
+	"r_view.h"
+	"r_verts.h"
+	"r_common.h"
+	"r_shader.h"
+	"r_portal.h"
+	"r_vis.h"
+	"s_aux.h"
+	"w_main.h"
+	"player.h"
+	"physics.h"
+	<stdio.h>
+	<stdlib.h>
+
+1553983044 c:\users\gabriel\documents\mayhem\fe_frontend.h
+
+1554075194 c:\users\gabriel\documents\mayhem\r_portal.h
+	"r_view.h"
+	"r_verts.h"
+	"vector.h"
+	"matrix.h"
+
+1554065691 c:\users\gabriel\documents\mayhem\r_vis.h
+	"r_common.h"
+
+1553653420 c:\users\gabriel\documents\mayhem\s_aux.h
+	<stdio.h>
+	"vector.h"
+	"list.h"
+	"r_common.h"
+	"r_surf.h"
+
+1554000415 c:\users\gabriel\documents\mayhem\r_surf.h
+	"vector.h"
+
+1554059026 c:\users\gabriel\documents\mayhem\w_main.h
+	"r_common.h"
+	"vector.h"
+	"physics.h"
+
+1554058825 c:\users\gabriel\documents\mayhem\physics.h
+	"vector.h"
+	"list.h"
+
+1552961695 c:\users\gabriel\documents\mayhem\player.h
+	"vector.h"
+	"physics.h"
+
+1553054698 source:c:\users\gabriel\documents\mayhem\input.c
+	"input.h"
+	"SDL2\SDL.h"
+	"SDL2\SDL_mouse.h"
+	"r_common.h"
+	"list.h"
+
+1553735873 source:c:\users\gabriel\documents\mayhem\list.c
+	"list.h"
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+
+1552956336 c:\users\gabriel\documents\mayhem\stack_list.h
+
+1554085132 source:c:\users\gabriel\documents\mayhem\matrix.c
+	"matrix.h"
+	<math.h>
+
+1554061255 source:c:\users\gabriel\documents\mayhem\physics.c
+	"physics.h"
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<float.h>
+	"r_common.h"
+	"r_view.h"
+	<stdio.h>
+
+1554060092 source:c:\users\gabriel\documents\mayhem\player.c
+	"player.h"
+	"stack_list.h"
+	"input.h"
+	"r_view.h"
+	<stdlib.h>
+	<string.h>
+
+1554345356 source:c:\users\gabriel\documents\mayhem\r_frame.c
+	"r_frame.h"
+	"r_verts.h"
+	"r_shader.h"
+	"r_surf.h"
+	"matrix.h"
+	"physics.h"
+	<stdlib.h>
+	<stdio.h>
+
+1554079199 source:c:\users\gabriel\documents\mayhem\r_main.c
+	"r_main.h"
+	"r_surf.h"
+	"r_shader.h"
+	<stdio.h>
+	<stdlib.h>
+
+1553915822 c:\users\gabriel\documents\mayhem\r_main.h
+	"r_common.h"
+	"r_view.h"
+	"r_frame.h"
+	"r_verts.h"
+	"r_shader.h"
+
+1554176134 source:c:\users\gabriel\documents\mayhem\r_portal.c
+	"r_portal.h"
+	"stack_list.h"
+	"r_verts.h"
+	"be_backend.h"
+	<stdio.h>
+
+1554345246 source:c:\users\gabriel\documents\mayhem\r_shader.c
+	"r_shader.h"
+	"r_common.h"
+	"r_verts.h"
+	"stack_list.h"
+	"s_aux.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
+1554032527 source:c:\users\gabriel\documents\mayhem\r_surf.c
+	"r_surf.h"
+	"r_shader.h"
+	"stack_list.h"
+	"list.h"
+	"r_common.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1554083038 source:c:\users\gabriel\documents\mayhem\r_verts.c
+	"r_verts.h"
+	"stack_list.h"
+	"list.h"
+	<string.h>
+	"r_common.h"
+
+1554209933 source:c:\users\gabriel\documents\mayhem\r_view.c
+	"r_view.h"
+	<math.h>
+	<stdlib.h>
+
+1554345041 source:c:\users\gabriel\documents\mayhem\r_vis.c
+	"r_vis.h"
+	"r_view.h"
+	"r_portal.h"
+	"list.h"
+	"be_backend.h"
+	"stack_list.h"
+	<stdio.h>
+
+1553982887 source:c:\users\gabriel\documents\mayhem\ring_buffer.c
+	"ring_buffer.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
+1553982195 c:\users\gabriel\documents\mayhem\ring_buffer.h
+
+1554002572 source:c:\users\gabriel\documents\mayhem\s_aux.c
+	"s_aux.h"
+	<stdlib.h>
+	<string.h>
+
+1553385403 source:c:\users\gabriel\documents\mayhem\stack_list.c
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+
+1554062790 source:c:\users\gabriel\documents\mayhem\vector.c
+	"vector.h"
+	"matrix.h"
+	<math.h>
+
+1554083062 source:c:\users\gabriel\documents\mayhem\w_main.c
+	"w_main.h"
+	"r_common.h"
+	"r_verts.h"
+	"s_aux.h"
+	"physics.h"
+	"be_backend.h"
+	<stdlib.h>
+	<math.h>
+	<float.h>
+
+1554171027 source:c:\users\gabriel\documents\mayhem\main.c
+	"main.h"
+	<stdio.h>
+	<math.h>
+	<stdarg.h>
+
+1553915813 c:\users\gabriel\documents\mayhem\main.h
+	"SDL2\SDL.h"
+	"vector.h"
+	"matrix.h"
+	"r_main.h"
+	"w_main.h"
+	"input.h"
+	"player.h"
+	"physics.h"
+	"s_aux.h"
+	"be_backend.h"
+	"fe_frontend.h"
+
+1556988557 source:d:\files\gabriel noble\compiler\mayhem\r_light.c
+	"r_light.h"
+	"stack_list.h"
+	"GL/glew.h"
+	<stdio.h>
+
+1556988565 d:\files\gabriel noble\compiler\mayhem\r_light.h
+	"r_common.h"
+	"vector.h"
+
+1559789859 d:\files\gabriel noble\compiler\mayhem\phy_common.h
+	"vector.h"
+	"matrix.h"
+	"list.h"
+
+1556390601 source:d:\files\gabriel noble\compiler\mayhem\phy_col.c
+	"phy_col.h"
+	<stdio.h>
+	<math.h>
+
+1556390383 d:\files\gabriel noble\compiler\mayhem\phy_col.h
+	"phy_common.h"
+
+1556988803 source:d:\files\gabriel noble\compiler\mayhem\r_raytrace.c
+	"r_raytrace.h"
+	"r_common.h"
+	"GL/glew.h"
+	<stdio.h>
+	<stdlib.h>
+
+1556985178 d:\files\gabriel noble\compiler\mayhem\r_raytrace.h
+	"vector.h"
+
+1559022345 d:\files\gabriel noble\compiler\mayhem\handle.h
+
+1559789144 d:\files\gabriel noble\compiler\mayhem\pla_common.h
+	"ent.h"
+
+1559868051 d:\files\gabriel noble\compiler\mayhem\ent.h
+	"vector.h"
+	"matrix.h"
+	"phy_common.h"
+	"mdl.h"
+
+1559794492 source:d:\files\gabriel noble\compiler\mayhem\ent.c
+	"ent.h"
+	"stack_list.h"
+	"physics.h"
+	<stdio.h>
+
+1559021907 d:\files\gabriel noble\compiler\mayhem\mdl.h
+	"r_verts.h"
+
+1559021932 source:d:\files\gabriel noble\compiler\mayhem\mdl.c
+	"mdl.h"
+	"stack_list.h"
+	<stdio.h>
+
+1556937230 source:d:\files\gabriel noble\compiler\mayhem\containers\list.c
+	"list.h"
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+
+1556937234 d:\files\gabriel noble\compiler\mayhem\containers\list.h
+
+1552956336 d:\files\gabriel noble\compiler\mayhem\containers\stack_list.h
+
+1553982887 source:d:\files\gabriel noble\compiler\mayhem\containers\ring_buffer.c
+	"ring_buffer.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
+1553982195 d:\files\gabriel noble\compiler\mayhem\containers\ring_buffer.h
+
+1553385403 source:d:\files\gabriel noble\compiler\mayhem\containers\stack_list.c
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+
+1559873092 source:d:\files\gabriel noble\compiler\mayhem\common\ent.c
+	"ent.h"
+	"../containers/stack_list.h"
+	"physics.h"
+	<stdio.h>
+
+1559879247 d:\files\gabriel noble\compiler\mayhem\common\ent.h
+	"../gmath/vector.h"
+	"../gmath/matrix.h"
+	"phy_common.h"
+	"mdl.h"
+
+1555309013 d:\files\gabriel noble\compiler\mayhem\common\vector.h
+
+1556935751 d:\files\gabriel noble\compiler\mayhem\common\matrix.h
+	"vector.h"
+
+1559879252 d:\files\gabriel noble\compiler\mayhem\common\phy_common.h
+	"../gmath/vector.h"
+	"../gmath/matrix.h"
+	"../containers/list.h"
+
+1559021907 d:\files\gabriel noble\compiler\mayhem\common\mdl.h
+	"r_verts.h"
+
+1559879249 d:\files\gabriel noble\compiler\mayhem\common\r_verts.h
+	"../gmath/vector.h"
+
+1556388510 d:\files\gabriel noble\compiler\mayhem\common\physics.h
+	"phy_common.h"
+
+1556936465 source:d:\files\gabriel noble\compiler\mayhem\common\matrix.c
+	"matrix.h"
+	<math.h>
+
+1556390601 source:d:\files\gabriel noble\compiler\mayhem\common\phy_col.c
+	"phy_col.h"
+	<stdio.h>
+	<math.h>
+
+1556390383 d:\files\gabriel noble\compiler\mayhem\common\phy_col.h
+	"phy_common.h"
+
+1556988780 source:d:\files\gabriel noble\compiler\mayhem\common\be_backend.c
+	"be_backend.h"
+	"r_common.h"
+	"r_frame.h"
+	"r_shader.h"
+	"r_light.h"
+	"input.h"
+	"SDL2/SDL_atomic.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<stdarg.h>
+
+1556984745 d:\files\gabriel noble\compiler\mayhem\common\be_backend.h
+	"r_verts.h"
+
+1559879257 d:\files\gabriel noble\compiler\mayhem\common\r_common.h
+	"SDL2\SDL.h"
+	"GL\glew.h"
+	"../gmath/matrix.h"
+	"../containers/list.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_assert.h"
+	"SDL_atomic.h"
+	"SDL_audio.h"
+	"SDL_clipboard.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_filesystem.h"
+	"SDL_gamecontroller.h"
+	"SDL_haptic.h"
+	"SDL_hints.h"
+	"SDL_joystick.h"
+	"SDL_loadso.h"
+	"SDL_log.h"
+	"SDL_messagebox.h"
+	"SDL_mutex.h"
+	"SDL_power.h"
+	"SDL_render.h"
+	"SDL_rwops.h"
+	"SDL_sensor.h"
+	"SDL_shape.h"
+	"SDL_system.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_version.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<wchar.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<math.h>
+	<float.h>
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	<sal.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_config.h
+	"SDL_platform.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_platform.h
+	"AvailabilityMacros.h"
+	"TargetConditionals.h"
+	<winapifamily.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\begin_code.h
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\close_code.h
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_assert.h
+	"SDL_config.h"
+	"begin_code.h"
+	<signal.h>
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_atomic.h
+	"SDL_stdinc.h"
+	"SDL_platform.h"
+	"begin_code.h"
+	<mbarrier.h>
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_atomic.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	<process.h>
+	<stdlib.h>
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_clipboard.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	<intrin.h>
+	<intrin.h>
+	<altivec.h>
+	<arm_neon.h>
+	<mm3dnow.h>
+	<immintrin.h>
+	<mmintrin.h>
+	<xmmintrin.h>
+	<emmintrin.h>
+	<pmmintrin.h>
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_quit.h"
+	"SDL_gesture.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_pixels.h
+	"SDL_stdinc.h"
+	"SDL_endian.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_rect.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_pixels.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_surface.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_blendmode.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_blendmode.h
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keycode.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_keycode.h
+	"SDL_stdinc.h"
+	"SDL_scancode.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_scancode.h
+	"SDL_stdinc.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_gamecontroller.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_gesture.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_touch.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_filesystem.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_haptic.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_hints.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_log.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_messagebox.h
+	"SDL_stdinc.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_power.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_render.h
+	"SDL_stdinc.h"
+	"SDL_rect.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_sensor.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_shape.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_system.h
+	"SDL_stdinc.h"
+	"SDL_keyboard.h"
+	"SDL_render.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540998544 d:\files\gabriel noble\compiler\mayhem\common\libs\sdl\include\sdl2\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1501547140 d:\files\gabriel noble\compiler\mayhem\common\libs\glew\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1556986176 d:\files\gabriel noble\compiler\mayhem\common\r_frame.h
+	"r_common.h"
+	"r_view.h"
+
+1559879261 d:\files\gabriel noble\compiler\mayhem\common\r_view.h
+	"r_common.h"
+	"../gmath/matrix.h"
+
+1556985704 d:\files\gabriel noble\compiler\mayhem\common\r_shader.h
+
+1559879264 d:\files\gabriel noble\compiler\mayhem\common\r_light.h
+	"r_common.h"
+	"../gmath/vector.h"
+
+1559879254 d:\files\gabriel noble\compiler\mayhem\common\input.h
+	"../gmath/vector.h"
+
+1559873105 source:d:\files\gabriel noble\compiler\mayhem\common\mdl.c
+	"mdl.h"
+	"../containers/stack_list.h"
+	<stdio.h>
+
+1559873111 source:d:\files\gabriel noble\compiler\mayhem\common\physics.c
+	"physics.h"
+	"phy_col.h"
+	"../containers/stack_list.h"
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<float.h>
+	"r_common.h"
+	"r_view.h"
+	"r_portal.h"
+	"player.h"
+	<stdio.h>
+
+1559879274 d:\files\gabriel noble\compiler\mayhem\common\r_portal.h
+	"r_view.h"
+	"r_verts.h"
+	"../gmath/vector.h"
+	"../gmath/matrix.h"
+	"physics.h"
+
+1559879267 d:\files\gabriel noble\compiler\mayhem\common\player.h
+	"../gmath/vector.h"
+	"physics.h"
+	"r_view.h"
+	"pla_common.h"
+
+1559789144 d:\files\gabriel noble\compiler\mayhem\common\pla_common.h
+	"ent.h"
+
+1559878341 source:d:\files\gabriel noble\compiler\mayhem\common\r_main.c
+	"r_main.h"
+	"r_surf.h"
+	"r_shader.h"
+	"r_light.h"
+	<stdio.h>
+	<stdlib.h>
+
+1553915822 d:\files\gabriel noble\compiler\mayhem\common\r_main.h
+	"r_common.h"
+	"r_view.h"
+	"r_frame.h"
+	"r_verts.h"
+	"r_shader.h"
+
+1559879282 d:\files\gabriel noble\compiler\mayhem\common\r_surf.h
+	"../gmath/vector.h"
+
+1559878998 source:d:\files\gabriel noble\compiler\mayhem\common\fe_frontend.c
+	"fe_frontend.h"
+	"be_backend.h"
+	"input.h"
+	"r_view.h"
+	"r_verts.h"
+	"r_common.h"
+	"r_shader.h"
+	"r_portal.h"
+	"r_light.h"
+	"r_vis.h"
+	"s_aux.h"
+	"w_main.h"
+	"player.h"
+	"physics.h"
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
+1553983044 d:\files\gabriel noble\compiler\mayhem\common\fe_frontend.h
+
+1559871335 d:\files\gabriel noble\compiler\mayhem\common\r_vis.h
+	"r_common.h"
+
+1559879285 d:\files\gabriel noble\compiler\mayhem\common\s_aux.h
+	<stdio.h>
+	"../gmath/vector.h"
+	"../containers/stack_list.h"
+	"r_common.h"
+	"r_surf.h"
+
+1559879288 d:\files\gabriel noble\compiler\mayhem\common\w_main.h
+	"r_common.h"
+	"../gmath/vector.h"
+	"physics.h"
+
+1559014917 source:d:\files\gabriel noble\compiler\mayhem\common\main.c
+	"main.h"
+	<stdio.h>
+	<math.h>
+	<stdarg.h>
+
+1559879270 d:\files\gabriel noble\compiler\mayhem\common\main.h
+	"SDL2\SDL.h"
+	"../gmath/vector.h"
+	"../gmath/matrix.h"
+	"r_main.h"
+	"w_main.h"
+	"input.h"
+	"player.h"
+	"physics.h"
+	"s_aux.h"
+	"be_backend.h"
+	"fe_frontend.h"
+	"ent.h"
+
+1556988803 source:d:\files\gabriel noble\compiler\mayhem\common\r_raytrace.c
+	"r_raytrace.h"
+	"r_common.h"
+	"GL/glew.h"
+	<stdio.h>
+	<stdlib.h>
+
+1556985178 d:\files\gabriel noble\compiler\mayhem\common\r_raytrace.h
+	"vector.h"
+
+1559873121 source:d:\files\gabriel noble\compiler\mayhem\common\input.c
+	"input.h"
+	"SDL2\SDL.h"
+	"SDL2\SDL_mouse.h"
+	"r_common.h"
+	"../containers/list.h"
+
+1559873127 source:d:\files\gabriel noble\compiler\mayhem\common\player.c
+	"player.h"
+	"../containers/stack_list.h"
+	"input.h"
+	"r_view.h"
+	<stdlib.h>
+	<string.h>
+	<math.h>
+
+1558895394 source:d:\files\gabriel noble\compiler\mayhem\common\r_view.c
+	"r_view.h"
+	<math.h>
+	<stdlib.h>
+
+1559873164 source:d:\files\gabriel noble\compiler\mayhem\common\r_frame.c
+	"r_frame.h"
+	"r_verts.h"
+	"r_shader.h"
+	"r_surf.h"
+	"matrix.h"
+	"physics.h"
+	"../containers/stack_list.h"
+	<stdlib.h>
+	<stdio.h>
+
+1559873170 source:d:\files\gabriel noble\compiler\mayhem\common\r_light.c
+	"r_light.h"
+	"../containers/stack_list.h"
+	"GL/glew.h"
+	<stdio.h>
+
+1559873172 source:d:\files\gabriel noble\compiler\mayhem\common\r_portal.c
+	"r_portal.h"
+	"../containers/stack_list.h"
+	"r_verts.h"
+	"be_backend.h"
+	<stdio.h>
+
+1559873176 source:d:\files\gabriel noble\compiler\mayhem\common\r_shader.c
+	"r_shader.h"
+	"r_common.h"
+	"r_verts.h"
+	"../containers/stack_list.h"
+	"s_aux.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
+1555180165 source:d:\files\gabriel noble\compiler\mayhem\common\s_aux.c
+	"s_aux.h"
+	<stdlib.h>
+	<string.h>
+
+1559878761 source:d:\files\gabriel noble\compiler\mayhem\common\r_surf.c
+	"r_surf.h"
+	"r_shader.h"
+	"../containers/stack_list.h"
+	"../containers/list.h"
+	"r_common.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1559873187 source:d:\files\gabriel noble\compiler\mayhem\common\r_verts.c
+	"r_verts.h"
+	"../containers/stack_list.h"
+	"../containers/list.h"
+	<string.h>
+	"r_common.h"
+
+1554384560 source:d:\files\gabriel noble\compiler\mayhem\common\vector.c
+	"vector.h"
+	"matrix.h"
+	<math.h>
+
+1555178646 source:d:\files\gabriel noble\compiler\mayhem\common\w_main.c
+	"w_main.h"
+	"r_common.h"
+	"r_verts.h"
+	"s_aux.h"
+	"physics.h"
+	"be_backend.h"
+	<stdlib.h>
+	<math.h>
+	<float.h>
+
+1559873343 source:d:\files\gabriel noble\compiler\mayhem\common\r_vis.c
+	"r_vis.h"
+	"r_view.h"
+	"r_portal.h"
+	"r_light.h"
+	"../containers/list.h"
+	"be_backend.h"
+	"../containers/stack_list.h"
+	"ent.h"
+	<stdio.h>
+
+1555309013 d:\files\gabriel noble\compiler\mayhem\gmath\vector.h
+
+1556935751 d:\files\gabriel noble\compiler\mayhem\gmath\matrix.h
+	"vector.h"
+
