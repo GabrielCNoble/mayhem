@@ -1,0 +1,72 @@
+# depslib dependency file v1.0
+1560061213 source:d:\files\gabriel noble\compiler\mayhem\tools\gmycvt\main.c
+	"main.h"
+
+1560057761 d:\files\gabriel noble\compiler\mayhem\tools\gmycvt\main.h
+	<stdio.h>
+	<string.h>
+	"../../loaders/obj.h"
+	"../../loaders/gmy.h"
+
+1559966572 d:\files\gabriel noble\compiler\mayhem\loaders\obj.h
+	"../exchange/xchg.h"
+
+1560056375 d:\files\gabriel noble\compiler\mayhem\exchange\xchg.h
+	"../containers/list.h"
+	"../gmath/vector.h"
+
+1556937234 d:\files\gabriel noble\compiler\mayhem\containers\list.h
+
+1559879398 d:\files\gabriel noble\compiler\mayhem\gmath\vector.h
+
+1560061545 d:\files\gabriel noble\compiler\mayhem\loaders\gmy.h
+	"../exchange/xchg.h"
+	"../containers/list.h"
+	"../gmath/vector.h"
+
+1556937230 source:d:\files\gabriel noble\compiler\mayhem\containers\list.c
+	"list.h"
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+
+1552956336 d:\files\gabriel noble\compiler\mayhem\containers\stack_list.h
+
+1553982887 source:d:\files\gabriel noble\compiler\mayhem\containers\ring_buffer.c
+	"ring_buffer.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
+1553982195 d:\files\gabriel noble\compiler\mayhem\containers\ring_buffer.h
+
+1553385403 source:d:\files\gabriel noble\compiler\mayhem\containers\stack_list.c
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+
+1556936465 source:d:\files\gabriel noble\compiler\mayhem\gmath\matrix.c
+	"matrix.h"
+	<math.h>
+
+1556935751 d:\files\gabriel noble\compiler\mayhem\gmath\matrix.h
+	"vector.h"
+
+1559879465 source:d:\files\gabriel noble\compiler\mayhem\gmath\vector.c
+	"vector.h"
+	"matrix.h"
+	<math.h>
+
+1560061507 source:d:\files\gabriel noble\compiler\mayhem\loaders\gmy.c
+	"gmy.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1559970994 source:d:\files\gabriel noble\compiler\mayhem\loaders\obj.c
+	"obj.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+

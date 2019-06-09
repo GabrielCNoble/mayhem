@@ -47,6 +47,7 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="../containers/stack_list.h" />
+		<Unit filename="../exchange/xchg.h" />
 		<Unit filename="../gmath/matrix.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -55,6 +56,14 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="../gmath/vector.h" />
+		<Unit filename="../loaders/gmy.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../loaders/gmy.h" />
+		<Unit filename="../loaders/obj.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../loaders/obj.h" />
 		<Unit filename="be_backend.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -71,6 +80,7 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="input.h" />
+		<Unit filename="loaders/gmy.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CPP" />
 		</Unit>

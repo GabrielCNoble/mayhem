@@ -2,6 +2,8 @@
 #include "r_common.h"
 #include "r_verts.h"
 #include "s_aux.h"
+#include "../exchange/xchg.h"
+#include "../loaders/obj.h"
 #include "physics.h"
 #include "be_backend.h"
 #include <stdlib.h>
@@ -38,10 +40,13 @@ void w_Shutdown()
 void w_LoadLevel(char *file_name)
 {
     struct geometry_data_t level_data;
+    struct batch_data_t *batches;
+    struct draw_batch_t draw_batch;
+    struct material_data_t *materials;
     struct vertex_t *vertices;
     int i;
 
-    aux_LoadWavefront(file_name, &level_data);
+    obj_LoadWavefront(file_name, &level_data);
 
     //phy_BuildBvh((vec3_t *)level_data.vertices.buffer, level_data.vertices.cursor);
     w_world_collider = phy_CreateStaticCollider();
@@ -49,9 +54,15 @@ void w_LoadLevel(char *file_name)
     phy_StaticColliderBvh(w_world_collider);
 
 
+    materials = (struct material_data_t *)level_data.materials.buffer;
+    for(i = 0; i < level_data.materials.cursor; i++)
+    {
+        r_CreateMaterial(materials[i].base, -1, -1, materials[i].name);
+    }
+
+
     vertices = (struct vertex_t *)calloc(sizeof(vertex_t), level_data.vertices.cursor);
 
-    w_world_batches.cursor = 0;
 
     for(i = 0; i < level_data.vertices.cursor; i++)
     {
@@ -60,9 +71,15 @@ void w_LoadLevel(char *file_name)
         vertices[i].tex_coord = vec2_t(0.0, 0.0);
     }
 
-    for(i = 0; i < level_data.draw_batches.cursor ;i++)
+
+    w_world_batches.cursor = 0;
+    batches = (struct batch_data_t *)level_data.batches.buffer;
+    for(i = 0; i < level_data.batches.cursor ;i++)
     {
-        w_world_batches.add(level_data.draw_batches.get(i));
+        draw_batch.material = r_GetMaterialHandle(batches[i].material);
+        draw_batch.start = batches[i].start;
+        draw_batch.count = batches[i].count;
+        w_world_batches.add(&draw_batch);
     }
 
     w_world_verts = r_AllocVerts(sizeof(struct vertex_t) * level_data.vertices.cursor, sizeof(struct vertex_t));
@@ -71,7 +88,7 @@ void w_LoadLevel(char *file_name)
     w_world_indices_buffer = (unsigned int *)calloc(sizeof(unsigned int ), level_data.vertices.cursor);
     w_world_draw_triangles = (struct draw_triangle_t *)calloc(sizeof(struct draw_triangle_t ), level_data.vertices.cursor);
 
-    w_world_bvh = w_BuildBvh((struct draw_batch_t *)level_data.draw_batches.buffer, level_data.draw_batches.cursor, (vec3_t *)level_data.vertices.buffer, w_world_draw_triangles);
+    w_world_bvh = w_BuildBvh((struct draw_batch_t *)w_world_batches.buffer, w_world_batches.cursor, (vec3_t *)level_data.vertices.buffer, w_world_draw_triangles);
 
     be_MemcpyTo(w_world_verts, vertices, sizeof(struct vertex_t) * level_data.vertices.cursor);
 }

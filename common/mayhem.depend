@@ -1834,10 +1834,11 @@
 1559871335 d:\files\gabriel noble\compiler\mayhem\common\r_vis.h
 	"r_common.h"
 
-1559879285 d:\files\gabriel noble\compiler\mayhem\common\s_aux.h
+1559966166 d:\files\gabriel noble\compiler\mayhem\common\s_aux.h
 	<stdio.h>
 	"../gmath/vector.h"
 	"../containers/stack_list.h"
+	"../exchange/xchg.h"
 	"r_common.h"
 	"r_surf.h"
 
@@ -1873,8 +1874,8 @@
 	<stdio.h>
 	<stdlib.h>
 
-1556985178 d:\files\gabriel noble\compiler\mayhem\common\r_raytrace.h
-	"vector.h"
+1559879291 d:\files\gabriel noble\compiler\mayhem\common\r_raytrace.h
+	"../gmath/vector.h"
 
 1559873121 source:d:\files\gabriel noble\compiler\mayhem\common\input.c
 	"input.h"
@@ -1897,12 +1898,12 @@
 	<math.h>
 	<stdlib.h>
 
-1559873164 source:d:\files\gabriel noble\compiler\mayhem\common\r_frame.c
+1559879294 source:d:\files\gabriel noble\compiler\mayhem\common\r_frame.c
 	"r_frame.h"
 	"r_verts.h"
 	"r_shader.h"
 	"r_surf.h"
-	"matrix.h"
+	"../gmath/matrix.h"
 	"physics.h"
 	"../containers/stack_list.h"
 	<stdlib.h>
@@ -1931,7 +1932,7 @@
 	<string.h>
 	<stdlib.h>
 
-1555180165 source:d:\files\gabriel noble\compiler\mayhem\common\s_aux.c
+1559966161 source:d:\files\gabriel noble\compiler\mayhem\common\s_aux.c
 	"s_aux.h"
 	<stdlib.h>
 	<string.h>
@@ -1958,11 +1959,13 @@
 	"matrix.h"
 	<math.h>
 
-1555178646 source:d:\files\gabriel noble\compiler\mayhem\common\w_main.c
+1559970736 source:d:\files\gabriel noble\compiler\mayhem\common\w_main.c
 	"w_main.h"
 	"r_common.h"
 	"r_verts.h"
 	"s_aux.h"
+	"../exchange/xchg.h"
+	"../loaders/obj.h"
 	"physics.h"
 	"be_backend.h"
 	<stdlib.h>
@@ -1980,8 +1983,30 @@
 	"ent.h"
 	<stdio.h>
 
-1555309013 d:\files\gabriel noble\compiler\mayhem\gmath\vector.h
+1559879398 d:\files\gabriel noble\compiler\mayhem\gmath\vector.h
 
 1556935751 d:\files\gabriel noble\compiler\mayhem\gmath\matrix.h
 	"vector.h"
+
+1556936465 source:d:\files\gabriel noble\compiler\mayhem\gmath\matrix.c
+	"matrix.h"
+	<math.h>
+
+1559879465 source:d:\files\gabriel noble\compiler\mayhem\gmath\vector.c
+	"vector.h"
+	"matrix.h"
+	<math.h>
+
+1560056375 d:\files\gabriel noble\compiler\mayhem\exchange\xchg.h
+	"../containers/list.h"
+	"../gmath/vector.h"
+
+1559970994 source:d:\files\gabriel noble\compiler\mayhem\loaders\obj.c
+	"obj.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
+1559966572 d:\files\gabriel noble\compiler\mayhem\loaders\obj.h
+	"../exchange/xchg.h"
 
