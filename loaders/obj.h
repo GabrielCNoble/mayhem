@@ -8,7 +8,7 @@ void obj_LoadWavefront(char *file_name, struct geometry_data_t *geometry_data);
 
 void obj_LoadWavefrontMtl(char *file_name, struct geometry_data_t *geometry_data);
 
-struct material_data_t *obj_GetMaterial(char *material_name, struct geometry_data_t *geometry_data);
+struct batch_data_t *obj_GetBatch(char *material_name, struct geometry_data_t *geometry_data);
 
 
 #endif // OBJ_H

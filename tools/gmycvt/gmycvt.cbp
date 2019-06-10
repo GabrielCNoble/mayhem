@@ -13,20 +13,41 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-std=gnu++11" />
 				</Compiler>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="../../../loaders/gmy.c">
-			<Option compilerVar="CC" />
+		<Unit filename="../../containers/list.c">
+			<Option compilerVar="CPP" />
 		</Unit>
-		<Unit filename="../../../loaders/gmy.h" />
-		<Unit filename="../../../loaders/obj.c">
-			<Option compilerVar="CC" />
+		<Unit filename="../../containers/list.h" />
+		<Unit filename="../../containers/ring_buffer.c">
+			<Option compilerVar="CPP" />
 		</Unit>
-		<Unit filename="../../../loaders/obj.h" />
+		<Unit filename="../../containers/ring_buffer.h" />
+		<Unit filename="../../containers/stack_list.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../../containers/stack_list.h" />
+		<Unit filename="../../gmath/matrix.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../../gmath/matrix.h" />
+		<Unit filename="../../gmath/vector.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../../gmath/vector.h" />
+		<Unit filename="../../loaders/gmy.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../../loaders/gmy.h" />
+		<Unit filename="../../loaders/obj.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../../loaders/obj.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CPP" />
 		</Unit>

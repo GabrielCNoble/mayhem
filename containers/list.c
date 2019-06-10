@@ -80,6 +80,24 @@ int list_t::add(void *data)
     return index;
 }
 
+void list_t::add_multiple(void *data, int count)
+{
+    int cursor = this->cursor + count;
+
+    if(cursor >= this->size)
+    {
+        cursor -= this->size;
+        this->resize(this->size + cursor);
+    }
+
+    if(data)
+    {
+        memcpy((char *)this->buffer + this->cursor * this->elem_size, data, this->elem_size * count);
+    }
+
+    this->cursor += count;
+}
+
 
 void list_t::remove(unsigned int index)
 {

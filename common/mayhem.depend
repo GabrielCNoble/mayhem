@@ -1959,7 +1959,7 @@
 	"matrix.h"
 	<math.h>
 
-1559970736 source:d:\files\gabriel noble\compiler\mayhem\common\w_main.c
+1560144023 source:d:\files\gabriel noble\compiler\mayhem\common\w_main.c
 	"w_main.h"
 	"r_common.h"
 	"r_verts.h"
@@ -1997,16 +1997,27 @@
 	"matrix.h"
 	<math.h>
 
-1560056375 d:\files\gabriel noble\compiler\mayhem\exchange\xchg.h
+1560128008 d:\files\gabriel noble\compiler\mayhem\exchange\xchg.h
 	"../containers/list.h"
 	"../gmath/vector.h"
 
-1559970994 source:d:\files\gabriel noble\compiler\mayhem\loaders\obj.c
+1560128016 source:d:\files\gabriel noble\compiler\mayhem\loaders\obj.c
 	"obj.h"
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
 
-1559966572 d:\files\gabriel noble\compiler\mayhem\loaders\obj.h
+1560126158 d:\files\gabriel noble\compiler\mayhem\loaders\obj.h
 	"../exchange/xchg.h"
+
+1560143960 source:d:\files\gabriel noble\compiler\mayhem\loaders\gmy.c
+	"gmy.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1560127218 d:\files\gabriel noble\compiler\mayhem\loaders\gmy.h
+	"../exchange/xchg.h"
+	"../containers/list.h"
+	"../gmath/vector.h"
 

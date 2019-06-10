@@ -79,6 +79,15 @@ int main(int argc, char *argv[])
 
         obj_LoadWavefront(input_file, &geometry_data);
         gmy_SaveGmy(output_file, &geometry_data);
+
+        struct geometry_data_t loaded;
+        gmy_LoadGmy(output_file, &loaded);
+
+        printf("vertices: %d\n", loaded.vertices.cursor);
+        printf("normals: %s\n", loaded.normals.cursor ? "yes" : "no");
+        printf("tangets: %s\n", loaded.tangents.cursor ? "yes" : "no");
+        printf("tex coords: %s\n", loaded.tex_coords.cursor ? "yes" : "no");
+        printf("batches: %d\n", loaded.batches.cursor);
     }
 }
 

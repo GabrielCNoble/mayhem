@@ -25,6 +25,8 @@ class list_t
 
     int add(void *data);
 
+    void add_multiple(void *data, int count);
+
     void remove(unsigned int index);
 
     void remove_move(unsigned int index);

@@ -54,11 +54,11 @@ void w_LoadLevel(char *file_name)
     phy_StaticColliderBvh(w_world_collider);
 
 
-    materials = (struct material_data_t *)level_data.materials.buffer;
-    for(i = 0; i < level_data.materials.cursor; i++)
-    {
-        r_CreateMaterial(materials[i].base, -1, -1, materials[i].name);
-    }
+//    materials = (struct material_data_t *)level_data.materials.buffer;
+//    for(i = 0; i < level_data.materials.cursor; i++)
+//    {
+//        r_CreateMaterial(materials[i].base, -1, -1, materials[i].name);
+//    }
 
 
     vertices = (struct vertex_t *)calloc(sizeof(vertex_t), level_data.vertices.cursor);
@@ -74,9 +74,9 @@ void w_LoadLevel(char *file_name)
 
     w_world_batches.cursor = 0;
     batches = (struct batch_data_t *)level_data.batches.buffer;
-    for(i = 0; i < level_data.batches.cursor ;i++)
+    for(i = 0; i < level_data.batches.cursor; i++)
     {
-        draw_batch.material = r_GetMaterialHandle(batches[i].material);
+        draw_batch.material = r_CreateMaterial(batches[i].base_color, -1, -1, batches[i].material);
         draw_batch.start = batches[i].start;
         draw_batch.count = batches[i].count;
         w_world_batches.add(&draw_batch);

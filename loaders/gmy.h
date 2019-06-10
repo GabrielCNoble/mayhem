@@ -25,12 +25,13 @@ static char gmy_batch_tag[] = "[gmy_batch]";
 struct gmy_batch_t
 {
     char tag[(sizeof(gmy_batch_tag) + 3) & (~3)];
-    char material[64];
-    char diffuse_texture[64];
-    char normal_texture[64];
-    vec4_t base;
-
-    unsigned int vertice_count;
+    struct batch_data_t batch;
+//    char material[64];
+//    char diffuse_texture[64];
+//    char normal_texture[64];
+//    vec4_t base;
+//
+//    unsigned int vertice_count;
 };
 
 
