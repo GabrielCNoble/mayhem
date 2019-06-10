@@ -10,6 +10,7 @@ void gmy_LoadGmy(char *file_name, struct geometry_data_t *geometry_data)
     unsigned int file_size;
     unsigned char *in;
     struct gmy_start_t *start;
+    struct gmy_end_t *end;
     struct gmy_batch_t *gmy_batch;
 //    struct material_data_t material;
     struct batch_data_t batch;

@@ -79,7 +79,7 @@ int fe_Frontend(void *data)
 
     #elif defined LEVEL_7
 
-    w_LoadLevel("../models/test7.obj");
+    w_LoadLevel("../models/test7.gmy");
 
 //    int portal0 = r_CreatePortal(vec3_t(0.0, 4.6, -3.0), vec2_t(2.5, 2.5));
 //    int portal1 = r_CreatePortal(vec3_t(0.0, -11.0, 5.0), vec2_t(2.5, 2.5));

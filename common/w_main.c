@@ -4,6 +4,7 @@
 #include "s_aux.h"
 #include "../exchange/xchg.h"
 #include "../loaders/obj.h"
+#include "../loaders/gmy.h"
 #include "physics.h"
 #include "be_backend.h"
 #include <stdlib.h>
@@ -46,7 +47,8 @@ void w_LoadLevel(char *file_name)
     struct vertex_t *vertices;
     int i;
 
-    obj_LoadWavefront(file_name, &level_data);
+//    obj_LoadWavefront(file_name, &level_data);
+    gmy_LoadGmy(file_name, &level_data);
 
     //phy_BuildBvh((vec3_t *)level_data.vertices.buffer, level_data.vertices.cursor);
     w_world_collider = phy_CreateStaticCollider();

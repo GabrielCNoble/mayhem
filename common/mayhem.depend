@@ -1300,14 +1300,14 @@
 	"stack_list.h"
 	<stdio.h>
 
-1556937230 source:d:\files\gabriel noble\compiler\mayhem\containers\list.c
+1560145219 source:d:\files\gabriel noble\compiler\mayhem\containers\list.c
 	"list.h"
 	"stack_list.h"
 	<stdlib.h>
 	<string.h>
 	<stdio.h>
 
-1556937234 d:\files\gabriel noble\compiler\mayhem\containers\list.h
+1560145328 d:\files\gabriel noble\compiler\mayhem\containers\list.h
 
 1552956336 d:\files\gabriel noble\compiler\mayhem\containers\stack_list.h
 
@@ -1810,7 +1810,7 @@
 1559879282 d:\files\gabriel noble\compiler\mayhem\common\r_surf.h
 	"../gmath/vector.h"
 
-1559878998 source:d:\files\gabriel noble\compiler\mayhem\common\fe_frontend.c
+1560145906 source:d:\files\gabriel noble\compiler\mayhem\common\fe_frontend.c
 	"fe_frontend.h"
 	"be_backend.h"
 	"input.h"
@@ -1959,13 +1959,14 @@
 	"matrix.h"
 	<math.h>
 
-1560144023 source:d:\files\gabriel noble\compiler\mayhem\common\w_main.c
+1560145948 source:d:\files\gabriel noble\compiler\mayhem\common\w_main.c
 	"w_main.h"
 	"r_common.h"
 	"r_verts.h"
 	"s_aux.h"
 	"../exchange/xchg.h"
 	"../loaders/obj.h"
+	"../loaders/gmy.h"
 	"physics.h"
 	"be_backend.h"
 	<stdlib.h>
@@ -2010,7 +2011,7 @@
 1560126158 d:\files\gabriel noble\compiler\mayhem\loaders\obj.h
 	"../exchange/xchg.h"
 
-1560143960 source:d:\files\gabriel noble\compiler\mayhem\loaders\gmy.c
+1560145932 source:d:\files\gabriel noble\compiler\mayhem\loaders\gmy.c
 	"gmy.h"
 	<stdio.h>
 	<stdlib.h>
