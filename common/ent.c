@@ -242,7 +242,17 @@ void ent_AddPhysicsComponent(struct entity_handle_t entity_handle, int collider_
     player_collider->entity_index = entity_handle.index;
 }
 
+void ent_AddModelComponent(struct entity_handle_t entity_handle, struct model_handle_t model_handle)
+{
+    struct model_component_t *model_component;
+    struct entity_t *entity;
 
+    entity = ent_GetEntityPointer(entity_handle);
+
+    ent_AddComponent(entity_handle, ENT_COMPONENT_TYPE_MODEL);
+    model_component = (struct model_component_t *)ent_GetComponentPointer(entity->components[ENT_COMPONENT_TYPE_MODEL]);
+    model_component->model = model_handle;
+}
 
 
 

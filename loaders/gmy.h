@@ -35,10 +35,13 @@ struct gmy_batch_t
 };
 
 
-
 void gmy_LoadGmy(char *file_name, struct geometry_data_t *geometry_data);
 
+void gmy_DeserializeGmy(void **buffer, struct geometry_data_t *geometry_data, int advance_pointer);
+
 void gmy_SaveGmy(char *file_name, struct geometry_data_t *geometry_data);
+
+void gmy_SerializeGmy(void **buffer, unsigned int *buffer_size, struct geometry_data_t *geometry_data);
 
 
 #endif // GMY_H

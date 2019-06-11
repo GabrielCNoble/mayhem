@@ -18,7 +18,7 @@ struct vertex_t
 {
     vec3_t position;
     vec3_t normal;
-    vec3_t tanget;
+    vec3_t tangent;
     vec2_t tex_coord;
 };
 

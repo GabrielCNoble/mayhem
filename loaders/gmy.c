@@ -8,20 +8,6 @@ void gmy_LoadGmy(char *file_name, struct geometry_data_t *geometry_data)
     FILE *file;
     void *file_buffer;
     unsigned int file_size;
-    unsigned char *in;
-    struct gmy_start_t *start;
-    struct gmy_end_t *end;
-    struct gmy_batch_t *gmy_batch;
-//    struct material_data_t material;
-    struct batch_data_t batch;
-    int i;
-
-    geometry_data->batches.init(sizeof(struct batch_data_t), 32);
-//    geometry_data->materials.init(sizeof(struct material_data_t), 32);
-    geometry_data->vertices.init(sizeof(vec3_t), 32);
-    geometry_data->normals.init(sizeof(vec3_t), 32);
-    geometry_data->tangents.init(sizeof(vec3_t), 32);
-    geometry_data->tex_coords.init(sizeof(vec2_t), 32);
 
     file = fopen(file_name, "rb");
 
@@ -36,7 +22,32 @@ void gmy_LoadGmy(char *file_name, struct geometry_data_t *geometry_data)
         fread(file_buffer, file_size, 1, file);
         fclose(file);
 
-        in = (unsigned char *)file_buffer;
+        gmy_DeserializeGmy(&file_buffer, geometry_data, 0);
+
+        free(file_buffer);
+    }
+}
+
+
+void gmy_DeserializeGmy(void **buffer, struct geometry_data_t *geometry_data, int advance_pointer)
+{
+    unsigned char *in;
+    struct gmy_start_t *start;
+    struct gmy_end_t *end;
+    struct gmy_batch_t *gmy_batch;
+//    struct material_data_t material;
+    struct batch_data_t batch;
+    int i;
+
+    geometry_data->batches.init(sizeof(struct batch_data_t), 32);
+    geometry_data->vertices.init(sizeof(vec3_t), 32);
+    geometry_data->normals.init(sizeof(vec3_t), 32);
+    geometry_data->tangents.init(sizeof(vec3_t), 32);
+    geometry_data->tex_coords.init(sizeof(vec2_t), 32);
+
+    if(buffer)
+    {
+        in = *(unsigned char **)buffer;
 
         start = (struct gmy_start_t *)in;
         in += sizeof(struct gmy_start_t);
@@ -70,7 +81,10 @@ void gmy_LoadGmy(char *file_name, struct geometry_data_t *geometry_data)
         end = (struct gmy_end_t *)in;
         in += sizeof(struct gmy_end_t );
 
-        free(file_buffer);
+        if(advance_pointer)
+        {
+            *buffer = in;
+        }
     }
 }
 
@@ -79,14 +93,54 @@ void gmy_SaveGmy(char *file_name, struct geometry_data_t *geometry_data)
     unsigned int file_size;
     void *file_buffer;
     FILE *file;
+    char output_name[512];
+
+    int i;
+    int j;
+
+    gmy_SerializeGmy(&file_buffer, &file_size, geometry_data);
+
+
+    /* make sure the output file name has the ".gmy" ext... */
+    for(i = strlen(file_name); i > 0; i--)
+    {
+        if(file_name[i] == '.')
+        {
+            break;
+        }
+    }
+
+    if(!i)
+    {
+        i = strlen(file_name);
+    }
+
+    output_name[i] = '\0';
+    i--;
+
+    for(; i >= 0; i--)
+    {
+        output_name[i] = file_name[i];
+    }
+
+    strcat(output_name, ".gmy");
+
+    file = fopen(output_name, "wb");
+    fwrite(file_buffer, file_size, 1, file);
+    fclose(file);
+}
+
+
+void gmy_SerializeGmy(void **buffer, unsigned int *buffer_size, struct geometry_data_t *geometry_data)
+{
+    unsigned int file_size;
+    void *file_buffer;
     unsigned char *out;
 
     struct gmy_start_t *start;
     struct gmy_end_t *end;
     struct gmy_batch_t *gmy_batch;
     struct batch_data_t *batches;
-//    struct material_data_t *materials;
-    char output_name[512];
 
     int i;
     int j;
@@ -149,34 +203,8 @@ void gmy_SaveGmy(char *file_name, struct geometry_data_t *geometry_data)
     out += sizeof(struct gmy_end_t);
     strcpy(end->tag, gmy_end_tag);
 
-
-    /* make sure the output file name has the ".gmy" ext... */
-    for(i = strlen(file_name); i > 0; i--)
-    {
-        if(file_name[i] == '.')
-        {
-            break;
-        }
-    }
-
-    if(!i)
-    {
-        i = strlen(file_name);
-    }
-
-    output_name[i] = '\0';
-    i--;
-
-    for(; i >= 0; i--)
-    {
-        output_name[i] = file_name[i];
-    }
-
-    strcat(output_name, ".gmy");
-
-    file = fopen(output_name, "wb");
-    fwrite(file_buffer, file_size, 1, file);
-    fclose(file);
+    *buffer = file_buffer;
+    *buffer_size = file_size;
 }
 
 

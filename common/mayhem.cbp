@@ -80,7 +80,6 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="input.h" />
-		<Unit filename="loaders/gmy.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CPP" />
 		</Unit>

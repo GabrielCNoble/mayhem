@@ -117,8 +117,12 @@ void r_VisibleEntitiesOnView(struct view_t *view, struct draw_command_buffer_t *
     struct entity_t *entities;
     struct entity_t *entity;
     struct model_component_t *model_component;
+    struct transform_component_t *transform_component;
+    struct draw_command_t draw_command;
     int i;
     int c;
+
+//    struct view_t *view = r_GetActiveView();
 
 
     ent_GetEntityListPointer(&entities, &c, 0);
@@ -138,8 +142,9 @@ void r_VisibleEntitiesOnView(struct view_t *view, struct draw_command_buffer_t *
         }
 
         model_component = (struct model_component_t *)ent_GetComponentPointer(entity->components[ENT_COMPONENT_TYPE_MODEL]);
+        transform_component = (struct transform_component_t *)ent_GetComponentPointer(entity->components[ENT_COMPONENT_TYPE_TRANSFORM]);
 
-
+//        draw_command.model_view_projection_matrix = transform_component->
     }
 }
 

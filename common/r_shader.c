@@ -313,6 +313,7 @@ void r_SetShader(int shader_handle)
                 glEnableVertexAttribArray(shader->vertex_normal);
                 glVertexAttribPointer(shader->vertex_normal, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->normal));
             }
+
         }
     }
     else

@@ -108,6 +108,8 @@ struct base_component_t *ent_GetComponentPointer(struct component_handle_t compo
 
 void ent_AddPhysicsComponent(struct entity_handle_t entity_handle, int collider_type);
 
+void ent_AddModelComponent(struct entity_handle_t entity_handle, struct model_handle_t model_handle);
+
 
 
 
