@@ -14,6 +14,7 @@
 #include "s_aux.h"
 #include "be_backend.h"
 #include "fe_frontend.h"
+#include "res.h"
 #include "ent.h"
 
 

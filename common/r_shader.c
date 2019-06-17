@@ -23,6 +23,7 @@ void r_InitShader()
     r_default_uniform_names[r_ViewModelMatrix] = STRFY(r_ViewModelMatrix);
     r_default_uniform_names[r_BaseColor] = STRFY(r_BaseColor);
     r_default_uniform_names[r_NearPlane] = STRFY(r_NearPlane);
+    r_default_uniform_names[r_MaterialFlags] = STRFY(r_MaterialFlags);
     //r_default_uniform_names[r_LightCount] = STRFY(r_LightCount);
     r_default_uniform_names[r_TextureSampler0] = STRFY(r_TextureSampler0);
     r_default_uniform_names[r_TextureSampler1] = STRFY(r_TextureSampler1);
@@ -207,6 +208,8 @@ int r_CompileShaderSource(int shader_handle, char *source)
 
     shader->vertex_position = glGetAttribLocation(shader->program, "r_VertexPosition");
     shader->vertex_normal = glGetAttribLocation(shader->program, "r_VertexNormal");
+    shader->vertex_tangent = glGetAttribLocation(shader->program, "r_VertexTangent");
+    shader->vertex_tex_coords = glGetAttribLocation(shader->program, "r_VertexTexCoords");
 
     for(i = 0; i < r_LAST_UNIFORM; i++)
     {
@@ -314,6 +317,12 @@ void r_SetShader(int shader_handle)
                 glVertexAttribPointer(shader->vertex_normal, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->normal));
             }
 
+            if(shader->vertex_tex_coords > -1)
+            {
+                glEnableVertexAttribArray(shader->vertex_tex_coords);
+                glVertexAttribPointer(shader->vertex_tex_coords, 2, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->tex_coord));
+            }
+
         }
     }
     else
@@ -355,11 +364,31 @@ void r_DefaultUniform4fv(int uniform, float *value)
     }
 }
 
+void r_DefaultUniform1i(int uniform, int value)
+{
+    struct shader_t *shader;
+
+    shader = r_GetShaderPointer(r_renderer.active_shader);
+
+    if(shader)
+    {
+        r_Uniform1i(shader->default_uniforms + uniform, value);
+    }
+}
+
 void r_Uniform4fv(struct uniform_t *uniform, float *value)
 {
     if(uniform)
     {
         glUniform4fv(uniform->location, 1, value);
+    }
+}
+
+void r_Uniform1i(struct uniform_t *uniform, int value)
+{
+    if(uniform)
+    {
+        glUniform1i(uniform->location, value);
     }
 }
 

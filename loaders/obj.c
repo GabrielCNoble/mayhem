@@ -1,8 +1,11 @@
 
 #include "obj.h"
+#include "../utils/file.h"
+#include "../utils/path.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 
 
 struct face_t
@@ -44,7 +47,7 @@ void obj_LoadWavefront(char *file_name,  struct geometry_data_t *geometry_data)
     int j = 0;
     int k = 0;
     char *file_buffer;
-    unsigned long file_size;
+    long file_size;
     vec4_t vec_attrib;
     int attrib_size;
     FILE *file;
@@ -54,22 +57,17 @@ void obj_LoadWavefront(char *file_name,  struct geometry_data_t *geometry_data)
     struct batch_data_t *current_batch;
     int value_string_index;
     char value_string[128];
+    char file_path[PATH_MAX];
+    char material_path[PATH_MAX];
 
     file = fopen(file_name, "rb");
 
     if(file)
     {
-//        file_size = aux_FileSize(file);
-//        file_buffer = (char *)aux_ReadFile(file);
-//        fclose(file);
-
-        fseek(file, 0, SEEK_END);
-        file_size = ftell(file);
-        rewind(file);
-        file_buffer = (char *)calloc(file_size + 1, 1);
-        fread(file_buffer, file_size, 1, file);
+        file_ReadFile(file, (void **)&file_buffer, &file_size);
         fclose(file);
-        file_buffer[file_size] = '\0';
+
+        strcpy(file_path, path_GetFilePath(file_name));
 
         while(i < file_size)
         {
@@ -260,7 +258,9 @@ void obj_LoadWavefront(char *file_name,  struct geometry_data_t *geometry_data)
 
                         value_string[value_string_index] = '\0';
 
-                        obj_LoadWavefrontMtl(value_string, geometry_data);
+                        strcpy(material_path, path_AppendPathSegment(file_path, value_string));
+//                        printf("load material %s\n", material_path);
+                        obj_LoadWavefrontMtl(material_path, geometry_data);
                     }
                     else
                     {
@@ -315,7 +315,7 @@ void obj_LoadWavefrontMtl(char *file_name, struct geometry_data_t *geometry_data
     int i = 0;
     int j;
     char *file_buffer;
-    unsigned long file_size;
+    long file_size;
 //    struct material_data_t *current_material = NULL;
     struct batch_data_t *current_batch = NULL;
     int value_str_index;
@@ -323,6 +323,8 @@ void obj_LoadWavefrontMtl(char *file_name, struct geometry_data_t *geometry_data
     char value_str[64];
     vec4_t color;
     FILE *file;
+
+    int texture_type;
 
     file = fopen(file_name, "rb");
 
@@ -332,13 +334,16 @@ void obj_LoadWavefrontMtl(char *file_name, struct geometry_data_t *geometry_data
 //        file_size = aux_FileSize(file);
 //        fclose(file);
 
-        fseek(file, 0, SEEK_END);
-        file_size = ftell(file);
-        rewind(file);
-        file_buffer = (char *)calloc(file_size + 1, 1);
-        fread(file_buffer, file_size, 1, file);
+        file_ReadFile(file, (void **)&file_buffer, &file_size);
         fclose(file);
-        file_buffer[file_size] = '\0';
+
+//        fseek(file, 0, SEEK_END);
+//        file_size = ftell(file);
+//        rewind(file);
+//        file_buffer = (char *)calloc(file_size + 1, 1);
+//        fread(file_buffer, file_size, 1, file);
+//        fclose(file);
+//        file_buffer[file_size] = '\0';
 
         while(i < file_size)
         {
@@ -385,6 +390,69 @@ void obj_LoadWavefrontMtl(char *file_name, struct geometry_data_t *geometry_data
                     }
                 break;
 
+                case 'm':
+                    i++;
+
+                    if(file_buffer[i    ] == 'a' &&
+                       file_buffer[i + 1] == 'p' &&
+                       file_buffer[i + 2] == '_')
+                    {
+                        i += 3;
+
+                        if(file_buffer[i    ] == 'K' &&
+                           file_buffer[i + 1] == 'd')
+                        {
+                            i += 2;
+                            texture_type = 0;
+                        }
+                        else if(file_buffer[i   ] == 'K' &&
+                                file_buffer[i + 1] == 's')
+                        {
+                            i += 2;
+                            texture_type = 1;
+                        }
+                        else if(file_buffer[i    ] == 'K' &&
+                                file_buffer[i + 1] == 'a')
+                        {
+                            i += 2;
+                            texture_type = 2;
+
+                            /* don't care about ambient texture... */
+                            while(file_buffer[i] != '\n' && file_buffer[i] != '\0')i++;
+                        }
+
+                        /* according to the format specification there can be options
+                        and arguments for those options before the actual texture name. We
+                        won't bother with those, since they won't be used. The loader may
+                        fail in loading the texture file if there are options specified, but
+                        until this day comes we won't bother dealing with that... */
+
+                        while(file_buffer[i] == ' ') i++;
+
+                        value_str_index = 0;
+                        while(file_buffer[i] != '\n' && file_buffer[i] != '\t' &&
+                              file_buffer[i] != '\0')
+                        {
+                            value_str[value_str_index] = file_buffer[i];
+                            value_str_index++;
+                            i++;
+                        }
+
+                        value_str[value_str_index] = '\0';
+
+                        switch(texture_type)
+                        {
+                            case 0:
+                                strcpy(current_batch->diffuse_texture, value_str);
+                            break;
+
+                            case 1:
+                                strcpy(current_batch->normal_texture, value_str);
+                            break;
+                        }
+                    }
+                break;
+
                 case 'n':
                     i++;
 
@@ -401,7 +469,7 @@ void obj_LoadWavefrontMtl(char *file_name, struct geometry_data_t *geometry_data
 
                         value_str_index = 0;
 
-                        while(file_buffer[i] != ' ' && file_buffer[i] != '\n' &&
+                        while(file_buffer[i] != '\n' &&
                               file_buffer[i] != '\r' && file_buffer[i] != '\0' &&
                               file_buffer[i] != '\t')
                         {
@@ -413,7 +481,9 @@ void obj_LoadWavefrontMtl(char *file_name, struct geometry_data_t *geometry_data
                         value_str[value_str_index] = '\0';
 
                         current_batch = (struct batch_data_t *)geometry_data->batches.get(geometry_data->batches.add(NULL));
+                        memset(current_batch, 0, sizeof(struct batch_data_t ));
                         strcpy(current_batch->material, value_str);
+
 
 //                        material_handle = r_CreateEmptyMaterial();
 //                        current_material = r_GetMaterialPointer(material_handle);

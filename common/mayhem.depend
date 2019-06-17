@@ -1311,13 +1311,13 @@
 
 1552956336 d:\files\gabriel noble\compiler\mayhem\containers\stack_list.h
 
-1553982887 source:d:\files\gabriel noble\compiler\mayhem\containers\ring_buffer.c
+1560743976 source:d:\files\gabriel noble\compiler\mayhem\containers\ring_buffer.c
 	"ring_buffer.h"
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 
-1553982195 d:\files\gabriel noble\compiler\mayhem\containers\ring_buffer.h
+1560743983 d:\files\gabriel noble\compiler\mayhem\containers\ring_buffer.h
 
 1553385403 source:d:\files\gabriel noble\compiler\mayhem\containers\stack_list.c
 	"stack_list.h"
@@ -1368,23 +1368,25 @@
 1556390383 d:\files\gabriel noble\compiler\mayhem\common\phy_col.h
 	"phy_common.h"
 
-1556988780 source:d:\files\gabriel noble\compiler\mayhem\common\be_backend.c
+1560745463 source:d:\files\gabriel noble\compiler\mayhem\common\be_backend.c
 	"be_backend.h"
 	"r_common.h"
 	"r_frame.h"
 	"r_shader.h"
 	"r_light.h"
+	"r_surf.h"
 	"input.h"
 	"SDL2/SDL_atomic.h"
+	"../containers/ring_buffer.h"
 	<stdlib.h>
 	<stdio.h>
 	<string.h>
 	<stdarg.h>
 
-1556984745 d:\files\gabriel noble\compiler\mayhem\common\be_backend.h
+1560722955 d:\files\gabriel noble\compiler\mayhem\common\be_backend.h
 	"r_verts.h"
 
-1559879257 d:\files\gabriel noble\compiler\mayhem\common\r_common.h
+1560654687 d:\files\gabriel noble\compiler\mayhem\common\r_common.h
 	"SDL2\SDL.h"
 	"GL\glew.h"
 	"../gmath/matrix.h"
@@ -1749,7 +1751,7 @@
 	"r_common.h"
 	"../gmath/matrix.h"
 
-1556985704 d:\files\gabriel noble\compiler\mayhem\common\r_shader.h
+1560746788 d:\files\gabriel noble\compiler\mayhem\common\r_shader.h
 
 1559879264 d:\files\gabriel noble\compiler\mayhem\common\r_light.h
 	"r_common.h"
@@ -1758,7 +1760,7 @@
 1559879254 d:\files\gabriel noble\compiler\mayhem\common\input.h
 	"../gmath/vector.h"
 
-1560218811 source:d:\files\gabriel noble\compiler\mayhem\common\mdl.c
+1560641550 source:d:\files\gabriel noble\compiler\mayhem\common\mdl.c
 	"mdl.h"
 	"r_common.h"
 	"r_surf.h"
@@ -1798,7 +1800,7 @@
 1559789144 d:\files\gabriel noble\compiler\mayhem\common\pla_common.h
 	"ent.h"
 
-1559878341 source:d:\files\gabriel noble\compiler\mayhem\common\r_main.c
+1560722282 source:d:\files\gabriel noble\compiler\mayhem\common\r_main.c
 	"r_main.h"
 	"r_surf.h"
 	"r_shader.h"
@@ -1813,10 +1815,10 @@
 	"r_verts.h"
 	"r_shader.h"
 
-1559879282 d:\files\gabriel noble\compiler\mayhem\common\r_surf.h
+1560750756 d:\files\gabriel noble\compiler\mayhem\common\r_surf.h
 	"../gmath/vector.h"
 
-1560218935 source:d:\files\gabriel noble\compiler\mayhem\common\fe_frontend.c
+1560749584 source:d:\files\gabriel noble\compiler\mayhem\common\fe_frontend.c
 	"fe_frontend.h"
 	"be_backend.h"
 	"input.h"
@@ -1853,13 +1855,13 @@
 	"../gmath/vector.h"
 	"physics.h"
 
-1559014917 source:d:\files\gabriel noble\compiler\mayhem\common\main.c
+1560745158 source:d:\files\gabriel noble\compiler\mayhem\common\main.c
 	"main.h"
 	<stdio.h>
 	<math.h>
 	<stdarg.h>
 
-1559879270 d:\files\gabriel noble\compiler\mayhem\common\main.h
+1560745127 d:\files\gabriel noble\compiler\mayhem\common\main.h
 	"SDL2\SDL.h"
 	"../gmath/vector.h"
 	"../gmath/matrix.h"
@@ -1871,6 +1873,7 @@
 	"s_aux.h"
 	"be_backend.h"
 	"fe_frontend.h"
+	"res.h"
 	"ent.h"
 
 1556988803 source:d:\files\gabriel noble\compiler\mayhem\common\r_raytrace.c
@@ -1928,7 +1931,7 @@
 	"be_backend.h"
 	<stdio.h>
 
-1560217830 source:d:\files\gabriel noble\compiler\mayhem\common\r_shader.c
+1560747344 source:d:\files\gabriel noble\compiler\mayhem\common\r_shader.c
 	"r_shader.h"
 	"r_common.h"
 	"r_verts.h"
@@ -1943,11 +1946,15 @@
 	<stdlib.h>
 	<string.h>
 
-1559878761 source:d:\files\gabriel noble\compiler\mayhem\common\r_surf.c
+1560750819 source:d:\files\gabriel noble\compiler\mayhem\common\r_surf.c
 	"r_surf.h"
 	"r_shader.h"
+	"be_backend.h"
+	"res.h"
 	"../containers/stack_list.h"
 	"../containers/list.h"
+	"../utils/file.h"
+	"stb_image_aug.h"
 	"r_common.h"
 	<stdio.h>
 	<stdlib.h>
@@ -1965,7 +1972,7 @@
 	"matrix.h"
 	<math.h>
 
-1560145948 source:d:\files\gabriel noble\compiler\mayhem\common\w_main.c
+1560748566 source:d:\files\gabriel noble\compiler\mayhem\common\w_main.c
 	"w_main.h"
 	"r_common.h"
 	"r_verts.h"
@@ -1979,7 +1986,7 @@
 	<math.h>
 	<float.h>
 
-1559873343 source:d:\files\gabriel noble\compiler\mayhem\common\r_vis.c
+1560342720 source:d:\files\gabriel noble\compiler\mayhem\common\r_vis.c
 	"r_vis.h"
 	"r_view.h"
 	"r_portal.h"
@@ -2008,17 +2015,22 @@
 	"../containers/list.h"
 	"../gmath/vector.h"
 
-1560218440 source:d:\files\gabriel noble\compiler\mayhem\loaders\obj.c
+1560748461 source:d:\files\gabriel noble\compiler\mayhem\loaders\obj.c
 	"obj.h"
+	"../utils/file.h"
+	"../utils/path.h"
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
+	<limits.h>
 
 1560126158 d:\files\gabriel noble\compiler\mayhem\loaders\obj.h
 	"../exchange/xchg.h"
 
-1560216182 source:d:\files\gabriel noble\compiler\mayhem\loaders\gmy.c
+1560750497 source:d:\files\gabriel noble\compiler\mayhem\loaders\gmy.c
 	"gmy.h"
+	"../utils/file.h"
+	"../utils/path.h"
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -2027,4 +2039,51 @@
 	"../exchange/xchg.h"
 	"../containers/list.h"
 	"../gmath/vector.h"
+
+1560733720 d:\files\gabriel noble\compiler\mayhem\utils\file.h
+	<stdio.h>
+
+1560643121 source:d:\files\gabriel noble\compiler\mayhem\utils\file.c
+	"file.h"
+	<limits.h>
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
+1560580434 d:\files\gabriel noble\compiler\mayhem\utils\path.h
+
+1560750547 source:d:\files\gabriel noble\compiler\mayhem\utils\path.c
+	"path.h"
+	<string.h>
+	<limits.h>
+
+1501554726 source:d:\files\gabriel noble\compiler\mayhem\common\libs\stb\stb_image_aug.c
+	"stb_image_aug.h"
+	<math.h>
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+	<assert.h>
+	<stdarg.h>
+	"stbi_DDS_aug.h"
+	"stbi_DDS_aug_c.h"
+
+1501554726 d:\files\gabriel noble\compiler\mayhem\common\libs\stb\stb_image_aug.h
+	<stdio.h>
+
+1501554726 d:\files\gabriel noble\compiler\mayhem\common\libs\stb\stbi_dds_aug.h
+
+1501554726 d:\files\gabriel noble\compiler\mayhem\common\libs\stb\stbi_dds_aug_c.h
+
+1560750763 source:d:\files\gabriel noble\compiler\mayhem\common\res.c
+	"res.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"SDL2/SDL_atomic.h"
+	"SDL2/SDL.h"
+	"../containers/ring_buffer.h"
+
+1560745578 d:\files\gabriel noble\compiler\mayhem\common\res.h
 

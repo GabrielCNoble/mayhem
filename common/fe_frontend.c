@@ -36,7 +36,7 @@ int fe_Frontend(void *data)
 
    // int shd = fe_LoadShader("shaders/test");
 
-    player = player_CreatePlayer("default", vec3_t(0.0, 1.22, 2.0), vec3_t(0.0, 0.3, 0.0));
+    player = player_CreatePlayer("default", vec3_t(0.0, 3.22, 2.0), vec3_t(0.0, 0.3, 0.0));
     player_SetActivePlayer(player);
 //
 //    player_CreatePlayer("default1", vec3_t(4.0, 0.22, 0.0));
@@ -51,6 +51,7 @@ int fe_Frontend(void *data)
     in_RegisterKey(SDL_SCANCODE_ESCAPE);
 
     r_CreateLight(vec3_t(5.0, 1.2, 0.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
+    r_CreateLight(vec3_t(0.0, 4.2, 2.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
     r_CreateLight(vec3_t(-5.0, 1.2, -3.0), vec3_t(0.0, 0.2, 0.4), 0.3, 20.0);
     r_CreateLight(vec3_t(0.0, 8.2, 1.5), vec3_t(1.0, 0.2, 0.4), 0.3, 20.0);
     r_CreateLight(vec3_t(0.0, -12.0, 0.0), vec3_t(1.0, 1.0, 1.0), 0.3, 20.0);
@@ -79,8 +80,82 @@ int fe_Frontend(void *data)
 
     #elif defined LEVEL_7
 
-    w_LoadLevel("../models/test7.gmy");
-    mdl_LoadModel("../models/cube.gmy");
+//    w_LoadLevel("../models/test7.gmy");
+    w_LoadLevel("../models/level0.gmy");
+    struct model_handle_t cube = mdl_LoadModel("../models/monkey.gmy");
+//
+//
+//    r_LoadTexture("../pk02_ceiling02_C.tga");
+//
+//    r_LoadTexture("../../../textures/pk02/pk02_ceiling02_C.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_ceiling02_I.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_ceiling02_N.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_ceiling02_S.tga");
+//
+//    r_LoadTexture("../../../textures/pk02/pk02_ceiling03_C.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_ceiling03_I.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_ceiling03_N.tga");
+//
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01a_C.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01a_I.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01a_N.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01a_S.tga");
+//
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01b_C.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01b_I.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01b_N.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01b_S.tga");
+//
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01c_C.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01c_I.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01c_N.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_computer01c_S.tga");
+//
+//    r_LoadTexture("../../../textures/pk02/pk02_dec_num00.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_dec_num01.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_dec_num02.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_dec_num03.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_dec_num04.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_dec_num05.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_dec_num06.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_dec_num07.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_dec_num08.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_dec_num09.tga");
+//
+//    r_LoadTexture("../../../textures/pk02/pk02_door01_C.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_door01_N.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_door01_S.tga");
+//
+//    r_LoadTexture("../../../textures/pk02/pk02_door02_C.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_door02_N.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_door02_S.tga");
+//
+//    r_LoadTexture("../../../textures/pk02/pk02_door03_C.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_door03_N.tga");
+//    r_LoadTexture("../../../textures/pk02/pk02_door03_S.tga");
+
+
+    struct entity_handle_t entity_handle = ent_CreateEntityInstance();
+    ent_AddComponent(entity_handle, ENT_COMPONENT_TYPE_TRANSFORM);
+    ent_AddModelComponent(entity_handle, cube);
+
+    struct entity_t *entity = ent_GetEntityPointer(entity_handle);
+    struct transform_component_t *transform;
+
+    transform = (struct transform_component_t *)ent_GetComponentPointer(entity->components[ENT_COMPONENT_TYPE_TRANSFORM]);
+
+    transform->orientation.identity();
+    transform->position.y = 1.0;
+
+//    int portal0 = r_CreatePortal(vec3_t(0.0, 3.0, 0.5), vec2_t(2.5, 3.0));
+//    int portal1 = r_CreatePortal(vec3_t(0.0, 1.5, 2.0), vec2_t(2.5, 3.0));
+//    r_LinkPortals(portal0, portal1);
+//
+//    struct portal_t *portal = r_GetPortalPointer(portal0);
+//    portal->orientation = rotate_x(-0.5);
+//    rotate_y(portal->orientation, 0.05);
+
+
 
 //    int portal0 = r_CreatePortal(vec3_t(0.0, 4.6, -3.0), vec2_t(2.5, 2.5));
 //    int portal1 = r_CreatePortal(vec3_t(0.0, -11.0, 5.0), vec2_t(2.5, 2.5));

@@ -1,4 +1,6 @@
 #include "gmy.h"
+#include "../utils/file.h"
+#include "../utils/path.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,21 +9,22 @@ void gmy_LoadGmy(char *file_name, struct geometry_data_t *geometry_data)
 {
     FILE *file;
     void *file_buffer;
-    unsigned int file_size;
+    long file_size;
 
     file = fopen(file_name, "rb");
 
     if(file)
     {
-        fseek(file, 0, SEEK_END);
-        file_size = ftell(file);
-        rewind(file);
+//        fseek(file, 0, SEEK_END);
+//        file_size = ftell(file);
+//        rewind(file);
+//
+//        file_buffer = (void *)calloc(file_size, 1);
+//
+//        fread(file_buffer, file_size, 1, file);
+//        fclose(file);
 
-        file_buffer = (void *)calloc(file_size, 1);
-
-        fread(file_buffer, file_size, 1, file);
-        fclose(file);
-
+        file_ReadFile(file, &file_buffer, &file_size);
         gmy_DeserializeGmy(&file_buffer, geometry_data, 0);
 
         free(file_buffer);
@@ -170,6 +173,10 @@ void gmy_SerializeGmy(void **buffer, unsigned int *buffer_size, struct geometry_
 
         /* gmy uses the exchange batch_data_t structure to store batch data... */
         memcpy(&gmy_batch->batch, batches + i, sizeof(struct batch_data_t));
+
+        /* make sure these paths are formatted... */
+        strcpy(gmy_batch->batch.diffuse_texture, path_FormatPath(gmy_batch->batch.diffuse_texture));
+        strcpy(gmy_batch->batch.normal_texture, path_FormatPath(gmy_batch->batch.normal_texture));
     }
 
     memcpy(out, geometry_data->vertices.buffer, sizeof(vec3_t) * geometry_data->vertices.cursor);
@@ -178,25 +185,25 @@ void gmy_SerializeGmy(void **buffer, unsigned int *buffer_size, struct geometry_
     /* the output file will be filled with zero bytes if there are no normals... */
     if(geometry_data->normals.cursor)
     {
-        memcpy(out, geometry_data->normals.buffer, sizeof(vec3_t) * geometry_data->normals.cursor);
+        memcpy(out, geometry_data->normals.buffer, sizeof(vec3_t) * geometry_data->vertices.cursor);
     }
-    out += sizeof(vec3_t) * geometry_data->normals.cursor;
+    out += sizeof(vec3_t) * geometry_data->vertices.cursor;
 
 
     /* the output file will be filled with zero bytes if there are no tangents... */
-    if(geometry_data->tangents.cursor)
-    {
-        memcpy(out, geometry_data->tangents.buffer, sizeof(vec3_t) * geometry_data->tangents.cursor);
-    }
-    out += sizeof(vec3_t) * geometry_data->tangents.cursor;
+//    if(geometry_data->tangents.cursor)
+//    {
+//        memcpy(out, geometry_data->tangents.buffer, sizeof(vec3_t) * geometry_data->vertices.cursor);
+//    }
+    out += sizeof(vec3_t) * geometry_data->vertices.cursor;
 
 
     /* the output file will be filled with zero bytes if there are no tex coords... */
     if(geometry_data->tex_coords.cursor)
     {
-        memcpy(out, geometry_data->tex_coords.buffer, sizeof(vec3_t) * geometry_data->tangents.cursor);
+        memcpy(out, geometry_data->tex_coords.buffer, sizeof(vec2_t) * geometry_data->vertices.cursor);
     }
-    out += sizeof(vec2_t) * geometry_data->tangents.cursor;
+    out += sizeof(vec2_t) * geometry_data->vertices.cursor;
 
 
     end = (struct gmy_end_t *)out;

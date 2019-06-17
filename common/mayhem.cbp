@@ -18,6 +18,7 @@
 					<Add directory="libs/SDL/include" />
 					<Add directory="libs/GLEW/include" />
 					<Add directory="../gmath" />
+					<Add directory="libs/STB" />
 				</Compiler>
 				<Linker>
 					<Add library="mingw32" />
@@ -28,6 +29,7 @@
 					<Add library="glew32" />
 					<Add directory="libs/SDL/lib" />
 					<Add directory="libs/GLEW/lib" />
+					<Add directory="libs/STB" />
 				</Linker>
 			</Target>
 		</Build>
@@ -64,6 +66,14 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="../loaders/obj.h" />
+		<Unit filename="../utils/file.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../utils/file.h" />
+		<Unit filename="../utils/path.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../utils/path.h" />
 		<Unit filename="be_backend.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -80,6 +90,12 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="input.h" />
+		<Unit filename="libs/STB/stb_image_aug.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libs/STB/stb_image_aug.h" />
+		<Unit filename="libs/STB/stbi_DDS_aug.h" />
+		<Unit filename="libs/STB/stbi_DDS_aug_c.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CPP" />
 		</Unit>

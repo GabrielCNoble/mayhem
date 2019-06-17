@@ -48,6 +48,14 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="../../loaders/obj.h" />
+		<Unit filename="../../utils/file.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../../utils/file.h" />
+		<Unit filename="../../utils/path.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../../utils/path.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CPP" />
 		</Unit>

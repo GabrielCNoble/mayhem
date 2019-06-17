@@ -34,11 +34,27 @@ void ring_buffer_t::init(int elem_size, int elem_count)
     this->next_out = 0;
 }
 
+void ring_buffer_t::advance_next_in()
+{
+    if(this->available())
+    {
+        this->next_in = (this->next_in + 1) % this->elem_count;
+    }
+}
+
+void ring_buffer_t::advance_next_out()
+{
+    if(this->available())
+    {
+        this->next_out = (this->next_out + 1) % this->elem_count;
+    }
+}
+
 int ring_buffer_t::add_next(void *data)
 {
     int index = -1;
 
-    if(this->avaliable())
+    if(this->available())
     {
         if(data)
         {
@@ -48,6 +64,24 @@ int ring_buffer_t::add_next(void *data)
         index = this->next_in;
 
         this->next_in = (this->next_in + 1) % this->elem_count;
+    }
+
+    return index;
+}
+
+
+int ring_buffer_t::add_next_no_advance(void *data)
+{
+    int index = -1;
+
+    if(this->available())
+    {
+        if(data)
+        {
+            memcpy(this->buffer + this->next_in * this->elem_size, data, this->elem_size);
+        }
+
+        index = this->next_in;
     }
 
     return index;
@@ -66,12 +100,29 @@ void *ring_buffer_t::get_next()
     return rtrn;
 }
 
-int ring_buffer_t::avaliable()
+void *ring_buffer_t::get_next_no_advance()
 {
-    int in = next_in;
+    void *rtrn = NULL;
+
+    if(this->next_out != this->next_in)
+    {
+        /* only get the next element, without advancing the 'out' cursor... */
+        rtrn = (char *)this->buffer + this->elem_size * this->next_out;
+    }
+
+    return rtrn;
+}
+
+int ring_buffer_t::available()
+{
+    int in = this->next_in;
 
     if(in < this->next_out)
     {
+        /* the 'next_in' position has wrapped around the buffer, so to properly compare
+        'next_in' and 'next_out' we add the buffer size to 'next_in', so we always have
+        it ahead of 'next_out'. No risk of catastrophic overflow here. When 'next_out'
+        wraps around, doing this won't be necessary... */
         in += this->elem_count;
     }
 

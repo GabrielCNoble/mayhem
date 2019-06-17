@@ -90,7 +90,7 @@ struct model_handle_t mdl_LoadModel(char *file_name)
 
     for(i = 0; i < geometry_data.batches.cursor; i++)
     {
-        batch.material = r_CreateMaterial(batches[i].base_color, -1, -1, batches[i].material);
+        batch.material = r_CreateMaterial(batches[i].base_color, R_INVALID_TEXTURE_HANDLE, R_INVALID_TEXTURE_HANDLE, batches[i].material);
         batch.start = batches[i].start + model_start;
         batch.count = batches[i].count;
         model->batches.add(&batch);

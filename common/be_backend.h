@@ -16,6 +16,7 @@ enum BE_BACKEND_CMD
 
     BE_CMD_LOAD_SHADER,
     BE_CMD_LOAD_TEXTURE,
+    BE_CMD_UPLOAD_TEXTURE,
     BE_CMD_MEMCPY_TO,
     BE_CMD_UPLOAD_LIGHTS,
     BE_CMD_UPLOAD_TRIANGLES,
@@ -47,6 +48,10 @@ void be_RunBackend();
 
 void be_QueueCmd(int type, void *data, int size);
 
+void be_NextCmd(struct backend_cmd_t *cmd, unsigned char **cmd_data);
+
+void be_AdvanceQueue();
+
 void be_Clear(int mask);
 
 void be_SwapBuffers();
@@ -55,7 +60,7 @@ void be_SetShader(int shader_handle);
 
 void be_LoadShader(char *file_name);
 
-void be_LoadTexture(char *file_name);
+struct texture_handle_t be_LoadTexture(char *file_name);
 
 void be_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size);
 
@@ -78,6 +83,8 @@ void be_UploadWorldTris();
 void be_EnableVertsReads();
 
 void be_WaitEmptyQueue();
+
+void *be_WaitLastResult();
 
 
 

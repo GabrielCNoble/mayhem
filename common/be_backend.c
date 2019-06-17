@@ -3,8 +3,10 @@
 #include "r_frame.h"
 #include "r_shader.h"
 #include "r_light.h"
+#include "r_surf.h"
 #include "input.h"
 #include "SDL2/SDL_atomic.h"
+#include "../containers/ring_buffer.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -25,10 +27,13 @@ struct
 
     struct backend_cmd_t *cmd_stream;
     unsigned char *cmd_data_buffer;
+
+    void *last_result;
 }backend;
 
 extern struct renderer_t r_renderer;
 
+struct ring_buffer_t cmd_stream;
 
 struct memcpy_to_data_t
 {
@@ -42,6 +47,8 @@ void be_Init()
     backend.cmd_stream = (struct backend_cmd_t *)calloc(sizeof(struct backend_cmd_t), BE_CMD_STREAM_BUFFER_SIZE);
     backend.cmd_data_buffer = (unsigned char *)calloc(BE_CMD_DATA_BUFFER_SIZE, BE_CMD_STREAM_BUFFER_SIZE);
     SDL_AtomicUnlock(&backend.stream_spinlock);
+
+    cmd_stream.init(sizeof(struct backend_cmd_t), BE_CMD_STREAM_BUFFER_SIZE);
 }
 
 void be_Shutdown()
@@ -59,6 +66,9 @@ void be_RunBackend()
     void *cmd_data;
     int matrix_mode;
     int mask;
+    SDL_Thread *loader_thread;
+
+    struct texture_handle_t texture_result;
 
     glStencilMask(0xff);
     glClearStencil(0);
@@ -77,12 +87,13 @@ void be_RunBackend()
 
     while(1)
     {
-        if(backend.next_out != backend.next_in)
+        if(cmd_stream.next_out != cmd_stream.next_in)
         {
-            SDL_AtomicLock(&backend.stream_spinlock);
-            cmd = backend.cmd_stream[backend.next_out];
-            cmd_data = backend.cmd_data_buffer + backend.next_out * BE_CMD_DATA_BUFFER_SIZE;
-            SDL_AtomicUnlock(&backend.stream_spinlock);
+//            SDL_AtomicLock(&backend.stream_spinlock);
+//            cmd = backend.cmd_stream[backend.next_out];
+//            cmd_data = backend.cmd_data_buffer + backend.next_out * BE_CMD_DATA_BUFFER_SIZE;
+//            SDL_AtomicUnlock(&backend.stream_spinlock);
+            be_NextCmd(&cmd, (unsigned char **)&cmd_data);
 
             switch(cmd.type)
             {
@@ -100,6 +111,15 @@ void be_RunBackend()
 
                 case BE_CMD_LOAD_SHADER:
                     r_LoadShader(*(char **)cmd_data);
+                break;
+
+                case BE_CMD_LOAD_TEXTURE:
+//                    loader_thread = SDL_CreateThread(r_LoadTexturePixels, "loader_thread", cmd_data);
+//                    SDL_DetachThread(loader_thread);
+                break;
+
+                case BE_CMD_UPLOAD_TEXTURE:
+                    r_UploadTexturePixels((struct upload_texture_pixels_params_t *)cmd_data);
                 break;
 
                 case BE_CMD_DRAW_DBG:
@@ -136,7 +156,8 @@ void be_RunBackend()
                 break;
             }
 
-            backend.next_out = (backend.next_out + 1) % BE_CMD_STREAM_BUFFER_SIZE;
+            be_AdvanceQueue();
+//            backend.next_out = (backend.next_out + 1) % BE_CMD_STREAM_BUFFER_SIZE;
         }
     }
 }
@@ -145,33 +166,65 @@ void be_QueueCmd(int type, void *data, int size)
 {
     SDL_AtomicLock(&backend.stream_spinlock);
 
-    int in;
-    int out;
-    int diff;
+    struct backend_cmd_t cmd;
+    int cmd_index;
 
-    in = backend.next_in;
-    out = backend.next_out;
-
-    if(in < out)
+    if(cmd_stream.available())
     {
-        in += BE_CMD_STREAM_BUFFER_SIZE;
-    }
-
-    diff = BE_CMD_STREAM_BUFFER_SIZE - abs(out - in) - 1;
-
-    if(diff > 0 && backend.cmd_stream)
-    {
-        backend.cmd_stream[backend.next_in].type = type;
+        cmd.type = type;
+        cmd_index = cmd_stream.add_next_no_advance(&cmd);
 
         if(data && size)
         {
-            memcpy(backend.cmd_data_buffer + backend.next_in * BE_CMD_DATA_BUFFER_SIZE, data, size);
+            memcpy(backend.cmd_data_buffer + cmd_index * BE_CMD_DATA_BUFFER_SIZE, data, size);
         }
 
-        backend.next_in = (backend.next_in + 1) % BE_CMD_STREAM_BUFFER_SIZE;
+        cmd_stream.advance_next_in();
     }
 
+//    int in;
+//    int out;
+//    int diff;
+//
+//    in = backend.next_in;
+//    out = backend.next_out;
+//
+//    if(in < out)
+//    {
+//        in += BE_CMD_STREAM_BUFFER_SIZE;
+//    }
+//
+//    diff = BE_CMD_STREAM_BUFFER_SIZE - abs(out - in) - 1;
+//
+//    if(diff > 0 && backend.cmd_stream)
+//    {
+//        backend.cmd_stream[backend.next_in].type = type;
+//
+//        if(data && size)
+//        {
+//            memcpy(backend.cmd_data_buffer + backend.next_in * BE_CMD_DATA_BUFFER_SIZE, data, size);
+//        }
+//
+//        backend.next_in = (backend.next_in + 1) % BE_CMD_STREAM_BUFFER_SIZE;
+//    }
+
     SDL_AtomicUnlock(&backend.stream_spinlock);
+}
+
+
+void be_NextCmd(struct backend_cmd_t *cmd, unsigned char **cmd_data)
+{
+    SDL_AtomicLock(&backend.stream_spinlock);
+//    *cmd = backend.cmd_stream[backend.next_out];
+    *cmd = *(struct backend_cmd_t* )cmd_stream.get_next_no_advance();
+    *cmd_data = backend.cmd_data_buffer + cmd_stream.next_out * BE_CMD_DATA_BUFFER_SIZE;
+    SDL_AtomicUnlock(&backend.stream_spinlock);
+}
+
+void be_AdvanceQueue()
+{
+//    backend.next_out = (backend.next_out + 1) % BE_CMD_STREAM_BUFFER_SIZE;
+    cmd_stream.advance_next_out();
 }
 
 void be_Clear(int mask)
@@ -195,9 +248,12 @@ void be_LoadShader(char *file_name)
     be_WaitEmptyQueue();
 }
 
-void be_LoadTexture(char *file_name)
+struct texture_handle_t be_LoadTexture(char *file_name)
 {
-    //be_QueueCmd(BE_CMD_LOAD_TEXTURE, &file_name, sizeof(char *));
+    be_QueueCmd(BE_CMD_LOAD_TEXTURE, &file_name, sizeof(char *));
+    be_WaitEmptyQueue();
+    struct texture_handle_t texture;
+    return texture;
 }
 
 void be_MemcpyTo(struct verts_handle_t dst, void *src, unsigned int size)
@@ -267,10 +323,15 @@ void be_UploadTriangleIndices(unsigned int *indices, int count)
 
 void be_WaitEmptyQueue()
 {
-    while(backend.next_in != backend.next_out);
+    while(cmd_stream.next_in != cmd_stream.next_out);
 }
 
 
+void *be_WaitLastResult()
+{
+    be_WaitEmptyQueue();
+    return backend.last_result;
+}
 
 
 

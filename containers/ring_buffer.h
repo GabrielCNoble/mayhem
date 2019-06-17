@@ -22,11 +22,19 @@ class ring_buffer_t
 
         void init(int elem_size, int elem_count);
 
+        void advance_next_in();
+
+        void advance_next_out();
+
         int add_next(void *data);
+
+        int add_next_no_advance(void *data);
 
         void *get_next();
 
-        int avaliable();
+        void *get_next_no_advance();
+
+        int available();
 };
 
 

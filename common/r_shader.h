@@ -9,6 +9,7 @@ enum R_SHADER_DEFAULT_UNIFORMS
     r_ViewMatrix,
     r_ViewModelMatrix,
     r_BaseColor,
+    r_MaterialFlags,
     r_NearPlane,
     //r_LightCount,
 
@@ -37,6 +38,8 @@ struct shader_t
 
     int vertex_position;
     int vertex_normal;
+    int vertex_tangent;
+    int vertex_tex_coords;
 
     struct uniform_t *default_uniforms;
 
@@ -71,7 +74,11 @@ void r_UniformMatrix4fv(struct uniform_t *uniform, float *value);
 
 void r_DefaultUniform4fv(int uniform, float *value);
 
+void r_DefaultUniform1i(int uniform, int value);
+
 void r_Uniform4fv(struct uniform_t *uniform, float *value);
+
+void r_Uniform1i(struct uniform_t *uniform, int value);
 
 
 #endif // R_SHADER_H

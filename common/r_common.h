@@ -43,6 +43,11 @@ struct light_interface_t
     int light_count;
 };
 
+struct material_interface_t
+{
+    vec4_t base_color;
+    int material_flags;
+};
 
 
 struct raytrace_triangle_t

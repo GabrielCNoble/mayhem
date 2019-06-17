@@ -64,15 +64,14 @@ void r_VisibleWorldOnView(struct view_t *view)
     cmd_buffer->view_matrix = view->view_matrix;
     cmd_buffer->near_plane = view->near_plane;
     r_VisibleWorldTrianglesOnView(view, cmd_buffer);
-
     be_DrawLit(cmd_buffer);
 
+    cmd_buffer = r_AllocCommandBuffer();
+    cmd_buffer->view_matrix = view->view_matrix;
+    cmd_buffer->near_plane = view->near_plane;
+    r_VisibleEntitiesOnView(view, cmd_buffer);
+    be_DrawLit(cmd_buffer);
 
-
-//    cmd_buffer = r_AllocCommandBuffer();
-//    cmd_buffer->view_matrix = view->view_matrix;
-//    cmd_buffer->near_plane = view->near_plane;
-//    r_VisibleEntitiesOnView(view, cmd_buffer);
 
 
 
@@ -116,11 +115,16 @@ void r_VisibleEntitiesOnView(struct view_t *view, struct draw_command_buffer_t *
 {
     struct entity_t *entities;
     struct entity_t *entity;
+    struct draw_batch_t *batches;
     struct model_component_t *model_component;
+    struct model_t *model;
     struct transform_component_t *transform_component;
+//    mat4_t entity_transform;
+    mat4_t model_view_projection_matrix;
     struct draw_command_t draw_command;
     int i;
     int c;
+    int j;
 
 //    struct view_t *view = r_GetActiveView();
 
@@ -144,7 +148,19 @@ void r_VisibleEntitiesOnView(struct view_t *view, struct draw_command_buffer_t *
         model_component = (struct model_component_t *)ent_GetComponentPointer(entity->components[ENT_COMPONENT_TYPE_MODEL]);
         transform_component = (struct transform_component_t *)ent_GetComponentPointer(entity->components[ENT_COMPONENT_TYPE_TRANSFORM]);
 
-//        draw_command.model_view_projection_matrix = transform_component->
+        model = mdl_GetModelPointer(model_component->model);
+        mat4_t entity_transform(transform_component->orientation, transform_component->position);
+        model_view_projection_matrix = entity_transform * view->view_projection_matrix;
+
+        batches = (struct draw_batch_t *)model->batches.buffer;
+
+        for(j = 0; j < model->batches.cursor; j++)
+        {
+            draw_command.model_view_projection_matrix = model_view_projection_matrix;
+            draw_command.batch = batches[j];
+            draw_command.indices = NULL;
+            cmd_buffer->draw_commands.add(&draw_command);
+        }
     }
 }
 
