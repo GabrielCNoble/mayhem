@@ -1,6 +1,7 @@
 #include "gmy.h"
 #include "../utils/file.h"
 #include "../utils/path.h"
+#include "../utils/geo.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -174,6 +175,8 @@ void gmy_SerializeGmy(void **buffer, unsigned int *buffer_size, struct geometry_
         /* gmy uses the exchange batch_data_t structure to store batch data... */
         memcpy(&gmy_batch->batch, batches + i, sizeof(struct batch_data_t));
 
+
+
         /* make sure these paths are formatted... */
         strcpy(gmy_batch->batch.diffuse_texture, path_FormatPath(gmy_batch->batch.diffuse_texture));
         strcpy(gmy_batch->batch.normal_texture, path_FormatPath(gmy_batch->batch.normal_texture));
@@ -189,12 +192,16 @@ void gmy_SerializeGmy(void **buffer, unsigned int *buffer_size, struct geometry_
     }
     out += sizeof(vec3_t) * geometry_data->vertices.cursor;
 
+    if(!geometry_data->tangents.cursor && geometry_data->tex_coords.cursor)
+    {
+        geometry_data->tangents.resize(geometry_data->vertices.size);
+        geo_ComputeTangents((vec3_t *)geometry_data->vertices.buffer,
+                            (vec2_t *)geometry_data->tex_coords.buffer,
+                            (vec3_t *)geometry_data->tangents.buffer, geometry_data->vertices.cursor);
 
-    /* the output file will be filled with zero bytes if there are no tangents... */
-//    if(geometry_data->tangents.cursor)
-//    {
-//        memcpy(out, geometry_data->tangents.buffer, sizeof(vec3_t) * geometry_data->vertices.cursor);
-//    }
+        geometry_data->tangents.cursor = geometry_data->vertices.cursor;
+    }
+    memcpy(out, geometry_data->tangents.buffer, sizeof(vec3_t) * geometry_data->vertices.cursor);
     out += sizeof(vec3_t) * geometry_data->vertices.cursor;
 
 

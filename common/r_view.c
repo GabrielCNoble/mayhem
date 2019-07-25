@@ -28,7 +28,8 @@ void r_Perspective(float fov_y, float aspect, float znear, float zfar, mat4_t *m
 
 	mat->floats[0][0] = f.znear / f.right;
 	mat->floats[1][1] = f.znear / f.top;
-	mat->floats[2][2] = (-f.zfar + f.znear) / (f.zfar - f.znear);
+//	mat->floats[2][2] = (-f.zfar + f.znear) / (f.zfar - f.znear);
+    mat->floats[2][2] = -1.0;
 
 //    vec3_t near = vec3_t(-1.0, 0.0, 0.0);
 //    near = normalize(near);

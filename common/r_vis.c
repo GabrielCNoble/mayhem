@@ -2,6 +2,7 @@
 #include "r_view.h"
 #include "r_portal.h"
 #include "r_light.h"
+#include "r_dbg.h"
 #include "../containers/list.h"
 #include "be_backend.h"
 #include "../containers/stack_list.h"
@@ -73,10 +74,16 @@ void r_VisibleWorldOnView(struct view_t *view)
     be_DrawLit(cmd_buffer);
 
 
-
+//    r_DrawLine(vec3_t(0.0, 5.0, 0.0), vec3_t(0.0, -5.0, 0.0), vec3_t(1.0, 1.0, 1.0));
+//
+//    r_DrawTriangle(vec3_t(1.0, 0.0, 0.0),
+//                   vec3_t(-1.0, 0.0, 0.0),
+//                   vec3_t(0.0, 1.0, 0.0),
+//                   vec3_t(0.0, 1.0, 0.0),
+//                   1, 0, 0);
 
     cur_view = *view;
-
+//
 //    cmd_buffer = r_AllocCommandBuffer();
 //    cmd_buffer->view_matrix = view->view_matrix * view->projection_matrix;
 //    be_DrawDebug(cmd_buffer);

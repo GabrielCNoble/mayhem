@@ -1,4 +1,5 @@
 #include "be_backend.h"
+#include "be_r_dbg.h"
 #include "r_common.h"
 #include "r_frame.h"
 #include "r_shader.h"
@@ -17,7 +18,7 @@
 
 
 #define BE_CMD_STREAM_BUFFER_SIZE 4096
-#define BE_CMD_DATA_BUFFER_SIZE 64
+#define BE_CMD_DATA_BUFFER_SIZE 128
 
 struct
 {
@@ -89,10 +90,6 @@ void be_RunBackend()
     {
         if(cmd_stream.next_out != cmd_stream.next_in)
         {
-//            SDL_AtomicLock(&backend.stream_spinlock);
-//            cmd = backend.cmd_stream[backend.next_out];
-//            cmd_data = backend.cmd_data_buffer + backend.next_out * BE_CMD_DATA_BUFFER_SIZE;
-//            SDL_AtomicUnlock(&backend.stream_spinlock);
             be_NextCmd(&cmd, (unsigned char **)&cmd_data);
 
             switch(cmd.type)
@@ -124,6 +121,22 @@ void be_RunBackend()
 
                 case BE_CMD_DRAW_DBG:
                     r_DrawDebug(*(struct draw_command_buffer_t **)cmd_data, 0);
+                break;
+
+                case BE_CMD_DRAW_LINE:
+                    be_r_DrawLine((struct draw_line_data_t *)cmd_data);
+                break;
+
+                case BE_CMD_DRAW_TRIANGLE:
+                    be_r_DrawTriangle((struct draw_triangle_data_t *)cmd_data);
+                break;
+
+                case BE_CMD_DRAW_CAPSULE:
+                    be_r_DrawCapsule((struct draw_capsule_data_t *)cmd_data);
+                break;
+
+                case BE_CMD_DRAW_POINT:
+                    be_r_DrawPoint((struct draw_point_data_t *)cmd_data);
                 break;
 
                 case BE_CMD_DRAW_LIT:

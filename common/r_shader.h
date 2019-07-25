@@ -6,9 +6,11 @@
 enum R_SHADER_DEFAULT_UNIFORMS
 {
     r_ModelViewProjectionMatrix,
+    r_ViewProjectionMatrix,
     r_ViewMatrix,
     r_ViewModelMatrix,
     r_BaseColor,
+    r_DebugColor,
     r_MaterialFlags,
     r_NearPlane,
     //r_LightCount,
@@ -40,6 +42,7 @@ struct shader_t
     int vertex_normal;
     int vertex_tangent;
     int vertex_tex_coords;
+    int vertex_color;
 
     struct uniform_t *default_uniforms;
 

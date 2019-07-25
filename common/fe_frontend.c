@@ -36,7 +36,7 @@ int fe_Frontend(void *data)
 
    // int shd = fe_LoadShader("shaders/test");
 
-    player = player_CreatePlayer("default", vec3_t(0.0, 3.22, 2.0), vec3_t(0.0, 0.3, 0.0));
+    player = player_CreatePlayer("default", vec3_t(-3.0, 2.0, 0.0), vec3_t(0.0, 0.3, 0.0));
     player_SetActivePlayer(player);
 //
 //    player_CreatePlayer("default1", vec3_t(4.0, 0.22, 0.0));
@@ -49,12 +49,14 @@ int fe_Frontend(void *data)
     in_RegisterKey(SDL_SCANCODE_D);
     in_RegisterKey(SDL_SCANCODE_SPACE);
     in_RegisterKey(SDL_SCANCODE_ESCAPE);
+    in_RegisterKey(SDL_SCANCODE_LCTRL);
 
-    r_CreateLight(vec3_t(5.0, 1.2, 0.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
+    r_CreateLight(vec3_t(5.0, 0.1, 0.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
     r_CreateLight(vec3_t(0.0, 4.2, 2.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
     r_CreateLight(vec3_t(-5.0, 1.2, -3.0), vec3_t(0.0, 0.2, 0.4), 0.3, 20.0);
     r_CreateLight(vec3_t(0.0, 8.2, 1.5), vec3_t(1.0, 0.2, 0.4), 0.3, 20.0);
     r_CreateLight(vec3_t(0.0, -12.0, 0.0), vec3_t(1.0, 1.0, 1.0), 0.3, 20.0);
+    r_CreateLight(vec3_t(-20.0, -2.0, 0.0), vec3_t(1.0, 1.0, 1.0), 0.3, 20.0);
 
     #define LEVEL_7
 
@@ -80,8 +82,8 @@ int fe_Frontend(void *data)
 
     #elif defined LEVEL_7
 
-//    w_LoadLevel("../models/test7.gmy");
-    w_LoadLevel("../models/level0.gmy");
+    w_LoadLevel("../models/test7.gmy");
+//    w_LoadLevel("../models/level2.gmy");
     struct model_handle_t cube = mdl_LoadModel("../models/monkey.gmy");
 //
 //
@@ -135,17 +137,17 @@ int fe_Frontend(void *data)
 //    r_LoadTexture("../../../textures/pk02/pk02_door03_S.tga");
 
 
-    struct entity_handle_t entity_handle = ent_CreateEntityInstance();
-    ent_AddComponent(entity_handle, ENT_COMPONENT_TYPE_TRANSFORM);
-    ent_AddModelComponent(entity_handle, cube);
-
-    struct entity_t *entity = ent_GetEntityPointer(entity_handle);
-    struct transform_component_t *transform;
-
-    transform = (struct transform_component_t *)ent_GetComponentPointer(entity->components[ENT_COMPONENT_TYPE_TRANSFORM]);
-
-    transform->orientation.identity();
-    transform->position.y = 1.0;
+//    struct entity_handle_t entity_handle = ent_CreateEntityInstance();
+//    ent_AddComponent(entity_handle, ENT_COMPONENT_TYPE_TRANSFORM);
+//    ent_AddModelComponent(entity_handle, cube);
+//
+//    struct entity_t *entity = ent_GetEntityPointer(entity_handle);
+//    struct transform_component_t *transform;
+//
+//    transform = (struct transform_component_t *)ent_GetComponentPointer(entity->components[ENT_COMPONENT_TYPE_TRANSFORM]);
+//
+//    transform->orientation.identity();
+//    transform->position.y = 1.0;
 
 //    int portal0 = r_CreatePortal(vec3_t(0.0, 3.0, 0.5), vec2_t(2.5, 3.0));
 //    int portal1 = r_CreatePortal(vec3_t(0.0, 1.5, 2.0), vec2_t(2.5, 3.0));
@@ -224,6 +226,12 @@ int fe_Frontend(void *data)
     float pos = 2.5;
     float angle = 0.0;
 
+    struct view_t *active_view;
+
+    active_view = r_GetActiveView();
+
+    active_view->position = vec3_t(2.0, 3.0, -2.0);
+
     while(1)
     {
         //portal->orientation = rotate_y(portal->orientation, angle);
@@ -231,9 +239,10 @@ int fe_Frontend(void *data)
         //collider_ptr->orientation = rotate_z(angle);
 
       /*  portal->position.y = pos + sin(angle) * 2.0;*/
-        angle += 0.009;
+//        angle += 0.009;
         be_QueueCmd(BE_CMD_UPDATE_INPUT, NULL, 0);
         be_WaitEmptyQueue();
+        be_Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         player_UpdatePlayers();
         phy_Step();
@@ -241,7 +250,7 @@ int fe_Frontend(void *data)
         ent_UpdateTransformComponents();
         player_PostUpdatePlayers();
 
-        be_Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
         r_VisibleWorld();
         be_SwapBuffers();
         be_WaitEmptyQueue();

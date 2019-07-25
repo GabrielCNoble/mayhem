@@ -2,6 +2,7 @@
 
 in vec4 pos;
 in vec4 normal;
+in vec4 tangent;
 in vec2 tex_coords;
 
 struct light_t
@@ -26,26 +27,45 @@ uniform vec4 r_BaseColor;
 uniform vec4 r_NearPlane;
 uniform int r_MaterialFlags;
 uniform sampler2D r_TextureSampler0;
+uniform sampler2D r_TextureSampler1;
 
 void main()
 {
     int i;
 
     vec3 color = vec3(0);
-    vec4 base_color;
+    vec4 pixel_color;
+    vec4 pixel_normal;
 
     if(dot(pos.xyz, r_NearPlane.xyz) + r_NearPlane.w < 0.0)
     {
         discard;
     }
 
-    if(r_MaterialFlags > 0)
+    if((r_MaterialFlags & 1) != 0)
     {
-        base_color = texture2D(r_TextureSampler0, tex_coords);
+        pixel_color = texture2D(r_TextureSampler0, tex_coords);
     }
     else
     {
-        base_color = r_BaseColor;
+        pixel_color = r_BaseColor;
+    }
+
+    if((r_MaterialFlags & 2) != 0)
+    {
+        mat3 tbn;
+
+        tbn[2] = normal.xyz;
+        tbn[1] = tangent.xyz;
+        tbn[0] = -cross(normal.xyz, tangent.xyz);
+
+        pixel_normal.xyz = tbn * normalize(texture2D(r_TextureSampler1, tex_coords).xyz * 2.0 - vec3(1.0));
+
+        //pixel_normal.x = -pixel_normal.x;
+    }
+    else
+    {
+        pixel_normal = normal;
     }
 
     for(i = 0; i < r_LightInterface.r_LightCount; i++)
@@ -58,11 +78,11 @@ void main()
 
         float attenuation = (1.0 / distance) * max(1.0 - (distance / light.pos_radius.w), 0.0) * light.col_energy.w;
 
-        float l = clamp(dot(light_vec, normal.xyz), 0.0, 1.0) * 10.0;
-        color += (light.col_energy.rgb * base_color.rgb * l) * attenuation;
+        float l = clamp(dot(light_vec, pixel_normal.xyz), 0.0, 1.0) * 10.0;
+        color += (light.col_energy.rgb * pixel_color.rgb * l) * attenuation;
     }
 
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(color.xyz, 1.0);
 
 //    gl_FragColor = vec4(tex_coords.xy, 0.0, 0.0);
 //    gl_FragColor = base_color;

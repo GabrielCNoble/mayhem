@@ -19,9 +19,11 @@ void r_InitShader()
 {
     #define STRFY(x) #x
     r_default_uniform_names[r_ModelViewProjectionMatrix] = STRFY(r_ModelViewProjectionMatrix);
+    r_default_uniform_names[r_ViewProjectionMatrix] = STRFY(r_ViewProjectionMatrix);
     r_default_uniform_names[r_ViewMatrix] = STRFY(r_ViewMatrix);
     r_default_uniform_names[r_ViewModelMatrix] = STRFY(r_ViewModelMatrix);
     r_default_uniform_names[r_BaseColor] = STRFY(r_BaseColor);
+    r_default_uniform_names[r_DebugColor] = STRFY(r_DebugColor);
     r_default_uniform_names[r_NearPlane] = STRFY(r_NearPlane);
     r_default_uniform_names[r_MaterialFlags] = STRFY(r_MaterialFlags);
     //r_default_uniform_names[r_LightCount] = STRFY(r_LightCount);
@@ -33,6 +35,7 @@ void r_InitShader()
     r_renderer.lit_shader = r_LoadShader("shaders/lit");
     r_renderer.portal_stencil_shader = r_LoadShader("shaders/portal_stencil");
     r_renderer.clear_portal_depth_shader = r_LoadShader("shaders/clear_portal_depth");
+    r_renderer.debug_shader = r_LoadShader("shaders/dbg");
 }
 
 void r_ShutdownShader()
@@ -210,6 +213,7 @@ int r_CompileShaderSource(int shader_handle, char *source)
     shader->vertex_normal = glGetAttribLocation(shader->program, "r_VertexNormal");
     shader->vertex_tangent = glGetAttribLocation(shader->program, "r_VertexTangent");
     shader->vertex_tex_coords = glGetAttribLocation(shader->program, "r_VertexTexCoords");
+    shader->vertex_color = glGetAttribLocation(shader->program, "r_VertexColor");
 
     for(i = 0; i < r_LAST_UNIFORM; i++)
     {
@@ -317,11 +321,23 @@ void r_SetShader(int shader_handle)
                 glVertexAttribPointer(shader->vertex_normal, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->normal));
             }
 
+            if(shader->vertex_tangent > -1)
+            {
+                glEnableVertexAttribArray(shader->vertex_tangent);
+                glVertexAttribPointer(shader->vertex_tangent, 3, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->tangent));
+            }
+
             if(shader->vertex_tex_coords > -1)
             {
                 glEnableVertexAttribArray(shader->vertex_tex_coords);
                 glVertexAttribPointer(shader->vertex_tex_coords, 2, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->tex_coord));
             }
+
+//            if(shader->vertex_color > -1)
+//            {
+//                glEnableVertexAttribArray(shader->vertex_color);
+//                glVertexAttribPointer(shader->vertex_color, 4, GL_FLOAT, GL_FALSE, sizeof(struct vertex_t), &(((struct vertex_t *)0)->vertex_color));
+//            }
 
         }
     }

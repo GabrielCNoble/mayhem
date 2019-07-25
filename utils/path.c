@@ -46,6 +46,8 @@ char *path_FormatPath(char *path)
     int i;
     int j;
 
+    memset(formatted_path, 0, PATH_MAX);
+
     for(i = 0, j = 0; path[i]; i++)
     {
         formatted_path[j] = path[i];

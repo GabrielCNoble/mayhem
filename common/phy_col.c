@@ -1,9 +1,11 @@
 #include "phy_col.h"
+#include "r_dbg.h"
+#include "../utils/geo.h"
+#include "../gmath/geometry.h"
 
 #include <stdio.h>
 #include <math.h>
 
-#define MIN_CONTACT_PENETRATION 0.0001
 
 
 int phy_ContactBoxTriangle(struct collision_triangle_t *triangle, struct box_shape_t *box_shape, vec3_t &position, mat3_t &orientation, struct contact_point_t *contact)
@@ -155,6 +157,85 @@ int phy_ContactCapsuleTriangle(struct collision_triangle_t *triangle, struct cap
     }
 
     return contact->penetration > MIN_CONTACT_PENETRATION;
+}
+
+int phy_ContactCapsuleTriangle2(struct collision_triangle_t *triangle, struct capsule_shape_t *capsule_shape, vec3_t &position, vec3_t &velocity, struct contact_point_t *contact)
+{
+    vec3_t capsule_point;
+    vec3_t triangle_point;
+    vec3_t point;
+    vec3_t normal;
+    vec3_t dir;
+    float col_t;
+    float a;
+    float b;
+    int i;
+
+//    if(dot(velocity, triangle->normal) > 0.0)
+//    {
+//        return 0;
+//    }
+
+    r_DrawTriangle(triangle->verts[0], triangle->verts[1], triangle->verts[2], vec3_t(0.0, 1.0, 0.0), 1, 0, 1);
+
+//    triangle_point = closest_point_on_triangle(position, triangle->verts[0], triangle->verts[1], triangle->verts[2]);
+
+    closest_point_line_triangle(triangle->verts[0], triangle->verts[1], triangle->verts[2],
+                                    position + vec3_t(0.0, capsule_shape->height * 0.5 - capsule_shape->radius, 0.0),
+                                    position - vec3_t(0.0, capsule_shape->height * 0.5 - capsule_shape->radius, 0.0),
+                                    &triangle_point, &capsule_point);
+
+    capsule_point = capsule_point + normalize(triangle_point - capsule_point) * capsule_shape->radius;
+    dir = normalize(capsule_point - triangle_point);
+
+//    if(dot(dir, triangle->normal) < 0.0)
+//    {
+//        dir = -dir;
+//    }
+
+//    if(dot(dir, triangle->normal) < 0.0)
+//    {
+//        return 0;
+//    }
+
+//    printf("%f\n", )
+
+//    r_DrawPoint(triangle_point, vec3_t(0.0, 1.0, 0.0), 12.0, 1);
+//    capsule_point = support_vertex_upright_capsule(dir, capsule_shape->height, capsule_shape->radius, dir);
+
+//    point = triangle_point + dir * capsule_shape->radius;
+    b = dot(dir, (capsule_point + velocity) - triangle_point);
+
+//    printf("b: %f", b);
+
+//    r_DrawLine(triangle_point, triangle_point + dir, vec3_t(0.0, 1.0, 0.0));
+
+    r_DrawPoint(triangle_point, vec3_t(1.0, 0.0, 0.0), 8.0, 1);
+    r_DrawLine(triangle_point, triangle_point + dir, vec3_t(1.0, 0.0, 0.0));
+
+    if(b != 0.0)
+    {
+        a = dot(dir, capsule_point - triangle_point);
+        col_t = a / (a - b);
+//        printf("  -- a: %f", a);
+//        printf("  -- col_t: %f\n", col_t);
+
+        if(col_t >= 0.0 && col_t <= 1.0)
+        {
+            contact->penetration = col_t;
+            contact->surface_normal = triangle->normal;
+            contact->normal = dir;
+            contact->position = position + velocity * col_t + dir * 0.0001;
+            contact->position_on_plane = triangle_point;
+            return 1;
+        }
+    }
+    else
+    {
+//        printf("\n");
+    }
+
+    return 0;
 }
 
 int phy_ContactBoxBox(struct box_shape_t *box_shape_a, vec3_t &position_a, struct box_shape_t *box_shape_b, vec3_t &position_b, struct contact_point_t *contact)

@@ -163,7 +163,7 @@ vec3_t::vec3_t(float x, float y, float z)
 
 
 
-vec3_t vec3_t::operator+(const vec3_t &vec)
+vec3_t vec3_t::operator+(const vec3_t &vec) const
 {
     return vec3_t(this->x + vec.x, this->y + vec.y, this->z + vec.z);
 }
@@ -178,7 +178,7 @@ vec3_t vec3_t::operator += (const vec3_t &vec)
 
 
 
-vec3_t vec3_t::operator - (const vec3_t &vec)
+vec3_t vec3_t::operator - (const vec3_t &vec) const
 {
     return vec3_t(this->x - vec.x, this->y - vec.y, this->z - vec.z);
 }

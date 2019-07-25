@@ -178,6 +178,7 @@ struct renderer_t
     int lit_shader;
     int portal_stencil_shader;
     int clear_portal_depth_shader;
+    int debug_shader;
 
     int current_stencil;
 
@@ -192,6 +193,7 @@ struct renderer_t
 
     mat4_t projection_matrix;
     mat4_t view_matrix;
+    mat4_t view_projection_matrix;
 };
 
 

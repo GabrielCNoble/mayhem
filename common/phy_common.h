@@ -63,6 +63,7 @@ struct collision_pair_t
 struct contact_point_t
 {
     vec3_t position;
+    vec3_t position_on_plane;
     vec3_t normal;
     vec3_t surface_normal;
     float penetration;
@@ -98,6 +99,7 @@ struct collision_shape_handle_t
 
 
 
+#define MIN_CONTACT_PENETRATION 0.0001
 
 
 

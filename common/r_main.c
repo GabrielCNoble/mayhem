@@ -2,6 +2,7 @@
 #include "r_surf.h"
 #include "r_shader.h"
 #include "r_light.h"
+#include "r_dbg.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,6 +62,7 @@ void r_Init()
 
     r_InitVerts();
     r_InitShader();
+    r_InitDebug();
 
 
     r_renderer.uniform_buffers[R_LIGHTS_UNIFORM_BUFFER_BINDING].offset = 0;
@@ -195,6 +197,16 @@ void r_SetRendererResolution(int width, int height)
         glViewport(0, 0, r_renderer.renderer_width, r_renderer.renderer_height);
     }
 }
+//
+//void r_SetViewMatrix(mat4_t *mat)
+//{
+//    memcpy(&r_renderer.view_matrix, mat, sizeof(mat4_t));
+//}
+//
+//void r_SetProjectionMatrix(mat4_t *mat)
+//{
+//    memcpy(&r_renderer.projection_matrix, mat, sizeof(mat4_t));
+//}
 
 #ifdef __cplusplus
 }

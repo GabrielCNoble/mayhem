@@ -2,6 +2,7 @@
 #include "../containers/stack_list.h"
 #include "input.h"
 #include "r_view.h"
+#include "r_dbg.h"
 
 
 #include <stdlib.h>
@@ -88,6 +89,8 @@ void player_PostUpdatePlayers()
 
 #define CAMERA_BOB_INCREMENT 0.25
 
+//#define SPECTATE
+
 void player_UpdateActivePlayer()
 {
     struct player_t *player;
@@ -158,18 +161,35 @@ void player_UpdateActivePlayer()
 
             player->camera_bob = camera_bob;
 
-            if(in_GetKeyStatus(SDL_SCANCODE_SPACE) & KEY_STATUS_JUST_PRESSED)
+
+            #ifdef SPECTATE
+                translation = normalize(translation);
+
+                if(in_GetMouseStatus() & MOUSE_STATUS_MIDDLE_BUTTON_PRESSED)
+                {
+                    if(in_GetKeyStatus(SDL_SCANCODE_LCTRL) & KEY_STATUS_PRESSED)
+                    {
+                        translation.y = -1.0;
+                    }
+
+                    if(in_GetKeyStatus(SDL_SCANCODE_SPACE) & KEY_STATUS_PRESSED)
+                    {
+                        translation.y = 1.0;
+                    }
+                    view->position += (translation * yaw_matrix) * 0.16;
+                }
+                else
+            #else
+                translation = (normalize(translation) * yaw_matrix);
+            #endif
             {
-                phy_Jump(physics_component->collider);
+                if(in_GetKeyStatus(SDL_SCANCODE_SPACE) & KEY_STATUS_JUST_PRESSED)
+                {
+                    phy_Jump(physics_component->collider);
+                }
+
+                phy_Move(physics_component->collider, translation * 0.016);
             }
-
-            translation = (normalize(translation) * yaw_matrix) * 0.016;
-
-            phy_Move(physics_component->collider, translation);
-
-            //collider = (struct player_collider_t *)phy_GetColliderPointer(player->collider);
-
-            //collider->base.position += (translation * yaw_matrix) * 0.1;
         }
     }
 }
@@ -198,12 +218,13 @@ void player_PostUpdateActivePlayer()
             view = r_GetActiveView();
             player_entity = ent_GetEntityPointer(player->entity);
             transform_component = (struct transform_component_t *)ent_GetComponentPointer(player_entity->components[ENT_COMPONENT_TYPE_TRANSFORM]);
-            view->position = transform_component->position + player->camera_position + vec3_t(0.0, sin(player->camera_bob) * 0.1, 0.0);
-//            physics_component = ent_GetComponentPointer(player_entity->components[ENT_COMPONENT_TYPE_PHYSICS]);
-//            collider = (struct player_collider_t *)phy_GetColliderPointer(physics_component->collider);
-//            player->position = collider->base.position;
-//
-//            view->position = player->position + player->camera_position + vec3_t(0.0, sin(player->camera_bob) * 0.1, 0.0);
+            physics_component = (struct physics_component_t *)ent_GetComponentPointer(player_entity->components[ENT_COMPONENT_TYPE_PHYSICS]);
+            collider = (struct player_collider_t *)phy_GetColliderPointer(physics_component->collider);
+
+            #ifndef SPECTATE
+                view->position = transform_component->position + player->camera_position;
+            #endif
+            r_DrawCapsule(transform_component->position, collider->height, collider->radius);
         }
     }
 }

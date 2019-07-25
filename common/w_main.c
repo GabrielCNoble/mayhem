@@ -46,6 +46,7 @@ void w_LoadLevel(char *file_name)
     struct material_data_t *materials;
     struct vertex_t *vertices;
     struct texture_handle_t diffuse_texture;
+    struct texture_handle_t normal_texture;
     int i;
 
 //    obj_LoadWavefront(file_name, &level_data);
@@ -72,6 +73,7 @@ void w_LoadLevel(char *file_name)
         vertices[i].position = *(vec3_t *)level_data.vertices.get(i);
         vertices[i].normal = *(vec3_t *)level_data.normals.get(i);
         vertices[i].tex_coord = *(vec2_t *)level_data.tex_coords.get(i);
+        vertices[i].tangent = *(vec3_t *)level_data.tangents.get(i);
     }
 
 
@@ -82,13 +84,19 @@ void w_LoadLevel(char *file_name)
     for(i = 0; i < level_data.batches.cursor; i++)
     {
         diffuse_texture = R_INVALID_TEXTURE_HANDLE;
+        normal_texture = R_INVALID_TEXTURE_HANDLE;
 
         if(batches[i].diffuse_texture[0] != '\0')
         {
             diffuse_texture = r_LoadTexture(batches[i].diffuse_texture);
         }
 
-        draw_batch.material = r_CreateMaterial(batches[i].base_color, diffuse_texture, R_INVALID_TEXTURE_HANDLE, batches[i].material);
+        if(batches[i].normal_texture[0] != '\0')
+        {
+            normal_texture = r_LoadTexture(batches[i].normal_texture);
+        }
+
+        draw_batch.material = r_CreateMaterial(batches[i].base_color, diffuse_texture, normal_texture, batches[i].material);
         draw_batch.start = batches[i].start;
         draw_batch.count = batches[i].count;
         w_world_batches.add(&draw_batch);

@@ -50,6 +50,10 @@
 		</Unit>
 		<Unit filename="../containers/stack_list.h" />
 		<Unit filename="../exchange/xchg.h" />
+		<Unit filename="../gmath/geometry.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../gmath/geometry.h" />
 		<Unit filename="../gmath/matrix.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -70,6 +74,10 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="../utils/file.h" />
+		<Unit filename="../utils/geo.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../utils/geo.h" />
 		<Unit filename="../utils/path.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -78,6 +86,10 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="be_backend.h" />
+		<Unit filename="be_r_dbg.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="be_r_dbg.h" />
 		<Unit filename="ent.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -121,6 +133,10 @@
 		</Unit>
 		<Unit filename="player.h" />
 		<Unit filename="r_common.h" />
+		<Unit filename="r_dbg.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_dbg.h" />
 		<Unit filename="r_frame.c">
 			<Option compilerVar="CPP" />
 		</Unit>
@@ -161,6 +177,10 @@
 			<Option compilerVar="CPP" />
 		</Unit>
 		<Unit filename="r_vis.h" />
+		<Unit filename="res.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="res.h" />
 		<Unit filename="s_aux.c">
 			<Option compilerVar="CPP" />
 		</Unit>

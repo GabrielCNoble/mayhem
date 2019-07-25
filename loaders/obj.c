@@ -405,10 +405,12 @@ void obj_LoadWavefrontMtl(char *file_name, struct geometry_data_t *geometry_data
                             i += 2;
                             texture_type = 0;
                         }
-                        else if(file_buffer[i   ] == 'K' &&
-                                file_buffer[i + 1] == 's')
+                        else if(file_buffer[i   ] == 'B' &&
+                                file_buffer[i + 1] == 'u' &&
+                                file_buffer[i + 2] == 'm' &&
+                                file_buffer[i + 3] == 'p')
                         {
-                            i += 2;
+                            i += 4;
                             texture_type = 1;
                         }
                         else if(file_buffer[i    ] == 'K' &&

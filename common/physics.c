@@ -9,6 +9,7 @@
 #include "r_common.h"
 #include "r_view.h"
 #include "r_portal.h"
+#include "r_dbg.h"
 #include "player.h"
 
 #include <stdio.h>
@@ -286,7 +287,7 @@ void phy_Step()
             continue;
         }
 
-        player_collider[i].base.position += player_collider[i].base.linear_velocity;
+//        player_collider[i].base.position += player_collider[i].base.linear_velocity;
         player_collider[i].flags &= ~PHY_PLAYER_COLLIDER_FLAG_ON_GROUND;
     }
 
@@ -297,7 +298,7 @@ void phy_Step()
     rigid_collider = (struct rigid_body_collider_t *)phy_colliders[PHY_COLLIDER_TYPE_RIGID].buffer;
     c = phy_colliders[PHY_COLLIDER_TYPE_RIGID].cursor;
 
-    /* add player's velocity, and clear on_ground flag... */
+
     for(i = 0; i < c; i++)
     {
         if(rigid_collider[i].base.type == PHY_COLLIDER_TYPE_NONE)
@@ -701,6 +702,7 @@ void phy_GenerateColliderCollisionPairs(struct collider_handle_t collider)
 
     vec2_t portal_size;
     vec3_t corners[4];
+    vec3_t linear_velocity;
 
     vec3_t corner;
     vec3_t corner2;
@@ -715,6 +717,8 @@ void phy_GenerateColliderCollisionPairs(struct collider_handle_t collider)
     {
         if(collider_ptr->dbvh_node == -1)
         {
+            /* this collider hasn't been inserted into the dbvh,
+            so alloc a new node for it here... */
             collider_ptr->dbvh_node = phy_AllocDbvhNode();
         }
 
@@ -725,6 +729,8 @@ void phy_GenerateColliderCollisionPairs(struct collider_handle_t collider)
         {
             case PHY_COLLIDER_TYPE_PLAYER:
                 player_collider = (struct player_collider_t *)collider_ptr;
+
+                linear_velocity = vfabs(player_collider->base.linear_velocity);
 
                 node->max = player_collider->base.position +
                             vec3_t(player_collider->radius,
@@ -860,7 +866,7 @@ void phy_GenerateCollisionPairs()
                         continue;
                     }
 
-                    player_collider->base.position += player_collider->base.linear_velocity;
+//                    player_collider->base.position += player_collider->base.linear_velocity;
 
                     phy_GenerateColliderCollisionPairs(PHY_COLLIDER_HANDLE(PHY_COLLIDER_TYPE_PLAYER, i));
                 }
@@ -1278,6 +1284,16 @@ void phy_BoxOnBvhRecursive(vec3_t &aabb_max, vec3_t &aabb_min, struct bvh_node_t
 
         for(i = 0; i < 2; i++)
         {
+//            r_DrawLine(child->max, vec3_t(child->max.x, child->min.y, child->max.z), vec3_t(1.0, 0.0, 0.0));
+//            r_DrawLine(vec3_t(child->max.x, child->min.y, child->max.z), vec3_t(child->max.x, child->min.y, child->min.z), vec3_t(1.0, 0.0, 0.0));
+//            r_DrawLine(vec3_t(child->max.x, child->min.y, child->min.z), vec3_t(child->max.x, child->max.y, child->min.z), vec3_t(1.0, 0.0, 0.0));
+//            r_DrawLine(vec3_t(child->max.x, child->max.y, child->min.z), child->max, vec3_t(1.0, 0.0, 0.0));
+//
+//            r_DrawLine(vec3_t(child->min.x, child->max.y, child->max.z), vec3_t(child->min.x, child->min.y, child->max.z), vec3_t(1.0, 0.0, 0.0));
+//            r_DrawLine(vec3_t(child->min.x, child->min.y, child->max.z), vec3_t(child->min.x, child->min.y, child->min.z), vec3_t(1.0, 0.0, 0.0));
+//            r_DrawLine(vec3_t(child->min.x, child->min.y, child->min.z), vec3_t(child->min.x, child->max.y, child->min.z), vec3_t(1.0, 0.0, 0.0));
+//            r_DrawLine(vec3_t(child->min.x, child->max.y, child->min.z), vec3_t(child->min.x, child->max.y, child->max.z), vec3_t(1.0, 0.0, 0.0));
+
             if(aabb_max.x >= child->min.x && aabb_min.x <= child->max.x)
             {
                 if(aabb_max.y >= child->min.y && aabb_min.y <= child->max.y)
@@ -1335,6 +1351,8 @@ struct list_t *phy_FindContactPointsPlayerStatic(struct collider_handle_t player
     struct collision_triangle_t *triangle;
     struct capsule_shape_t capsule_shape;
     struct contact_point_t contact;
+    struct contact_point_t closest_contact;
+    struct contact_point_t next_contact;
     vec3_t collider_top;
     vec3_t capsule_vec;
     vec3_t closest_on_capsule;
@@ -1349,8 +1367,9 @@ struct list_t *phy_FindContactPointsPlayerStatic(struct collider_handle_t player
 
     vec3_t aabb_max;
     vec3_t aabb_min;
+    vec3_t position;
 
-    vec3_t col_tri_vec;
+    vec3_t extents;
     float col_t;
     float edge_t;
     float tri_dist;
@@ -1362,30 +1381,91 @@ struct list_t *phy_FindContactPointsPlayerStatic(struct collider_handle_t player
 
     struct view_t *view = r_GetActiveView();
 
+//    printf("phy_FindContactPointsPlayerStatic\n");
+
     if(collider && static_col)
     {
         contact_points.cursor = 0;
+        position = collider->base.position;
 
-        collider_top = collider->base.position + vec3_t(0.0, collider->height * 0.5, 0.0);
-        capsule_vec = (collider->base.position - vec3_t(0.0, collider->height * 0.5, 0.0)) - collider_top;
+        extents = vec3_t(collider->radius, collider->height * 0.5, collider->radius);
+        aabb_max = position + extents;
+        aabb_min = position - extents;
 
-        aabb_max = collider_top + vec3_t(collider->radius, collider->radius, collider->radius);
-        aabb_min = collider_top + capsule_vec - vec3_t(collider->radius, collider->radius, collider->radius);
+        for(i = 0; i < 3; i++)
+        {
+            if(collider->base.linear_velocity[i] > 0.0)
+            {
+                aabb_max[i] += collider->base.linear_velocity[i];
+            }
+            else
+            {
+                aabb_min[i] += collider->base.linear_velocity[i];
+            }
+        }
+
+//        if(collider->base.linear_velocity.x > 0.0)
+//        {
+//            aabb_max.x += collider->base.linear_velocity.x;
+//        }
+//        else
+//        {
+//            aabb_min.x += collider->base.linear_velocity.x;
+//        }
+
+
+
+//        collider_top = position + vec3_t(0.0, collider->height * 0.5, 0.0);
+//        capsule_vec = (position - vec3_t(0.0, collider->height * 0.5, 0.0)) - collider_top;
+
+
+//        aabb_max = collider_top + vec3_t(collider->radius, collider->radius, collider->radius);
+//        aabb_min = collider_top + capsule_vec - vec3_t(collider->radius, collider->radius, collider->radius);
 
         triangles = phy_BoxOnBvh(aabb_max, aabb_min, static_col->nodes);
 
         capsule_shape.height = collider->height;
         capsule_shape.radius = collider->radius;
 
+        closest_contact.penetration = 1.0;
+        closest_contact.position = collider->base.position + collider->base.linear_velocity;
+
         for(i = 0; i < triangles->cursor; i++)
         {
             triangle = *(struct collision_triangle_t **)triangles->get(i);
 
-            if(phy_ContactCapsuleTriangle(triangle, &capsule_shape, collider->base.position, &contact))
+//            printf("triangle [%f %f %f]\n", triangle->normal[0], triangle->normal[1], triangle->normal[2]);
+//            printf("velocity [%f %f %f]\n", collider->base.linear_velocity[0], collider->base.linear_velocity[1], collider->base.linear_velocity[2]);
+
+            if(phy_ContactCapsuleTriangle2(triangle, &capsule_shape, collider->base.position, collider->base.linear_velocity, &next_contact))
             {
-                contact_points.add(&contact);
+//                printf("contact %f\n", next_contact.penetration);
+                if(next_contact.penetration <= closest_contact.penetration)
+                {
+//                    if(next_contact.penetration == closest_contact.penetration)
+//                    {
+//                        if(dot(next_contact.surface_normal, next_contact.normal) >
+//                           dot(closest_contact.surface_normal, closest_contact.normal))
+//                        {
+//                            closest_contact = next_contact;
+//                        }
+//                    }
+//                    else
+                    {
+                        contact_points.cursor = 0;
+                        closest_contact = next_contact;
+                    }
+
+//                    contact_points.add(&closest_contact);
+                }
+//                contact_points.add(&contact);
             }
         }
+
+        r_DrawPoint(closest_contact.position_on_plane, vec3_t(1.0, 1.0, 0.0), 16.0, 1);
+//        r_DrawL
+
+        contact_points.add(&closest_contact);
 
         return &contact_points;
     }
@@ -1586,19 +1666,11 @@ void phy_CollidePlayerStatic(struct collider_handle_t player_collider, struct co
     unsigned int i;
     int j;
     int k;
-    int deepest_index;
+//    int deepest_index;
+    int closest_index;
     struct contact_point_t *contact;
     struct player_collider_t *collider;
     struct static_collider_t *static_col;
-
-    vec3_t pos_correction;
-    vec3_t vel_correction;
-
-    /* hmm... */
-    float deepest;
-    float dist;
-    float greatest_angle = -FLT_MAX;
-    float angle;
 
     collider = phy_GetPlayerColliderPointer(player_collider);
     static_col = phy_GetStaticColliderPointer(static_collider);
@@ -1607,67 +1679,63 @@ void phy_CollidePlayerStatic(struct collider_handle_t player_collider, struct co
     {
         collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_ON_GROUND;
 
+//        printf("start\n");
+
         for(j = 0; j < MAX_ITERATIONS; j++)
         {
             contacts = phy_FindContactPointsPlayerStatic(player_collider, static_collider);
-            pos_correction = vec3_t(0.0, 0.0, 0.0);
-
-            //printf("start\n");
 
             if(contacts->cursor)
             {
-                //while(contacts->cursor)
+//                for(i = 0; i < contacts->cursor; i++)
+//                {
+//
+//                }
+                contact = (struct contact_point_t *)contacts->get(0);
+
+                if(contact->penetration > 0.0)
                 {
-                    deepest = -FLT_MAX;
-                    greatest_angle = 0.0;
-                    deepest_index = -1;
+                    collider->base.position = contact->position;
+                }
 
-                    for(i = 0; i < contacts->cursor; i++)
-                    {
-                        contact = (struct contact_point_t *)contacts->get(i);
-                        angle = dot(contact->normal, contact->surface_normal);
+                if(contact->penetration == 1.0)
+                {
+                    break;
+                }
 
-                       /* printf("[%f %f %f] -- %f\n", contact->normal[0],
-                                               contact->normal[1],
-                                               contact->normal[2], contact->penetration);*/
+//                if(dot(collider->base.linear_velocity, contact->surface_normal) <= 0.0)
+                {
+//                    printf("%f\n", contact->penetration);
 
-//                        if(contact->penetration < 0.0001)
-//                        {
-//                            continue;
-//                        }
-
-                        //if(angle > greatest_angle)
-                        if(contact->penetration > deepest)
-                        {
-                            deepest = contact->penetration;
-                            //greatest_angle = angle;
-                            deepest_index = i;
-                        }
-                    }
-
-                    if(deepest_index == -1)
-                    {
-                        break;
-                    }
-
-                    contact = (struct contact_point_t *)contacts->get(deepest_index);
-
-                    if(dot(contact->normal, vec3_t(0.0, 1.0, 0.0)) > 0.7)
+                    if(dot(contact->surface_normal, vec3_t(0.0, 1.0, 0.0)) > 0.7)
                     {
                         collider->flags |= PHY_PLAYER_COLLIDER_FLAG_ON_GROUND;
                     }
 
-                    if(dot(collider->base.linear_velocity, contact->normal) < 0.0)
-                    {
-                        /* clip the linear velocity to make it go parallel to the contact plane... */
-                        collider->base.linear_velocity = collider->base.linear_velocity - contact->normal *
-                                                    dot(collider->base.linear_velocity, contact->normal);
-                    }
+//                    r_DrawPoint(contact->position, vec3_t(0.0, 1.0, 0.0), 12.0, 1);
+//                    r_DrawLine(contact->position, contact->position + contact->normal, vec3_t(0.0, 1.0, 0.0));
 
-                    collider->base.position += contact->normal * contact->penetration;
 
-                    contacts->remove(deepest_index);
+//                    printf("[%f %f %f] -- [%f %f %f] -> ", contact->normal[0],
+//                                                           contact->normal[1],
+//                                                           contact->normal[2],
+//
+//                                                           collider->base.linear_velocity[0],
+//                                                           collider->base.linear_velocity[1],
+//                                                           collider->base.linear_velocity[2]);
+
+//                    collider->base.position = contact->position;
+//                    collider->base.position += contact->normal * 0.001;
+//                    collider->base.position += collider->base.linear_velocity * contact->penetration + contact->normal * 0.001;
+                    collider->base.linear_velocity = collider->base.linear_velocity - contact->normal *
+                        dot(collider->base.linear_velocity, contact->normal);
+
+//                    printf("[%f %f %f]\n", collider->base.linear_velocity[0],
+//                                         collider->base.linear_velocity[1],
+//                                         collider->base.linear_velocity[2]);
                 }
+
+//                contacts->remove(0);
             }
             else
             {

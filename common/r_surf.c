@@ -142,6 +142,8 @@ void r_SetMaterial(int material_handle)
     struct texture_t *texture;
     vec4_t base_color;
 
+    int material_flags = 0;
+
     material = r_GetMaterialPointer(material_handle);
 
     if(material)
@@ -159,13 +161,20 @@ void r_SetMaterial(int material_handle)
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, texture->gl_handle);
             r_DefaultUniform1i(r_TextureSampler0, 0);
-            r_DefaultUniform1i(r_MaterialFlags, 1);
-        }
-        else
-        {
-            r_DefaultUniform1i(r_MaterialFlags, 0);
+            material_flags |= 1;
         }
 
+        if(material->normal_texture.texture_index != R_INVALID_TEXTURE_INDEX)
+        {
+            texture = r_GetTexturePointer(material->normal_texture);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, texture->gl_handle);
+            r_DefaultUniform1i(r_TextureSampler1, 1);
+            material_flags |= 2;
+        }
+
+
+        r_DefaultUniform1i(r_MaterialFlags, material_flags);
         r_DefaultUniform4fv(r_BaseColor, (float *) base_color.floats);
     }
 }
@@ -243,6 +252,7 @@ unsigned int r_CreateGLTexture(unsigned short target,
     glTexParameteri(target, GL_TEXTURE_WRAP_T, wrap_t);
     glTexParameteri(target, GL_TEXTURE_BASE_LEVEL, base_level);
     glTexParameteri(target, GL_TEXTURE_MAX_LEVEL, max_level);
+    glTexParameterf(target, GL_TEXTURE_MAX_ANISOTROPY, 8.0);
 
     if(target == GL_TEXTURE_3D)
     {
@@ -323,8 +333,8 @@ void r_UploadTexturePixels(struct upload_texture_pixels_params_t *params)
         texture_params->wrap_r = 0;
         texture_params->base_level = 0;
         texture_params->max_level = 4;
-        texture_params->min_filter = GL_LINEAR;
-        texture_params->mag_filter = GL_LINEAR;
+        texture_params->min_filter = GL_LINEAR_MIPMAP_LINEAR;
+        texture_params->mag_filter = GL_LINEAR_MIPMAP_LINEAR;
 
         texture->gl_handle = r_CreateGLTexture(texture_params->target,
                                                texture_params->width,
@@ -341,7 +351,7 @@ void r_UploadTexturePixels(struct upload_texture_pixels_params_t *params)
 
         glBindTexture(GL_TEXTURE_2D, texture->gl_handle);
         glTexImage2D(GL_TEXTURE_2D, 0, texture_params->internal_format, texture_params->width, texture_params->height, 0, texture_params->format, texture_params->type, params->texture_data);
-//        glGenerateMipmap(GL_TEXTURE_2D);
+        glGenerateMipmap(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
 
         printf("texture [%s] uploaded!\n", params->file_name);
