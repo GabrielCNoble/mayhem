@@ -27,6 +27,9 @@ struct dbvh_node_t
 
     vec3_t max;
     vec3_t min;
+
+    vec3_t expanded_max;
+    vec3_t expanded_min;
 };
 
 
@@ -108,7 +111,7 @@ struct base_collider_t
     int type;
     int dbvh_node;
     vec3_t position;
-    vec3_t linear_velocity;
+//    vec3_t linear_velocity;
 };
 
 
@@ -143,6 +146,7 @@ enum PHY_PLAYER_COLLIDER_FLAGS
 struct player_collider_t
 {
     struct base_collider_t base;
+    vec3_t linear_velocity;
     vec3_t warp_position;
     unsigned int entity_index;
 //    struct player_handle_t player_handle;
@@ -166,6 +170,18 @@ struct portal_collider_t
 //    vec2_t scale;
 
     int portal_handle;
+};
+
+/*
+============================================
+============================================
+============================================
+*/
+
+struct projectile_collider_t
+{
+    vec3_t linear_velocity;
+    float radius;
 };
 
 /*

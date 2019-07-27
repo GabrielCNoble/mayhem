@@ -36,7 +36,7 @@ int fe_Frontend(void *data)
 
    // int shd = fe_LoadShader("shaders/test");
 
-    player = player_CreatePlayer("default", vec3_t(-3.0, 2.0, 0.0), vec3_t(0.0, 0.3, 0.0));
+    player = player_CreatePlayer("default", vec3_t(-3.0, 1.0, 0.0), vec3_t(0.0, 0.3, 0.0));
     player_SetActivePlayer(player);
 //
 //    player_CreatePlayer("default1", vec3_t(4.0, 0.22, 0.0));
@@ -81,9 +81,9 @@ int fe_Frontend(void *data)
     portal->orientation = rotate_y(1.0);
 
     #elif defined LEVEL_7
-
-    w_LoadLevel("../models/test7.gmy");
-//    w_LoadLevel("../models/level2.gmy");
+//
+//    w_LoadLevel("../models/test5.gmy");
+    w_LoadLevel("../models/level3.gmy");
     struct model_handle_t cube = mdl_LoadModel("../models/monkey.gmy");
 //
 //

@@ -32,6 +32,8 @@ struct portal_collider_t *phy_GetPortalColliderPointer(struct collider_handle_t 
 
 struct static_collider_t *phy_GetStaticColliderPointer(struct collider_handle_t collider);
 
+struct projectile_collider_t *phy_GetProjectileColliderPointer(struct collider_handle_t collider);
+
 struct rigid_body_collider_t *phy_GetRigidBodyColliderPointer(struct collider_handle_t collider);
 
 
