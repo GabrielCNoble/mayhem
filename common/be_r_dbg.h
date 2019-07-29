@@ -43,6 +43,11 @@ struct draw_point_data_t
     int smooth;
 };
 
+struct draw_debug_data_t
+{
+    mat4_t view_projection_matrix;
+};
+
 void be_r_DrawLine(struct draw_line_data_t *line);
 
 void be_r_DrawTriangle(struct draw_triangle_data_t *triangle);
@@ -50,6 +55,8 @@ void be_r_DrawTriangle(struct draw_triangle_data_t *triangle);
 void be_r_DrawCapsule(struct draw_capsule_data_t *capsule);
 
 void be_r_DrawPoint(struct draw_point_data_t *point);
+
+void be_r_DrawDebug(struct draw_debug_data_t *data);
 
 
 #endif // BE_R_DBG

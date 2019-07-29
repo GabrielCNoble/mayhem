@@ -1,6 +1,7 @@
 #include "stack_list.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 stack_list_t::stack_list_t()
 {
@@ -47,13 +48,15 @@ void stack_list_t::resize(int new_size)
 {
     void *new_buffer;
 
+//    printf("stack_list_t::resize: %d -> %d\n", this->size, new_size);
+
     if(this->size < new_size)
     {
         new_buffer = calloc(this->elem_size, new_size);
 
         if(this->buffer)
         {
-            memcpy(new_buffer, this->buffer, this->elem_size * this->size);
+            memmove(new_buffer, this->buffer, this->elem_size * this->size);
             free(this->buffer);
             free(this->free_list);
         }

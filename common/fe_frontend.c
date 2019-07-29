@@ -47,11 +47,13 @@ int fe_Frontend(void *data)
     in_RegisterKey(SDL_SCANCODE_S);
     in_RegisterKey(SDL_SCANCODE_A);
     in_RegisterKey(SDL_SCANCODE_D);
+    in_RegisterKey(SDL_SCANCODE_E);
     in_RegisterKey(SDL_SCANCODE_SPACE);
     in_RegisterKey(SDL_SCANCODE_ESCAPE);
     in_RegisterKey(SDL_SCANCODE_LCTRL);
 
-    r_CreateLight(vec3_t(5.0, 0.1, 0.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
+    r_CreateLight(vec3_t(5.0, 0.9, 0.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
+    r_CreateLight(vec3_t(6.0, 1.5, 6.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
     r_CreateLight(vec3_t(0.0, 4.2, 2.0), vec3_t(1.0, 1.0, 1.0), 0.2, 20.0);
     r_CreateLight(vec3_t(-5.0, 1.2, -3.0), vec3_t(0.0, 0.2, 0.4), 0.3, 20.0);
     r_CreateLight(vec3_t(0.0, 8.2, 1.5), vec3_t(1.0, 0.2, 0.4), 0.3, 20.0);
@@ -83,7 +85,7 @@ int fe_Frontend(void *data)
     #elif defined LEVEL_7
 //
 //    w_LoadLevel("../models/test5.gmy");
-    w_LoadLevel("../models/level3.gmy");
+    w_LoadLevel("../models/level0.gmy");
     struct model_handle_t cube = mdl_LoadModel("../models/monkey.gmy");
 //
 //

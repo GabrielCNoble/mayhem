@@ -17,6 +17,8 @@ struct collider_handle_t phy_CreateCollider(int type);
 
 struct collider_handle_t phy_CreateStaticCollider();
 
+struct collider_handle_t phy_CreateProjectileCollider(const vec3_t &position, float radius);
+
 void phy_DestroyCollider(struct collider_handle_t collider_handle);
 
 struct base_collider_t *phy_GetColliderPointer(struct collider_handle_t collider);
@@ -76,11 +78,20 @@ void phy_DeallocDbvhNode(int node_index);
 
 struct dbvh_node_t *phy_GetDbvhNodePointer(int node_index);
 
+struct dbvh_node_t *phy_GetSiblingDbvhNodePointer(int node_index);
+
+/* generates the collision pairs for a given collider. Also inserts and
+updates dbvh_node_t into the broadphase dbvh tree. Is used to insert static
+colliders into the dbvh tree. */
 void phy_GenerateColliderCollisionPairs(struct collider_handle_t collider);
+
+void phy_RemoveNodeFromDbvh(int node_index);
 
 void phy_GenerateCollisionPairs();
 
 void phy_DbvhNodesVolume(int node_a, int node_b, vec3_t *max, vec3_t *min);
+
+
 
 
 /*
@@ -114,9 +125,12 @@ struct list_t *phy_BoxOnBvh(vec3_t &aabb_max, vec3_t &aabb_min, struct bvh_node_
 
 struct list_t *phy_FindContactPointsPlayerStatic(struct collider_handle_t player_collider, struct collider_handle_t static_collider);
 
+struct list_t *phy_FindContactPointsProjectileStatic(struct collider_handle_t projectile_collider, struct collider_handle_t static_collider);
+
 struct list_t *phy_FindContactPointsRigidStatic(struct collider_handle_t rigid_body_collider, struct collider_handle_t static_collider);
 
 struct list_t *phy_FindContactPointsPlayerPortal(struct collider_handle_t player_collider, struct collider_handle_t portal_collider);
+
 
 
 
@@ -126,6 +140,8 @@ void phy_Collide(struct collider_handle_t collider_a, struct collider_handle_t c
 //void phy_CollidePlayerWorld(struct collider_handle_t player_collider);
 
 void phy_CollidePlayerStatic(struct collider_handle_t player_collider, struct collider_handle_t static_collider);
+
+void phy_CollideProjectileStatic(struct collider_handle_t projectile_collider, struct collider_handle_t static_collider);
 
 void phy_CollidePlayerPortal(struct collider_handle_t player_collider, struct collider_handle_t portal_collider);
 

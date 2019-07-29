@@ -49,7 +49,6 @@ void be_Shutdown();
 
 void be_RunBackend();
 
-
 void be_QueueCmd(int type, void *data, int size);
 
 void be_NextCmd(struct backend_cmd_t *cmd, unsigned char **cmd_data);

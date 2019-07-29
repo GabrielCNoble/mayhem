@@ -66,167 +66,205 @@ void r_ShutdownFrame()
 {
 
 }
-
-void r_DrawDebug(struct draw_command_buffer_t *cmd_buffer, int options)
-{
-    r_SetShader(-1);
-
-    int i;
-    int c;
-    struct player_collider_t *player_colliders;
-    struct player_collider_t *player_collider;
-
-    struct rigid_body_collider_t *rigid_colliders;
-    struct rigid_body_collider_t *rigid_collider;
-    struct base_shape_t *base_shape;
-    struct box_shape_t *box_shape;
-
-    vec3_t pos;
-    vec3_t corner;
-    vec3_t size;
-    float radius;
-    float height;
-
-    player_colliders = (struct player_collider_t *)phy_colliders[PHY_COLLIDER_TYPE_PLAYER].buffer;
-    c = phy_colliders[PHY_COLLIDER_TYPE_PLAYER].cursor;
-
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf((float *)cmd_buffer->view_matrix.floats);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    //if(options & R_DEBUG_DRAW_OPTION_COLLIDERS)
-    {
-        for(i = 0; i < c; i++)
-        {
-            player_collider = player_colliders + i;
-
-            if(player_collider->base.type == PHY_COLLIDER_TYPE_NONE)
-            {
-                continue;
-            }
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            glDisable(GL_CULL_FACE);
-            glLineWidth(2.0);
-            glColor3f(1.0, 1.0, 1.0);
-            glBegin(GL_QUADS);
-
-            radius = player_collider->radius;
-            height = player_collider->height * 0.5;
-            pos = player_collider->base.position;
-
-            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] + radius);
-            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] - radius);
-            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] - radius);
-            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] + radius);
-
-
-            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] + radius);
-            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] - radius);
-            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] - radius);
-            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] + radius);
-
-
-            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] + radius);
-            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] + radius);
-            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] - radius);
-            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] - radius);
-
-
-            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] + radius);
-            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] + radius);
-            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] - radius);
-            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] - radius);
-
-
-            glEnd();
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            glEnable(GL_CULL_FACE);
-            glLineWidth(1.0);
-        }
-    }
-
-
-
-
-    rigid_colliders = (struct rigid_body_collider_t *)phy_colliders[PHY_COLLIDER_TYPE_RIGID].buffer;
-    c = phy_colliders[PHY_COLLIDER_TYPE_RIGID].cursor;
-
-    for(i = 0; i < c; i++)
-    {
-        rigid_collider = rigid_colliders + i;
-
-        if(rigid_collider->base.type == PHY_COLLIDER_TYPE_NONE)
-        {
-            continue;
-        }
-
-        base_shape = phy_GetCollisionShapePointer(rigid_collider->collision_shape);
-
-        glPointSize(8.0);
-        glBegin(GL_POINTS);
-        glColor3f(0.0, 1.0, 0.0);
-
-        switch(base_shape->type)
-        {
-            case PHY_COLLISION_SHAPE_BOX:
-                box_shape = (struct box_shape_t *)base_shape;
-                size = box_shape->size * 0.5;
-
-                corner = size * rigid_collider->orientation + rigid_collider->base.position;
-                glVertex3f(corner[0], corner[1], corner[2]);
-
-                corner = vec3_t(-size[0], size[1], size[2]) *
-                    rigid_collider->orientation + rigid_collider->base.position;
-                glVertex3f(corner[0], corner[1], corner[2]);
-
-                corner = vec3_t(-size[0], size[1], -size[2]) *
-                    rigid_collider->orientation + rigid_collider->base.position;
-                glVertex3f(corner[0], corner[1], corner[2]);
-
-                corner = vec3_t(size[0], size[1], -size[2]) *
-                    rigid_collider->orientation + rigid_collider->base.position;
-                glVertex3f(corner[0], corner[1], corner[2]);
-
-
-
-
-                corner = -size * rigid_collider->orientation + rigid_collider->base.position;
-                glVertex3f(corner[0], corner[1], corner[2]);
-
-                corner = vec3_t(-size[0], -size[1], size[2]) *
-                    rigid_collider->orientation + rigid_collider->base.position;
-                glVertex3f(corner[0], corner[1], corner[2]);
-
-                corner = vec3_t(size[0], -size[1], size[2]) *
-                    rigid_collider->orientation + rigid_collider->base.position;
-                glVertex3f(corner[0], corner[1], corner[2]);
-
-                corner = vec3_t(size[0], -size[1], -size[2]) *
-                    rigid_collider->orientation + rigid_collider->base.position;
-                glVertex3f(corner[0], corner[1], corner[2]);
-            break;
-        }
-
-        glEnd();
-        glPointSize(1.0);
-    }
-
-
-
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glDisable(GL_CULL_FACE);
-    glColor3f(0.5, 0.2, 1.0);
-    glBegin(GL_QUADS);
-    r_DrawDbvh(phy_dbvh_root);
-    glEnd();
-    glEnable(GL_CULL_FACE);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    cmd_buffer->used = 1;
-}
+//
+//void r_DrawDebug(struct draw_command_buffer_t *cmd_buffer, int options)
+//{
+////    r_SetShader(-1);
+//
+//    int i;
+//    int type;
+//    int c;
+//    struct player_collider_t *player_colliders;
+//    struct player_collider_t *player_collider;
+//
+//    struct rigid_body_collider_t *rigid_colliders;
+//    struct rigid_body_collider_t *rigid_collider;
+//    struct base_shape_t *base_shape;
+//    struct box_shape_t *box_shape;
+//
+//    vec3_t pos;
+//    vec3_t corner;
+//    vec3_t size;
+//    float radius;
+//    float height;
+//
+//    r_SetShader(r_renderer.debug_shader);
+//    r_DefaultUniformMatrix4fv(r_ViewProjectionMatrix, (float *)active_view->view_projection_matrix.floats);
+////    glMatrixMode(GL_PROJECTION);
+////    glLoadMatrixf((float *)cmd_buffer->view_matrix.floats);
+////    glMatrixMode(GL_MODELVIEW);
+////    glLoadIdentity();
+//
+//    for(type = PHY_COLLIDER_TYPE_PLAYER; type < PHY_COLLIDER_TYPE_NONE; type++)
+//    {
+//        c = phy_colliders[type].cursor;
+//
+//        switch(type)
+//        {
+//            case PHY_COLLIDER_TYPE_PLAYER:
+//                #define SEGMENT_VERT_COUNT 64
+//                struct vertex_t vertices[SEGMENT_VERT_COUNT * 3];
+//
+//                vec4_t color = vec4_t(0.0, 1.0, 0.0, 1.0);
+//                r_DefaultUniform4fv(r_DebugColor, (float *)color.floats);
+//
+//                for(i = 0; i < c; i++)
+//                {
+//                    player_collider = (struct player_collider_t *)phy_colliders[type].get(i);
+//
+//                    if(player_collider->base.type != PHY_COLLIDER_TYPE_PLAYER)
+//                    {
+//                        continue;
+//                    }
+//
+//                    r_MemcpyToUnmapped(r_debug_verts_buffer_handle, &vertices, sizeof(struct vertex_t ) * SEGMENT_VERT_COUNT * 3);
+//
+//                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//                    glDrawArrays(GL_LINE_LOOP, r_debug_verts_buffer_start, SEGMENT_VERT_COUNT);
+//                    glDrawArrays(GL_LINE_LOOP, r_debug_verts_buffer_start + SEGMENT_VERT_COUNT, SEGMENT_VERT_COUNT);
+//                    glDrawArrays(GL_LINE_LOOP, r_debug_verts_buffer_start + SEGMENT_VERT_COUNT * 2, SEGMENT_VERT_COUNT);
+//                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+//                }
+//
+//                #undef SEGMENT_VERT_COUNT
+//            break;
+//        }
+//    }
+//
+////    player_colliders = (struct player_collider_t *)phy_colliders[PHY_COLLIDER_TYPE_PLAYER].buffer;
+//    c = phy_colliders[PHY_COLLIDER_TYPE_PLAYER].cursor;
+//
+//    //if(options & R_DEBUG_DRAW_OPTION_COLLIDERS)
+////    {
+////        for(i = 0; i < c; i++)
+////        {
+////            player_collider = player_colliders + i;
+////
+////            if(player_collider->base.type == PHY_COLLIDER_TYPE_NONE)
+////            {
+////                continue;
+////            }
+////            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+////            glDisable(GL_CULL_FACE);
+////            glLineWidth(2.0);
+////            glColor3f(1.0, 1.0, 1.0);
+////            glBegin(GL_QUADS);
+////
+////            radius = player_collider->radius;
+////            height = player_collider->height * 0.5;
+////            pos = player_collider->base.position;
+////
+////            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] + radius);
+////            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] - radius);
+////            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] - radius);
+////            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] + radius);
+////
+////
+////            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] + radius);
+////            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] - radius);
+////            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] - radius);
+////            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] + radius);
+////
+////
+////            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] + radius);
+////            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] + radius);
+////            glVertex3f(pos[0] - radius, pos[1] - height, pos[2] - radius);
+////            glVertex3f(pos[0] - radius, pos[1] + height, pos[2] - radius);
+////
+////
+////            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] + radius);
+////            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] + radius);
+////            glVertex3f(pos[0] + radius, pos[1] - height, pos[2] - radius);
+////            glVertex3f(pos[0] + radius, pos[1] + height, pos[2] - radius);
+////
+////
+////            glEnd();
+////            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+////            glEnable(GL_CULL_FACE);
+////            glLineWidth(1.0);
+////        }
+////    }
+//
+//
+//
+//
+////    rigid_colliders = (struct rigid_body_collider_t *)phy_colliders[PHY_COLLIDER_TYPE_RIGID].buffer;
+////    c = phy_colliders[PHY_COLLIDER_TYPE_RIGID].cursor;
+////
+////    for(i = 0; i < c; i++)
+////    {
+////        rigid_collider = rigid_colliders + i;
+////
+////        if(rigid_collider->base.type == PHY_COLLIDER_TYPE_NONE)
+////        {
+////            continue;
+////        }
+////
+////        base_shape = phy_GetCollisionShapePointer(rigid_collider->collision_shape);
+////
+////        glPointSize(8.0);
+////        glBegin(GL_POINTS);
+////        glColor3f(0.0, 1.0, 0.0);
+////
+////        switch(base_shape->type)
+////        {
+////            case PHY_COLLISION_SHAPE_BOX:
+////                box_shape = (struct box_shape_t *)base_shape;
+////                size = box_shape->size * 0.5;
+////
+////                corner = size * rigid_collider->orientation + rigid_collider->base.position;
+////                glVertex3f(corner[0], corner[1], corner[2]);
+////
+////                corner = vec3_t(-size[0], size[1], size[2]) *
+////                    rigid_collider->orientation + rigid_collider->base.position;
+////                glVertex3f(corner[0], corner[1], corner[2]);
+////
+////                corner = vec3_t(-size[0], size[1], -size[2]) *
+////                    rigid_collider->orientation + rigid_collider->base.position;
+////                glVertex3f(corner[0], corner[1], corner[2]);
+////
+////                corner = vec3_t(size[0], size[1], -size[2]) *
+////                    rigid_collider->orientation + rigid_collider->base.position;
+////                glVertex3f(corner[0], corner[1], corner[2]);
+////
+////
+////
+////
+////                corner = -size * rigid_collider->orientation + rigid_collider->base.position;
+////                glVertex3f(corner[0], corner[1], corner[2]);
+////
+////                corner = vec3_t(-size[0], -size[1], size[2]) *
+////                    rigid_collider->orientation + rigid_collider->base.position;
+////                glVertex3f(corner[0], corner[1], corner[2]);
+////
+////                corner = vec3_t(size[0], -size[1], size[2]) *
+////                    rigid_collider->orientation + rigid_collider->base.position;
+////                glVertex3f(corner[0], corner[1], corner[2]);
+////
+////                corner = vec3_t(size[0], -size[1], -size[2]) *
+////                    rigid_collider->orientation + rigid_collider->base.position;
+////                glVertex3f(corner[0], corner[1], corner[2]);
+////            break;
+////        }
+////
+////        glEnd();
+////        glPointSize(1.0);
+////    }
+//
+//
+//
+//
+////    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+////    glDisable(GL_CULL_FACE);
+////    glColor3f(0.5, 0.2, 1.0);
+////    glBegin(GL_QUADS);
+////    r_DrawDbvh(phy_dbvh_root);
+////    glEnd();
+////    glEnable(GL_CULL_FACE);
+////    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+//
+//    cmd_buffer->used = 1;
+//}
 
 void r_DrawLit(struct draw_command_buffer_t *cmd_buffer)
 {

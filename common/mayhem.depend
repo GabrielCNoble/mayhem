@@ -1319,10 +1319,11 @@
 
 1560743983 d:\files\gabriel noble\compiler\mayhem\containers\ring_buffer.h
 
-1553385403 source:d:\files\gabriel noble\compiler\mayhem\containers\stack_list.c
+1564354024 source:d:\files\gabriel noble\compiler\mayhem\containers\stack_list.c
 	"stack_list.h"
 	<stdlib.h>
 	<string.h>
+	<stdio.h>
 
 1560219173 source:d:\files\gabriel noble\compiler\mayhem\common\ent.c
 	"ent.h"
@@ -1341,7 +1342,7 @@
 1556935751 d:\files\gabriel noble\compiler\mayhem\common\matrix.h
 	"vector.h"
 
-1564244928 d:\files\gabriel noble\compiler\mayhem\common\phy_common.h
+1564370678 d:\files\gabriel noble\compiler\mayhem\common\phy_common.h
 	"../gmath/vector.h"
 	"../gmath/matrix.h"
 	"../containers/list.h"
@@ -1353,14 +1354,14 @@
 1560218202 d:\files\gabriel noble\compiler\mayhem\common\r_verts.h
 	"../gmath/vector.h"
 
-1564118126 d:\files\gabriel noble\compiler\mayhem\common\physics.h
+1564367410 d:\files\gabriel noble\compiler\mayhem\common\physics.h
 	"phy_common.h"
 
 1556936465 source:d:\files\gabriel noble\compiler\mayhem\common\matrix.c
 	"matrix.h"
 	<math.h>
 
-1564119226 source:d:\files\gabriel noble\compiler\mayhem\common\phy_col.c
+1564367021 source:d:\files\gabriel noble\compiler\mayhem\common\phy_col.c
 	"phy_col.h"
 	"r_dbg.h"
 	"../utils/geo.h"
@@ -1368,10 +1369,10 @@
 	<stdio.h>
 	<math.h>
 
-1564119211 d:\files\gabriel noble\compiler\mayhem\common\phy_col.h
+1564364921 d:\files\gabriel noble\compiler\mayhem\common\phy_col.h
 	"phy_common.h"
 
-1563751213 source:d:\files\gabriel noble\compiler\mayhem\common\be_backend.c
+1564361332 source:d:\files\gabriel noble\compiler\mayhem\common\be_backend.c
 	"be_backend.h"
 	"be_r_dbg.h"
 	"r_common.h"
@@ -1387,7 +1388,7 @@
 	<string.h>
 	<stdarg.h>
 
-1563751192 d:\files\gabriel noble\compiler\mayhem\common\be_backend.h
+1564361906 d:\files\gabriel noble\compiler\mayhem\common\be_backend.h
 	"r_verts.h"
 
 1563572114 d:\files\gabriel noble\compiler\mayhem\common\r_common.h
@@ -1747,7 +1748,7 @@
 	<OpenGL/glu.h>
 	<GL/glu.h>
 
-1563546975 d:\files\gabriel noble\compiler\mayhem\common\r_frame.h
+1564360986 d:\files\gabriel noble\compiler\mayhem\common\r_frame.h
 	"r_common.h"
 	"r_view.h"
 
@@ -1774,7 +1775,7 @@
 	<stdio.h>
 	<stdlib.h>
 
-1564245180 source:d:\files\gabriel noble\compiler\mayhem\common\physics.c
+1564370954 source:d:\files\gabriel noble\compiler\mayhem\common\physics.c
 	"physics.h"
 	"phy_col.h"
 	"../containers/stack_list.h"
@@ -1825,7 +1826,7 @@
 1560750756 d:\files\gabriel noble\compiler\mayhem\common\r_surf.h
 	"../gmath/vector.h"
 
-1564168508 source:d:\files\gabriel noble\compiler\mayhem\common\fe_frontend.c
+1564371318 source:d:\files\gabriel noble\compiler\mayhem\common\fe_frontend.c
 	"fe_frontend.h"
 	"be_backend.h"
 	"input.h"
@@ -1862,7 +1863,7 @@
 	"../gmath/vector.h"
 	"physics.h"
 
-1561252813 source:d:\files\gabriel noble\compiler\mayhem\common\main.c
+1564367742 source:d:\files\gabriel noble\compiler\mayhem\common\main.c
 	"main.h"
 	<stdio.h>
 	<math.h>
@@ -1900,7 +1901,7 @@
 	"r_common.h"
 	"../containers/list.h"
 
-1564087781 source:d:\files\gabriel noble\compiler\mayhem\common\player.c
+1564371091 source:d:\files\gabriel noble\compiler\mayhem\common\player.c
 	"player.h"
 	"../containers/stack_list.h"
 	"input.h"
@@ -1915,7 +1916,7 @@
 	<math.h>
 	<stdlib.h>
 
-1563553058 source:d:\files\gabriel noble\compiler\mayhem\common\r_frame.c
+1564360982 source:d:\files\gabriel noble\compiler\mayhem\common\r_frame.c
 	"r_frame.h"
 	"r_verts.h"
 	"r_shader.h"
@@ -1994,7 +1995,7 @@
 	<math.h>
 	<float.h>
 
-1563929840 source:d:\files\gabriel noble\compiler\mayhem\common\r_vis.c
+1564361503 source:d:\files\gabriel noble\compiler\mayhem\common\r_vis.c
 	"r_vis.h"
 	"r_view.h"
 	"r_portal.h"
@@ -2104,24 +2105,28 @@
 	"geo.h"
 	<math.h>
 
-1563751298 d:\files\gabriel noble\compiler\mayhem\common\be_r_dbg.h
+1564361243 d:\files\gabriel noble\compiler\mayhem\common\be_r_dbg.h
 	"r_dbg.h"
 
-1563751277 d:\files\gabriel noble\compiler\mayhem\common\r_dbg.h
+1564361255 d:\files\gabriel noble\compiler\mayhem\common\r_dbg.h
 	"../gmath/vector.h"
+	"../gmath/matrix.h"
 
-1563982983 source:d:\files\gabriel noble\compiler\mayhem\common\be_r_dbg.c
+1564363862 source:d:\files\gabriel noble\compiler\mayhem\common\be_r_dbg.c
 	"be_r_dbg.h"
 	"r_verts.h"
 	"r_view.h"
 	"r_shader.h"
+	"phy_common.h"
 	"../utils/geo.h"
 	"../gmath/geometry.h"
+	"../containers/stack_list.h"
 	<math.h>
 
-1563751450 source:d:\files\gabriel noble\compiler\mayhem\common\r_dbg.c
+1564361524 source:d:\files\gabriel noble\compiler\mayhem\common\r_dbg.c
 	"r_dbg.h"
 	"r_verts.h"
+	"r_view.h"
 	"be_backend.h"
 	"be_r_dbg.h"
 	"../containers/stack_list.h"
@@ -2129,7 +2134,7 @@
 1564080216 d:\files\gabriel noble\compiler\mayhem\gmath\geometry.h
 	"vector.h"
 
-1564085063 source:d:\files\gabriel noble\compiler\mayhem\gmath\geometry.c
+1564366314 source:d:\files\gabriel noble\compiler\mayhem\gmath\geometry.c
 	"geometry.h"
 	<math.h>
 	"../common/r_dbg.h"

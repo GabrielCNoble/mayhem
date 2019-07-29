@@ -1,5 +1,6 @@
 #include "r_dbg.h"
 #include "r_verts.h"
+#include "r_view.h"
 #include "be_backend.h"
 #include "be_r_dbg.h"
 #include "../containers/stack_list.h"
@@ -69,6 +70,15 @@ void r_DrawPoint(vec3_t position, vec3_t color, float size, int smooth)
     data.smooth = smooth;
 
     be_QueueCmd(BE_CMD_DRAW_POINT, &data, sizeof(data));
+}
+
+void r_DrawDebug(struct view_t *view)
+{
+    struct draw_debug_data_t data;
+
+    data.view_projection_matrix = view->view_projection_matrix;
+
+    be_QueueCmd(BE_CMD_DRAW_DBG, &data, sizeof(data));
 }
 
 

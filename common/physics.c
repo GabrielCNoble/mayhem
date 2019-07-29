@@ -43,17 +43,18 @@ extern "C"
 
 void phy_Init()
 {
-    phy_dbvh_nodes.init(sizeof(struct dbvh_node_t), 256);
+    phy_dbvh_nodes.init(sizeof(struct dbvh_node_t), 512);
     phy_collision_pairs.init(sizeof(struct collision_pair_t), 512);
-    phy_colliders[PHY_COLLIDER_TYPE_PLAYER].init(sizeof(struct player_collider_t), 32);
-    phy_colliders[PHY_COLLIDER_TYPE_STATIC].init(sizeof(struct static_collider_t), 32);
-    phy_colliders[PHY_COLLIDER_TYPE_PORTAL].init(sizeof(struct portal_collider_t), 32);
-    phy_colliders[PHY_COLLIDER_TYPE_RIGID].init(sizeof(struct rigid_body_collider_t), 32);
+    phy_colliders[PHY_COLLIDER_TYPE_PLAYER].init(sizeof(struct player_collider_t), 512);
+    phy_colliders[PHY_COLLIDER_TYPE_STATIC].init(sizeof(struct static_collider_t), 512);
+    phy_colliders[PHY_COLLIDER_TYPE_PORTAL].init(sizeof(struct portal_collider_t), 512);
+    phy_colliders[PHY_COLLIDER_TYPE_RIGID].init(sizeof(struct rigid_body_collider_t), 512);
+    phy_colliders[PHY_COLLIDER_TYPE_PROJECTILE].init(sizeof(struct projectile_collider_t), 512);
 
 
-    phy_collision_shapes[PHY_COLLISION_SHAPE_BOX].init(sizeof(struct box_shape_t), 32);
-    phy_collision_shapes[PHY_COLLISION_SHAPE_CAPSULE].init(sizeof(struct capsule_shape_t), 32);
-    phy_collision_shapes[PHY_COLLISION_SHAPE_SPHERE].init(sizeof(struct sphere_shape_t), 32);
+    phy_collision_shapes[PHY_COLLISION_SHAPE_BOX].init(sizeof(struct box_shape_t), 512);
+    phy_collision_shapes[PHY_COLLISION_SHAPE_CAPSULE].init(sizeof(struct capsule_shape_t), 512);
+    phy_collision_shapes[PHY_COLLISION_SHAPE_SPHERE].init(sizeof(struct sphere_shape_t), 512);
 
     phy_collision_matrix[PHY_COLLIDER_TYPE_PLAYER][PHY_COLLIDER_TYPE_PORTAL] = phy_CollidePlayerPortal;
     phy_collision_matrix[PHY_COLLIDER_TYPE_PORTAL][PHY_COLLIDER_TYPE_PLAYER] = phy_CollidePlayerPortal;
@@ -63,6 +64,9 @@ void phy_Init()
 
     phy_collision_matrix[PHY_COLLIDER_TYPE_RIGID][PHY_COLLIDER_TYPE_STATIC] = phy_ColliderRigidStatic;
     phy_collision_matrix[PHY_COLLIDER_TYPE_STATIC][PHY_COLLIDER_TYPE_RIGID] = phy_ColliderRigidStatic;
+
+    phy_collision_matrix[PHY_COLLIDER_TYPE_PROJECTILE][PHY_COLLIDER_TYPE_STATIC] = phy_CollideProjectileStatic;
+    phy_collision_matrix[PHY_COLLIDER_TYPE_STATIC][PHY_COLLIDER_TYPE_PROJECTILE] = phy_CollideProjectileStatic;
 }
 
 void phy_Shutdown()
@@ -78,6 +82,7 @@ struct collider_handle_t phy_CreateCollider(int type)
 
     if(type >= PHY_COLLIDER_TYPE_PLAYER && type < PHY_COLLIDER_TYPE_NONE)
     {
+//        printf("phy_CreateCollider\n");
         handle.type = type;
         handle.index = phy_colliders[type].add(NULL);
 
@@ -104,6 +109,23 @@ struct collider_handle_t phy_CreateStaticCollider()
     return handle;
 }
 
+struct collider_handle_t phy_CreateProjectileCollider(const vec3_t &position, float radius)
+{
+    struct collider_handle_t handle;
+    struct projectile_collider_t *collider;
+
+    handle = phy_CreateCollider(PHY_COLLIDER_TYPE_PROJECTILE);
+    collider = phy_GetProjectileColliderPointer(handle);
+
+    collider->radius = radius;
+    collider->overbounce = 1.0;
+    collider->base.position = position;
+    collider->linear_velocity = vec3_t(0.0, 0.0, 0.0);
+    collider->flags = 0;
+
+    return handle;
+}
+
 void phy_DestroyCollider(struct collider_handle_t collider_handle)
 {
     struct base_collider_t *collider;
@@ -112,6 +134,8 @@ void phy_DestroyCollider(struct collider_handle_t collider_handle)
 
     if(collider)
     {
+        phy_RemoveNodeFromDbvh(collider->dbvh_node);
+        phy_DeallocDbvhNode(collider->dbvh_node);
         collider->type = PHY_COLLIDER_TYPE_NONE;
         phy_colliders[collider_handle.type].remove(collider_handle.index);
     }
@@ -274,6 +298,7 @@ void phy_Step()
     struct player_collider_t *player_collider;
     struct portal_collider_t *portal_collider;
     struct static_collider_t *static_collider;
+    struct projectile_collider_t *projectile_collider;
     struct rigid_body_collider_t *rigid_collider;
     struct base_shape_t *base_shape;
     struct box_shape_t *box_shape;
@@ -288,22 +313,44 @@ void phy_Step()
 
     phy_collision_pairs.cursor = 0;
 
-    player_collider = (struct player_collider_t *)phy_colliders[PHY_COLLIDER_TYPE_PLAYER].buffer;
-    c = phy_colliders[PHY_COLLIDER_TYPE_PLAYER].cursor;
+//    player_collider = (struct player_collider_t *)phy_colliders[PHY_COLLIDER_TYPE_PLAYER].buffer;
+//    c = phy_colliders[PHY_COLLIDER_TYPE_PLAYER].cursor;
 
-    /* add player's velocity, and clear on_ground flag... */
-    for(i = 0; i < c; i++)
+    for(type = PHY_COLLIDER_TYPE_PLAYER; type < PHY_COLLIDER_TYPE_NONE; type++)
     {
-        if(player_collider[i].base.type == PHY_COLLIDER_TYPE_NONE)
+        c = phy_colliders[type].cursor;
+
+        switch(type)
         {
-            continue;
+            case PHY_COLLIDER_TYPE_PLAYER:
+                for(i = 0; i < c; i++)
+                {
+                    player_collider = (struct player_collider_t* )phy_colliders[type].get(i);
+
+                    if(player_collider->base.type != PHY_COLLIDER_TYPE_PLAYER)
+                    {
+                        continue;
+                    }
+
+                    player_collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_ON_GROUND;
+                }
+            break;
+
+            case PHY_COLLIDER_TYPE_PROJECTILE:
+                for(i = 0; i < c; i++)
+                {
+                    projectile_collider = (struct projectile_collider_t* )phy_colliders[type].get(i);
+
+                    if(projectile_collider->base.type != PHY_COLLIDER_TYPE_PROJECTILE)
+                    {
+                        continue;
+                    }
+
+                    projectile_collider->flags &= ~PHY_PROJECTILE_COLLIDER_HAS_CONTACTS;
+                }
+            break;
         }
-
-        player_collider[i].flags &= ~PHY_PLAYER_COLLIDER_FLAG_ON_GROUND;
     }
-
-
-
 
 
 //    rigid_collider = (struct rigid_body_collider_t *)phy_colliders[PHY_COLLIDER_TYPE_RIGID].buffer;
@@ -343,12 +390,13 @@ void phy_Step()
             continue;
         }
 
-        colliders = (struct base_collider_t *)phy_colliders[type].buffer;
+//        colliders = (struct base_collider_t *)phy_colliders[type].buffer;
         c = phy_colliders[type].cursor;
 
         for(i = 0; i < c; i++)
         {
-            collider = colliders + i;
+//            collider = colliders + i;
+            collider = (struct base_collider_t* )phy_colliders[type].get(i);
 
             if(collider->type != type)
             {
@@ -391,41 +439,84 @@ void phy_Step()
         phy_Collide(collision_pairs[i].collider_a, collision_pairs[i].collider_b);
     }
 
-
-    player_collider = (struct player_collider_t *)phy_colliders[PHY_COLLIDER_TYPE_PLAYER].buffer;
-    c = phy_colliders[PHY_COLLIDER_TYPE_PLAYER].cursor;
-
-    for(i = 0; i < c; i++)
+    for(type = PHY_COLLIDER_TYPE_PLAYER; type < PHY_COLLIDER_TYPE_NONE; type++)
     {
-        if(player_collider[i].base.type == PHY_COLLIDER_TYPE_NONE)
+        c = phy_colliders[type].cursor;
+
+        switch(type)
         {
-            continue;
+            case PHY_COLLIDER_TYPE_PLAYER:
+                for(i = 0; i < c; i++)
+                {
+                    player_collider = (struct player_collider_t* )phy_colliders[type].get(i);
+
+                    if(player_collider->base.type != PHY_COLLIDER_TYPE_PLAYER)
+                    {
+                        continue;
+                    }
+
+                    /* to avoid a collider getting frozen in place when it forms no collision pair -
+                    which happened because previously its position was being updated only inside the
+                    collision handling function - its position also gets updated here. During collision
+                    handling, its position will be modified only if the movement hits something, which
+                    means its velocity will need to be clipped, and an up to date position is necessary
+                    to find out the next collision, if any.
+
+                    When a movement doesn't hit something, the collision handling routine exits because
+                    no further collision will happen, which means we can add the linear velocity to the
+                    position here.
+
+                    If the collider doesn't form any collision pair, its unmodified velocity will
+                    just be added to its position... */
+                    player_collider->base.position += player_collider->linear_velocity;
+
+
+                    if(player_collider->flags & PHY_PLAYER_COLLIDER_FLAG_ON_GROUND)
+                    {
+                        player_collider->linear_velocity.x *= GROUND_FRICTION;
+                        player_collider->linear_velocity.z *= GROUND_FRICTION;
+                    }
+
+                    player_collider->linear_velocity.y -= GRAVITY;
+                }
+            break;
+
+            case PHY_COLLIDER_TYPE_PROJECTILE:
+                for(i = 0; i < c; i++)
+                {
+                    projectile_collider = (struct projectile_collider_t* )phy_colliders[type].get(i);
+
+                    if(projectile_collider->base.type != PHY_COLLIDER_TYPE_PROJECTILE)
+                    {
+                        continue;
+                    }
+
+                    projectile_collider->base.position += projectile_collider->linear_velocity;
+
+                    if(projectile_collider->flags & PHY_PROJECTILE_COLLIDER_HAS_CONTACTS)
+                    {
+                        projectile_collider->linear_velocity *= 0.6;
+                    }
+
+                    if(!(projectile_collider->flags & PHY_PROJECTILE_COLLIDER_FLAG_IGNORE_GRAVITY))
+                    {
+                        projectile_collider->linear_velocity.y -= GRAVITY;
+                    }
+                }
+            break;
         }
-
-        /* to avoid a collider getting frozen in place when it forms no collision pair -
-        which happened because previously its position was being updated only inside the
-        collision handling function - its position also gets updated here. During collision
-        handling, its position will be modified only if the movement hits something, which
-        means its velocity will need to be clipped, and an up to date position is necessary
-        to find out the next collision, if any.
-
-        When a movement doesn't hit something, the collision handling routine exits because
-        no further collision will happen, which means we can add the linear velocity to the
-        position here.
-
-        If the collider doesn't form any collision pair, its unmodified velocity will
-        just be added to its position... */
-        player_collider[i].base.position += player_collider[i].linear_velocity;
-
-
-        if(player_collider[i].flags & PHY_PLAYER_COLLIDER_FLAG_ON_GROUND)
-        {
-            player_collider[i].linear_velocity.x *= GROUND_FRICTION;
-            player_collider[i].linear_velocity.z *= GROUND_FRICTION;
-        }
-
-        player_collider[i].linear_velocity.y -= GRAVITY;
     }
+
+//    player_collider = (struct player_collider_t *)phy_colliders[PHY_COLLIDER_TYPE_PLAYER].buffer;
+//
+//
+//    for(i = 0; i < c; i++)
+//    {
+//        if(player_collider[i].base.type == PHY_COLLIDER_TYPE_NONE)
+//        {
+//            continue;
+//        }
+//    }
 }
 
 /*
@@ -487,6 +578,7 @@ int phy_AllocDbvhNode()
 {
     struct dbvh_node_t *node;
     int node_index;
+//    printf("phy_AllocDbvhNode\n");
     node_index = phy_dbvh_nodes.add(NULL);
     node = (struct dbvh_node_t *)phy_dbvh_nodes.get(node_index);
 
@@ -500,12 +592,42 @@ int phy_AllocDbvhNode()
 
 void phy_DeallocDbvhNode(int node_index)
 {
-    phy_dbvh_nodes.remove(node_index);
+    struct dbvh_node_t *node;
+    node = phy_GetDbvhNodePointer(node_index);
+
+    if(node)
+    {
+        node->parent = node_index;
+        node->children[0] = node_index;
+        node->children[1] = node_index;
+        phy_dbvh_nodes.remove(node_index);
+    }
 }
 
 struct dbvh_node_t *phy_GetDbvhNodePointer(int node_index)
 {
-    return (struct dbvh_node_t *)phy_dbvh_nodes.get(node_index);
+    struct dbvh_node_t *node = (struct dbvh_node_t *)phy_dbvh_nodes.get(node_index);
+
+    if(node)
+    {
+        if(node->children[0] == node_index && node->children[1] == node_index && node->parent == node_index)
+        {
+            node = NULL;
+        }
+    }
+
+    return node;
+}
+
+struct dbvh_node_t *phy_GetSiblingDbvhNodePointer(int node_index)
+{
+    struct dbvh_node_t *node;
+    struct dbvh_node_t *parent;
+
+    node = phy_GetDbvhNodePointer(node_index);
+    parent = phy_GetDbvhNodePointer(node->parent);
+
+    return phy_GetDbvhNodePointer(parent->children[parent->children[0] != node_index]);
 }
 
 void phy_GenerateColliderCollisionPairsRecursive(int cur_node_index, int node_index, float *smallest_area, int *smallest_index)
@@ -528,12 +650,8 @@ void phy_GenerateColliderCollisionPairsRecursive(int cur_node_index, int node_in
 
     vec3_t extents;
 
-    //printf("-->%d\n", cur_node_index);
-
     if(phy_dbvh_root == -1)
     {
-        /* the dbvh tree doesn't have a root,
-        so set this node as the new root... */
         phy_dbvh_root = node_index;
         return;
     }
@@ -581,7 +699,7 @@ void phy_GenerateColliderCollisionPairsRecursive(int cur_node_index, int node_in
 
     phy_DbvhNodesVolume(cur_node_index, node_index, &max, &min);
 
-    //volume = (max.x - min.x) * (max.y - min.y) * (max.z - min.z);
+//    volume = (max.x - min.x) * (max.y - min.y) * (max.z - min.z);
 
     extents = max - min;
 
@@ -614,6 +732,11 @@ void phy_GenerateColliderCollisionPairsRecursive(int cur_node_index, int node_in
             new_node_index = phy_AllocDbvhNode();
             new_node = phy_GetDbvhNodePointer(new_node_index);
 
+            /* and here is where the problem of using linear buffers for growable arrays shines:
+            whenever a resize happens, every pointer referencing the old buffer will be invalidated... */
+            node = phy_GetDbvhNodePointer(node_index);
+            cur_node = phy_GetDbvhNodePointer(cur_node_index);
+
             new_node->children[0] = node_index;
             new_node->children[1] = cur_node_index;
 
@@ -643,6 +766,8 @@ void phy_GenerateColliderCollisionPairsRecursive(int cur_node_index, int node_in
             group them into a new volume... */
             node->parent = new_node_index;
             cur_node->parent = new_node_index;
+
+//            printf("new node added!\n");
         }
         else
         {
@@ -656,14 +781,21 @@ void phy_GenerateColliderCollisionPairsRecursive(int cur_node_index, int node_in
             }
             else
             {
-                if(cur_node->children[0] == node_index ||
-                   cur_node->children[1] == node_index)
+//                if(cur_node->children[0] == node_index ||
+//                   cur_node->children[1] == node_index)
+//                {
+//                    /* if we get here, 'cur_node' will be the root, because 'node' is far away
+//                    from the whole hierarchy and don't intersect it, which will make the root
+//                    be the node with which 'node' forms the smallest volume possible. Whenever a
+//                    node gets parented with the root, a new node gets created and becomes the new
+//                    root. This only makes sense when 'node' isn't in the hierarchy... */
+//                    return;
+//                }
+
+                if(node->parent == cur_node_index)
                 {
-                    /* if we get here, 'cur_node' will be the root, because 'node' is far away
-                    from the whole hierarchy and don't intersect it, which will make the root
-                    be the node with which 'node' forms the smallest volume possible. Whenever a
-                    node gets parented with the root, a new node gets created and becomes the new
-                    root. This only makes sense when 'node' isn't in the hierarchy... */
+                    /* don't parent 'node' with it's parent. It doesn't make
+                    any sense... */
                     return;
                 }
 
@@ -760,18 +892,40 @@ void phy_GenerateColliderCollisionPairsRecursive(int cur_node_index, int node_in
                     phy_dbvh_root = parent->children[sibling_index];
                 }
 
-                /* 'cur_node' becomes 'node's new sibling... */
-                parent->children[sibling_index] = cur_node_index;
 
-                /* 'cur_node's parent node now points to 'node's parent
-                node... */
-                parent_parent = phy_GetDbvhNodePointer(cur_node->parent);
-                parent_parent->children[parent_parent->children[0] != cur_node_index] = node->parent;
 
-                /* 'node's parent node now points to 'cur_node's old parent node... */
-                parent->parent = cur_node->parent;
-                /* 'cur_node' now points to 'node's parent node... */
-                cur_node->parent = node->parent;
+
+                if(cur_node_index == phy_dbvh_root)
+                {
+                    new_node_index = phy_AllocDbvhNode();
+                    new_node = phy_GetDbvhNodePointer(new_node_index);
+
+                    new_node->children[0] = node_index;
+                    new_node->children[1] = cur_node_index;
+
+                    node = phy_GetDbvhNodePointer(node_index);
+                    cur_node = phy_GetDbvhNodePointer(cur_node_index);
+
+                    cur_node->parent = new_node_index;
+                    node->parent = new_node_index;
+
+                    phy_dbvh_root = new_node_index;
+                }
+                else
+                {
+                    /* 'cur_node' becomes 'node's new sibling... */
+                    parent->children[sibling_index] = cur_node_index;
+
+                    /* 'cur_node's parent node now points to 'node's parent
+                    node... */
+                    parent_parent = phy_GetDbvhNodePointer(cur_node->parent);
+                    parent_parent->children[parent_parent->children[0] != cur_node_index] = node->parent;
+
+                    /* 'node's parent node now points to 'cur_node's old parent node... */
+                    parent->parent = cur_node->parent;
+                    /* 'cur_node' now points to 'node's parent node... */
+                    cur_node->parent = node->parent;
+                }
             }
         }
     }
@@ -794,18 +948,12 @@ void phy_RecomputeVolumesRecursive(int node_index)
     }
 }
 
-void phy_UpdateDbvh()
-{
-    struct dbvh_node_t *node;
-
-//    node = phy_GetDbvhNodePointer()
-}
-
 void phy_GenerateColliderCollisionPairs(struct collider_handle_t collider)
 {
     struct dbvh_node_t *node;
     struct base_collider_t *collider_ptr;
     struct player_collider_t *player_collider;
+    struct projectile_collider_t *projectile_collider;
     struct portal_collider_t *portal_collider;
     struct static_collider_t *static_collider;
     struct rigid_body_collider_t *rigid_collider;
@@ -833,6 +981,7 @@ void phy_GenerateColliderCollisionPairs(struct collider_handle_t collider)
     {
         if(collider_ptr->dbvh_node == -1)
         {
+//            printf("phy_GenerateColliderCollisionPairs\n");
             /* this collider hasn't been inserted into the dbvh,
             so alloc a new node for it here... */
             collider_ptr->dbvh_node = phy_AllocDbvhNode();
@@ -873,6 +1022,37 @@ void phy_GenerateColliderCollisionPairs(struct collider_handle_t collider)
                     }
                 }
 
+            break;
+
+            case PHY_COLLIDER_TYPE_PROJECTILE:
+                projectile_collider = (struct projectile_collider_t *)collider_ptr;
+
+                linear_velocity = projectile_collider->linear_velocity;
+
+                node->max = projectile_collider->base.position +
+                            vec3_t(projectile_collider->radius,
+                                   projectile_collider->radius,
+                                   projectile_collider->radius);
+
+                node->min = projectile_collider->base.position +
+                            vec3_t(-projectile_collider->radius,
+                                   -projectile_collider->radius,
+                                   -projectile_collider->radius);
+
+                node->expanded_max = node->max;
+                node->expanded_min = node->min;
+
+                for(i = 0; i < 3; i++)
+                {
+                    if(linear_velocity[i] > 0.0)
+                    {
+                        node->expanded_max[i] += linear_velocity[i];
+                    }
+                    else
+                    {
+                        node->expanded_min[i] += linear_velocity[i];
+                    }
+                }
             break;
 
             case PHY_COLLIDER_TYPE_PORTAL:
@@ -965,8 +1145,129 @@ void phy_GenerateColliderCollisionPairs(struct collider_handle_t collider)
             break;
         }
 
+//        phy_UpdateDbvhForNode(collider_ptr->dbvh_node);
         phy_GenerateColliderCollisionPairsRecursive(phy_dbvh_root, collider_ptr->dbvh_node, &smallest_volume, &smallest_index);
         phy_RecomputeVolumesRecursive(collider_ptr->dbvh_node);
+    }
+}
+
+void phy_RemoveNodeFromDbvh(int node_index)
+{
+    struct dbvh_node_t *node;
+    struct dbvh_node_t *sibling;
+    struct dbvh_node_t *parent;
+    struct dbvh_node_t *parent_parent;
+
+    int sibling_index;
+
+    node = phy_GetDbvhNodePointer(node_index);
+
+    if(node)
+    {
+        if(node->parent == -1)
+        {
+            /* node is the current root... */
+
+
+            /* setting the root to an invalid index is enough here, since
+            only leaf nodes are accessible externally, and if a leaf node
+            is also the root, it's the only node in the hierarchy... */
+            phy_dbvh_root = -1;
+        }
+        else
+        {
+            /* 'node' is not the root, so we'll remove it and 'parent', and
+            then set 'node's sibling node as direct child node of 'parent' parent node... */
+
+            parent = phy_GetDbvhNodePointer(node->parent);
+            sibling_index = parent->children[parent->children[0] == node_index];
+            sibling = phy_GetDbvhNodePointer(sibling_index);
+
+            if(parent->parent != -1)
+            {
+                /* 'parent' is not the root...
+
+                ############################################################################
+
+                                                  (before)
+
+                                                      .
+                                                      .
+                                                      .
+                                                      |
+                                              (parent's parent)
+                                              ________|________
+                                             |                 |
+                                          (parent)      (parent's sibling)
+                                        _____|_____
+                                       |           |
+                                    (node)      (sibling)
+
+                ------------------------------------------------------------------------------
+
+                                                   (after)
+
+                                                      .
+                                                      .
+                                                      .
+                                                      |
+                                              (parent's parent)
+                                              ________|________
+                                             |                 |
+                                        (sibling)      (parent's sibling)
+
+                ############################################################################
+
+                */
+
+
+
+                parent_parent = phy_GetDbvhNodePointer(parent->parent);
+                parent_parent->children[parent_parent->children[0] != node->parent] = sibling_index;
+                sibling->parent = parent->parent;
+            }
+            else
+            {
+                /* parent is the root...
+
+                ############################################################################
+
+                                                  (before)
+
+                                            (parent - the root)
+                                          ___________|___________
+                                         |                       |
+                                      (node)                 (sibling)
+                                    _____|______            _____|_____
+                                   |            |          |           |
+                                   .            .          .           .
+                                   .            .          .           .
+                                   .            .          .           .
+
+
+                ------------------------------------------------------------------------------
+
+                                                   (after)
+
+                                           (sibling - new root)
+                                               _____|_____
+                                              |           |
+                                              .           .
+                                              .           .
+                                              .           .
+
+                ############################################################################
+                 */
+                phy_dbvh_root = sibling_index;
+            }
+
+            phy_RecomputeVolumesRecursive(sibling_index);
+
+            /* dealloc only 'parent', since 'node' is a leaf node, which is linked to
+            a collider. Let external code decide whether it wants to get rid of 'node'... */
+            phy_DeallocDbvhNode(node->parent);
+            node->parent = -1;
+        }
     }
 }
 
@@ -997,7 +1298,8 @@ void phy_GenerateCollisionPairs()
 
         for(i = 0; i < c; i++)
         {
-            collider = colliders + i;
+//            collider = colliders + i;
+            collider = (struct base_collider_t* )phy_colliders[type].get(i);
 
             if(collider->type != type)
             {
@@ -1068,7 +1370,6 @@ void phy_DbvhNodesVolume(int node_a, int node_b, vec3_t *max, vec3_t *min)
 ============================================
 ============================================
 */
-
 
 void phy_ClearBvh(struct bvh_node_t *node)
 {
@@ -1507,6 +1808,79 @@ struct list_t *phy_FindContactPointsPlayerStatic(struct collider_handle_t player
     return NULL;
 }
 
+struct list_t *phy_FindContactPointsProjectileStatic(struct collider_handle_t projectile_collider, struct collider_handle_t static_collider)
+{
+    unsigned int i;
+    int j;
+    struct projectile_collider_t *collider;
+    struct static_collider_t *static_col;
+    struct list_t *triangles;
+    struct collision_triangle_t *triangle;
+    struct sphere_shape_t sphere_shape;
+    struct contact_point_t closest_contact;
+    struct contact_point_t next_contact;
+
+    vec3_t aabb_max;
+    vec3_t aabb_min;
+    vec3_t position;
+    vec3_t extents;
+
+
+    collider = phy_GetProjectileColliderPointer(projectile_collider);
+    static_col = phy_GetStaticColliderPointer(static_collider);
+
+    struct view_t *view = r_GetActiveView();
+
+    if(collider && static_col)
+    {
+        contact_points.cursor = 0;
+        position = collider->base.position;
+
+        extents = vec3_t(collider->radius, collider->radius, collider->radius);
+        aabb_max = position + extents;
+        aabb_min = position - extents;
+
+        for(i = 0; i < 3; i++)
+        {
+            if(collider->linear_velocity[i] > 0.0)
+            {
+                aabb_max[i] += collider->linear_velocity[i];
+            }
+            else
+            {
+                aabb_min[i] += collider->linear_velocity[i];
+            }
+        }
+
+        triangles = phy_BoxOnBvh(aabb_max, aabb_min, static_col->nodes);
+
+        sphere_shape.radius = collider->radius;
+
+        closest_contact.penetration = 1.0;
+        closest_contact.position = collider->base.position + collider->linear_velocity;
+
+        for(i = 0; i < triangles->cursor; i++)
+        {
+            triangle = *(struct collision_triangle_t **)triangles->get(i);
+
+            if(phy_ContactSphereTriangle(triangle, &sphere_shape, collider->base.position, collider->linear_velocity, &next_contact))
+            {
+                if(next_contact.penetration <= closest_contact.penetration)
+                {
+                    contact_points.cursor = 0;
+                    closest_contact = next_contact;
+                }
+            }
+        }
+
+        contact_points.add(&closest_contact);
+
+        return &contact_points;
+    }
+
+    return NULL;
+}
+
 struct list_t *phy_FindContactPointsRigidStatic(struct collider_handle_t rigid_body_collider, struct collider_handle_t static_collider)
 {
     struct rigid_body_collider_t *rigid_body;
@@ -1631,6 +2005,8 @@ struct list_t *phy_FindContactPointsPlayerPortal(struct collider_handle_t player
 }
 
 
+
+
 void phy_Collide(struct collider_handle_t collider_a, struct collider_handle_t collider_b)
 {
     struct base_collider_t *ptr_a;
@@ -1719,12 +2095,12 @@ void phy_CollidePlayerStatic(struct collider_handle_t player_collider, struct co
 
             if(contacts->cursor)
             {
-//                if(collider->linear_velocity.x == 0.0 &&
-//                   collider->linear_velocity.y == 0.0 &&
-//                   collider->linear_velocity.z == 0.0)
-//                {
-//                    break;
-//                }
+                if(collider->linear_velocity.x == 0.0 &&
+                   collider->linear_velocity.y == 0.0 &&
+                   collider->linear_velocity.z == 0.0)
+                {
+                    break;
+                }
 
                 contact = (struct contact_point_t *)contacts->get(0);
 
@@ -1748,6 +2124,64 @@ void phy_CollidePlayerStatic(struct collider_handle_t player_collider, struct co
                     collider->linear_velocity = collider->linear_velocity - contact->normal *
                         dot(collider->linear_velocity, contact->normal);
                 }
+            }
+            else
+            {
+                /* probably flying... */
+                break;
+            }
+        }
+    }
+}
+
+void phy_CollideProjectileStatic(struct collider_handle_t projectile_collider, struct collider_handle_t static_collider)
+{
+    struct list_t *contacts;
+    unsigned int i;
+    int j;
+    int k;
+//    int deepest_index;
+    int closest_index;
+    struct contact_point_t *contact;
+    struct projectile_collider_t *collider;
+    struct static_collider_t *static_col;
+
+    collider = phy_GetProjectileColliderPointer(projectile_collider);
+    static_col = phy_GetStaticColliderPointer(static_collider);
+
+    if(collider && static_col)
+    {
+//        collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_ON_GROUND;
+
+        for(j = 0; j < MAX_ITERATIONS; j++)
+        {
+            contacts = phy_FindContactPointsProjectileStatic(projectile_collider, static_collider);
+
+            if(contacts->cursor)
+            {
+                if(collider->linear_velocity.x == 0.0 &&
+                   collider->linear_velocity.y == 0.0 &&
+                   collider->linear_velocity.z == 0.0)
+                {
+                    break;
+                }
+
+                contact = (struct contact_point_t *)contacts->get(0);
+
+                if(contact->penetration == 1.0)
+                {
+                    break;
+                }
+
+                if(contact->penetration > 0.0)
+                {
+                    collider->base.position = contact->position;
+                }
+
+                collider->linear_velocity = (collider->linear_velocity - contact->normal *
+                    dot(collider->linear_velocity, contact->normal) * collider->overbounce);
+
+                collider->flags |= PHY_PROJECTILE_COLLIDER_HAS_CONTACTS;
             }
             else
             {

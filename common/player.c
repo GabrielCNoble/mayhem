@@ -101,6 +101,12 @@ void player_UpdateActivePlayer()
     struct entity_t *player_entity;
     struct physics_component_t *physics_component;
 
+    static collider_handle_t collider = PHY_INVALID_COLLIDER_HANDLE;
+    struct player_collider_t *player_collider;
+
+    static int counter = 0;
+
+
     vec3_t translation;
 
     float camera_bob;
@@ -159,6 +165,19 @@ void player_UpdateActivePlayer()
                 camera_bob = player->camera_bob + CAMERA_BOB_INCREMENT;
             }
 
+            if(in_GetKeyStatus(SDL_SCANCODE_E) & KEY_STATUS_JUST_PRESSED)
+            {
+                struct collider_handle_t projectile;
+                struct projectile_collider_t *projectile_ptr;
+
+                projectile = phy_CreateCollider(PHY_COLLIDER_TYPE_PROJECTILE);
+                projectile_ptr = phy_GetProjectileColliderPointer(projectile);
+
+                projectile_ptr->radius = 0.2;
+                projectile_ptr->linear_velocity = vec3_t(0.0, 0.0, 0.0);
+                projectile_ptr->base.position = vec3_t(0.0, 0.6, 1.0);
+            }
+
             player->camera_bob = camera_bob;
 
 
@@ -189,6 +208,28 @@ void player_UpdateActivePlayer()
                 }
 
                 phy_Move(physics_component->collider, translation * 0.016);
+            }
+
+            #define FIRE_DELAY 8
+
+            if(counter < FIRE_DELAY)
+            {
+                counter++;
+            }
+
+            if(in_GetMouseStatus() & MOUSE_STATUS_LEFT_BUTTON_PRESSED)
+            {
+                if(counter >= FIRE_DELAY)
+                {
+                    struct collider_handle_t projectile;
+                    struct projectile_collider_t *projectile_ptr;
+
+                    projectile = phy_CreateProjectileCollider(view->position, 0.2);
+                    projectile_ptr = phy_GetProjectileColliderPointer(projectile);
+                    projectile_ptr->linear_velocity = -view->orientation[2] * 1.5;
+                    projectile_ptr->overbounce = 2.0;
+                    counter = 0;
+                }
             }
         }
     }
@@ -224,7 +265,7 @@ void player_PostUpdateActivePlayer()
             #ifndef SPECTATE
                 view->position = transform_component->position + player->camera_position;
             #endif
-            r_DrawCapsule(transform_component->position, collider->height, collider->radius);
+//            r_DrawCapsule(transform_component->position, collider->height, collider->radius);
         }
     }
 }

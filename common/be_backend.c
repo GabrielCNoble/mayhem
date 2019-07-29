@@ -88,8 +88,11 @@ void be_RunBackend()
 
     while(1)
     {
+//        printf("be_RunBackend: start -- ");
         if(cmd_stream.next_out != cmd_stream.next_in)
         {
+//            printf("be_RunBackend: execute cmd\n");
+
             be_NextCmd(&cmd, (unsigned char **)&cmd_data);
 
             switch(cmd.type)
@@ -120,7 +123,7 @@ void be_RunBackend()
                 break;
 
                 case BE_CMD_DRAW_DBG:
-                    r_DrawDebug(*(struct draw_command_buffer_t **)cmd_data, 0);
+                    be_r_DrawDebug((struct draw_debug_data_t *)cmd_data);
                 break;
 
                 case BE_CMD_DRAW_LINE:
@@ -172,6 +175,12 @@ void be_RunBackend()
             be_AdvanceQueue();
 //            backend.next_out = (backend.next_out + 1) % BE_CMD_STREAM_BUFFER_SIZE;
         }
+//        else
+//        {
+//            printf("be_RunBackend: spin\n");
+//        }
+
+//        printf("be_RunBackend: end\n");
     }
 }
 

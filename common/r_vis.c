@@ -88,6 +88,7 @@ void r_VisibleWorldOnView(struct view_t *view)
 //    cmd_buffer->view_matrix = view->view_matrix * view->projection_matrix;
 //    be_DrawDebug(cmd_buffer);
 
+    r_DrawDebug(view);
 
     if(current_recursion < r_renderer.max_recursion)
     {

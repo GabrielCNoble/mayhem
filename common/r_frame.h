@@ -16,7 +16,7 @@ void r_InitFrame();
 
 void r_ShutdownFrame();
 
-void r_DrawDebug(struct draw_command_buffer_t *cmd_buffer, int options);
+//void r_DrawDebug(struct draw_command_buffer_t *cmd_buffer, int options);
 
 void r_DrawLine(struct draw_command_buffer_t *cmd_buffer);
 

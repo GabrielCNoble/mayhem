@@ -178,10 +178,19 @@ struct portal_collider_t
 ============================================
 */
 
+enum PHY_PROJECTILE_COLLIDER_FLAGS
+{
+    PHY_PROJECTILE_COLLIDER_FLAG_IGNORE_GRAVITY = 1,
+    PHY_PROJECTILE_COLLIDER_HAS_CONTACTS = 1 << 1,
+};
+
 struct projectile_collider_t
 {
+    struct base_collider_t base;
     vec3_t linear_velocity;
+    float overbounce;
     float radius;
+    int flags;
 };
 
 /*

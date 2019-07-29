@@ -2,6 +2,7 @@
 #define R_DBG_H
 
 #include "../gmath/vector.h"
+#include "../gmath/matrix.h"
 
 
 /* those functions serves only as an interface. All they do is
@@ -18,6 +19,8 @@ void r_DrawTriangle(vec3_t a, vec3_t b, vec3_t c, vec3_t color, int wireframe, i
 void r_DrawCapsule(vec3_t position, float height, float radius);
 
 void r_DrawPoint(vec3_t position, vec3_t color, float size, int smooth);
+
+void r_DrawDebug(struct view_t *view);
 
 
 #endif // R_DBG_H
