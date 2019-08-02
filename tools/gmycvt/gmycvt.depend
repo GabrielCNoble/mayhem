@@ -17,7 +17,7 @@
 
 1560145328 d:\files\gabriel noble\compiler\mayhem\containers\list.h
 
-1559879398 d:\files\gabriel noble\compiler\mayhem\gmath\vector.h
+1563750659 d:\files\gabriel noble\compiler\mayhem\gmath\vector.h
 
 1560818312 d:\files\gabriel noble\compiler\mayhem\loaders\gmy.h
 	"../exchange/xchg.h"
@@ -41,10 +41,11 @@
 
 1560743983 d:\files\gabriel noble\compiler\mayhem\containers\ring_buffer.h
 
-1553385403 source:d:\files\gabriel noble\compiler\mayhem\containers\stack_list.c
+1564354024 source:d:\files\gabriel noble\compiler\mayhem\containers\stack_list.c
 	"stack_list.h"
 	<stdlib.h>
 	<string.h>
+	<stdio.h>
 
 1556936465 source:d:\files\gabriel noble\compiler\mayhem\gmath\matrix.c
 	"matrix.h"
@@ -53,12 +54,12 @@
 1556935751 d:\files\gabriel noble\compiler\mayhem\gmath\matrix.h
 	"vector.h"
 
-1559879465 source:d:\files\gabriel noble\compiler\mayhem\gmath\vector.c
+1563750677 source:d:\files\gabriel noble\compiler\mayhem\gmath\vector.c
 	"vector.h"
 	"matrix.h"
 	<math.h>
 
-1560820181 source:d:\files\gabriel noble\compiler\mayhem\loaders\gmy.c
+1564087937 source:d:\files\gabriel noble\compiler\mayhem\loaders\gmy.c
 	"gmy.h"
 	"../utils/file.h"
 	"../utils/path.h"
@@ -93,9 +94,10 @@
 	<string.h>
 	<limits.h>
 
-1560818073 d:\files\gabriel noble\compiler\mayhem\utils\geo.h
+1563580062 d:\files\gabriel noble\compiler\mayhem\utils\geo.h
 	"../gmath/vector.h"
 
-1560818546 source:d:\files\gabriel noble\compiler\mayhem\utils\geo.c
+1563591962 source:d:\files\gabriel noble\compiler\mayhem\utils\geo.c
 	"geo.h"
+	<math.h>
 

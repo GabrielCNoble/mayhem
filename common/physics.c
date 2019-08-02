@@ -491,16 +491,19 @@ void phy_Step()
                         continue;
                     }
 
-                    projectile_collider->base.position += projectile_collider->linear_velocity;
-
-                    if(projectile_collider->flags & PHY_PROJECTILE_COLLIDER_HAS_CONTACTS)
+                    if(!(projectile_collider->flags & PHY_PROJECTILE_COLLIDER_FLAG_FROZEN))
                     {
-                        projectile_collider->linear_velocity *= 0.6;
-                    }
+                        projectile_collider->base.position += projectile_collider->linear_velocity;
 
-                    if(!(projectile_collider->flags & PHY_PROJECTILE_COLLIDER_FLAG_IGNORE_GRAVITY))
-                    {
-                        projectile_collider->linear_velocity.y -= GRAVITY;
+                        if(projectile_collider->flags & PHY_PROJECTILE_COLLIDER_HAS_CONTACTS)
+                        {
+                            projectile_collider->linear_velocity *= 0.98;
+                        }
+
+                        if(!(projectile_collider->flags & PHY_PROJECTILE_COLLIDER_FLAG_IGNORE_GRAVITY))
+                        {
+                            projectile_collider->linear_velocity.y -= GRAVITY;
+                        }
                     }
                 }
             break;
@@ -1811,11 +1814,13 @@ struct list_t *phy_FindContactPointsPlayerStatic(struct collider_handle_t player
 struct list_t *phy_FindContactPointsProjectileStatic(struct collider_handle_t projectile_collider, struct collider_handle_t static_collider)
 {
     unsigned int i;
+    int triangle_index = -1;
     int j;
     struct projectile_collider_t *collider;
     struct static_collider_t *static_col;
     struct list_t *triangles;
     struct collision_triangle_t *triangle;
+    struct collision_triangle_t *prev_triangle;
     struct sphere_shape_t sphere_shape;
     struct contact_point_t closest_contact;
     struct contact_point_t next_contact;
@@ -1863,15 +1868,52 @@ struct list_t *phy_FindContactPointsProjectileStatic(struct collider_handle_t pr
         {
             triangle = *(struct collision_triangle_t **)triangles->get(i);
 
+            #ifdef COLLISION_DEBUGGING
+            int result = phy_ContactSphereTriangle(triangle, &sphere_shape, collider->base.position, collider->linear_velocity, &next_contact);
+
+            switch(result)
+            {
+                case 1:
+                    if(next_contact.penetration < closest_contact.penetration)
+                    {
+                        contact_points.cursor = 0;
+                        closest_contact = next_contact;
+                        triangle_index = i;
+                    }
+                break;
+
+                case -1:
+                    collider->flags |= PHY_PROJECTILE_COLLIDER_FLAG_FROZEN;
+                break;
+            }
+            #else
+
             if(phy_ContactSphereTriangle(triangle, &sphere_shape, collider->base.position, collider->linear_velocity, &next_contact))
             {
-                if(next_contact.penetration <= closest_contact.penetration)
+                if(next_contact.penetration < closest_contact.penetration)
                 {
                     contact_points.cursor = 0;
                     closest_contact = next_contact;
                 }
             }
+
+            #endif
         }
+
+        #ifdef COLLISION_DEBUGGING
+        if(triangle_index > -1)
+        {
+            triangle = *(struct collision_triangle_t **)triangles->get(triangle_index);
+            r_DrawTriangle(triangle->verts[0],
+                           triangle->verts[1],
+                           triangle->verts[2], vec3_t(0.0, 1.0, 0.0), 1, 0, 1);
+
+            r_DrawPoint(closest_contact.position, vec3_t(1.0, 0.0, 0.0), 8.0, 1);
+            r_DrawLine(closest_contact.position,
+                       closest_contact.position + closest_contact.normal,
+                       vec3_t(1.0, 1.0, 0.0));
+        }
+        #endif
 
         contact_points.add(&closest_contact);
 
@@ -2134,6 +2176,7 @@ void phy_CollidePlayerStatic(struct collider_handle_t player_collider, struct co
     }
 }
 
+#define PHY_MAX_PROJECTILE_COLLISION_INTERACTIONS 128
 void phy_CollideProjectileStatic(struct collider_handle_t projectile_collider, struct collider_handle_t static_collider)
 {
     struct list_t *contacts;
@@ -2153,7 +2196,7 @@ void phy_CollideProjectileStatic(struct collider_handle_t projectile_collider, s
     {
 //        collider->flags &= ~PHY_PLAYER_COLLIDER_FLAG_ON_GROUND;
 
-        for(j = 0; j < MAX_ITERATIONS; j++)
+        for(j = 0; j < PHY_MAX_PROJECTILE_COLLISION_INTERACTIONS; j++)
         {
             contacts = phy_FindContactPointsProjectileStatic(projectile_collider, static_collider);
 
@@ -2164,6 +2207,11 @@ void phy_CollideProjectileStatic(struct collider_handle_t projectile_collider, s
                    collider->linear_velocity.z == 0.0)
                 {
                     break;
+                }
+
+                if(collider->flags & PHY_PROJECTILE_COLLIDER_FLAG_FROZEN)
+                {
+                    continue;
                 }
 
                 contact = (struct contact_point_t *)contacts->get(0);

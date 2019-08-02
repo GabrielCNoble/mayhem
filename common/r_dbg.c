@@ -13,7 +13,7 @@ unsigned int r_debug_verts_buffer_start;
 
 void r_InitDebug()
 {
-    r_debug_verts_buffer_handle = r_AllocVerts(sizeof(struct vertex_t) * 3 * 128, sizeof(struct vertex_t));
+    r_debug_verts_buffer_handle = r_AllocVerts(sizeof(struct vertex_t) * 3 * 512, sizeof(struct vertex_t));
     r_debug_verts_buffer_start = r_GetAllocStart(r_debug_verts_buffer_handle) / sizeof(struct vertex_t);
 //    r_debug_data_buffer.init(R_DEBUG_DATA_BUFFER_SIZE, 32);
 }

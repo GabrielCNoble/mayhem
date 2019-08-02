@@ -188,7 +188,7 @@ vec3_t closest_point_on_triangle(const vec3_t &point, const vec3_t &a, const vec
     return projected;
 }
 
-void closest_point_line_triangle(const vec3_t &v0, const vec3_t &v1, const vec3_t &v2, const vec3_t &a, const vec3_t &b, vec3_t *point_on_tri, vec3_t *point_on_line)
+int closest_point_line_triangle(const vec3_t &v0, const vec3_t &v1, const vec3_t &v2, const vec3_t &a, const vec3_t &b, vec3_t *point_on_tri, vec3_t *point_on_line, float *line_t)
 {
     float edge_t;
     float a_dist;
@@ -202,6 +202,8 @@ void closest_point_line_triangle(const vec3_t &v0, const vec3_t &v1, const vec3_
     vec3_t closest;
     vec3_t projected;
     vec3_t line_vec;
+
+//    int intersect_plane = 0;
 
     triangle_normal = normalize(cross(v2 - v1, v1 - v0));
 
@@ -258,10 +260,24 @@ void closest_point_line_triangle(const vec3_t &v0, const vec3_t &v1, const vec3_
         the project point is also inside the triangle... */
         *point_on_tri = projected;
         *point_on_line = closest;
-        return;
+        *line_t = edge_t;
+        return a_dist * b_dist < 0.0;
     }
 
     /* one of the endpoints is outside the triangle... */
+
+
+    /* test to see if the projected point is inside the triangle... */
+
+    if(dot(projected - v0, planes[0]) < 0.0 &&
+       dot(projected - v1, planes[1]) < 0.0 &&
+       dot(projected - v2, planes[2]) < 0.0)
+    {
+        *point_on_tri = projected;
+        *point_on_line = closest;
+        *line_t = edge_t;
+        return a_dist * b_dist < 0.0;
+    }
 
 
     /* find which edge the projected closest point is closer to... */
@@ -326,6 +342,13 @@ void closest_point_line_triangle(const vec3_t &v0, const vec3_t &v1, const vec3_
 
     *point_on_tri = projected;
     *point_on_line = closest;
+
+    return 0;
+}
+
+int intersect_sphere(const vec3_t &center, float radius, const vec3_t &start, const vec3_t &end, float &t0, float &t1)
+{
+
 }
 
 

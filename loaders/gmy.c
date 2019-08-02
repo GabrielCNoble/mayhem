@@ -200,8 +200,8 @@ void gmy_SerializeGmy(void **buffer, unsigned int *buffer_size, struct geometry_
                             (vec3_t *)geometry_data->tangents.buffer, geometry_data->vertices.cursor);
 
         geometry_data->tangents.cursor = geometry_data->vertices.cursor;
+        memcpy(out, geometry_data->tangents.buffer, sizeof(vec3_t) * geometry_data->vertices.cursor);
     }
-    memcpy(out, geometry_data->tangents.buffer, sizeof(vec3_t) * geometry_data->vertices.cursor);
     out += sizeof(vec3_t) * geometry_data->vertices.cursor;
 
 

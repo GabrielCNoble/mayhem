@@ -85,7 +85,7 @@ int fe_Frontend(void *data)
     #elif defined LEVEL_7
 //
 //    w_LoadLevel("../models/test5.gmy");
-    w_LoadLevel("../models/level0.gmy");
+    w_LoadLevel("../models/phys_test6.gmy");
     struct model_handle_t cube = mdl_LoadModel("../models/monkey.gmy");
 //
 //

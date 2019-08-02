@@ -224,10 +224,11 @@ void player_UpdateActivePlayer()
                     struct collider_handle_t projectile;
                     struct projectile_collider_t *projectile_ptr;
 
-                    projectile = phy_CreateProjectileCollider(view->position, 0.2);
+                    projectile = phy_CreateProjectileCollider(view->position, 0.14);
                     projectile_ptr = phy_GetProjectileColliderPointer(projectile);
-                    projectile_ptr->linear_velocity = -view->orientation[2] * 1.5;
+                    projectile_ptr->linear_velocity = -view->orientation[2] * 4.3;
                     projectile_ptr->overbounce = 2.0;
+                    projectile_ptr->flags |= PHY_PROJECTILE_COLLIDER_FLAG_IGNORE_GRAVITY;
                     counter = 0;
                 }
             }
