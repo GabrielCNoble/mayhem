@@ -1,7 +1,7 @@
 
 #include "obj.h"
-#include "../utils/file.h"
-#include "../utils/path.h"
+#include "../common/utils/file.h"
+#include "../common/utils/path.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

@@ -1,7 +1,7 @@
 #include "gmy.h"
-#include "../utils/file.h"
-#include "../utils/path.h"
-#include "../utils/geo.h"
+#include "../common/utils/file.h"
+#include "../common/utils/path.h"
+#include "../common/utils/geo.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

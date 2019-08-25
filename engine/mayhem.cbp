@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="mayhem" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="./mayhem" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="./" />
+				<Option object_output="./" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-std=gnu++11" />
+					<Add directory="libs/SDL/include" />
+					<Add directory="libs/GLEW/include" />
+					<Add directory="../gmath" />
+					<Add directory="libs/STB" />
+					<Add directory="libs/ImGui/include" />
+				</Compiler>
+				<Linker>
+					<Add library="mingw32" />
+					<Add library="opengl32" />
+					<Add library="SDL2main" />
+					<Add library="SDL2.dll" />
+					<Add library="SDL2" />
+					<Add library="glew32" />
+					<Add library="imgui" />
+					<Add directory="libs/SDL/lib" />
+					<Add directory="libs/GLEW/lib" />
+					<Add directory="libs/STB" />
+					<Add directory="libs/ImGui/lib" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-Wno-write-strings" />
+		</Compiler>
+		<Unit filename="../common/containers/list.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../common/containers/list.h" />
+		<Unit filename="../common/containers/ring_buffer.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../common/containers/ring_buffer.h" />
+		<Unit filename="../common/containers/stack_list.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../common/containers/stack_list.h" />
+		<Unit filename="../common/exchange/xchg.h" />
+		<Unit filename="../common/gmath/geometry.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../common/gmath/geometry.h" />
+		<Unit filename="../common/gmath/matrix.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../common/gmath/matrix.h" />
+		<Unit filename="../common/gmath/vector.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../common/gmath/vector.h" />
+		<Unit filename="../common/utils/file.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../common/utils/file.h" />
+		<Unit filename="../common/utils/geo.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../common/utils/geo.h" />
+		<Unit filename="../common/utils/path.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../common/utils/path.h" />
+		<Unit filename="../loaders/gmy.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../loaders/gmy.h" />
+		<Unit filename="../loaders/obj.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../loaders/obj.h" />
+		<Unit filename="be_backend.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="be_backend.h" />
+		<Unit filename="be_r_dbg.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="be_r_dbg.h" />
+		<Unit filename="console.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="console.h" />
+		<Unit filename="ent.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="ent.h" />
+		<Unit filename="fe_frontend.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="fe_frontend.h" />
+		<Unit filename="gui.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="gui.h" />
+		<Unit filename="input.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="input.h" />
+		<Unit filename="libs/STB/stb_image_aug.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libs/STB/stb_image_aug.h" />
+		<Unit filename="libs/STB/stbi_DDS_aug.h" />
+		<Unit filename="libs/STB/stbi_DDS_aug_c.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="main.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="mdl.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="mdl.h" />
+		<Unit filename="net.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="net.h" />
+		<Unit filename="phy_common.h" />
+		<Unit filename="physics.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="physics.h" />
+		<Unit filename="pla_common.h" />
+		<Unit filename="player.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="player.h" />
+		<Unit filename="r_common.h" />
+		<Unit filename="r_dbg.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_dbg.h" />
+		<Unit filename="r_frame.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_frame.h" />
+		<Unit filename="r_gui.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_gui.h" />
+		<Unit filename="r_light.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_light.h" />
+		<Unit filename="r_main.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_main.h" />
+		<Unit filename="r_portal.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_portal.h" />
+		<Unit filename="r_raytrace.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_raytrace.h" />
+		<Unit filename="r_shader.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_shader.h" />
+		<Unit filename="r_surf.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_surf.h" />
+		<Unit filename="r_verts.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_verts.h" />
+		<Unit filename="r_view.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_view.h" />
+		<Unit filename="r_vis.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="r_vis.h" />
+		<Unit filename="res.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="res.h" />
+		<Unit filename="system.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="system.h" />
+		<Unit filename="w_main.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="w_main.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

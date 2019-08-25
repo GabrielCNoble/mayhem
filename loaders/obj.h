@@ -2,7 +2,7 @@
 #define OBJ_H
 
 
-#include "../exchange/xchg.h"
+#include "../common/exchange/xchg.h"
 
 void obj_LoadWavefront(char *file_name, struct geometry_data_t *geometry_data);
 

@@ -1,9 +1,9 @@
 #ifndef GMY_H
 #define GMY_H
 
-#include "../exchange/xchg.h"
-#include "../containers/list.h"
-#include "../gmath/vector.h"
+#include "../common/exchange/xchg.h"
+#include "../common/containers/list.h"
+#include "../common/gmath/vector.h"
 
 static char gmy_start_tag[] = "[gmy_start]";
 struct gmy_start_t
