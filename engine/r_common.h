@@ -2,11 +2,12 @@
 #define R_COMMON_H
 
 
-#include "SDL2\SDL.h"
-#include "GL\glew.h"
+#include "libs/SDL/include/SDL2/SDL.h"
+#include "libs/GLEW/include/GL/glew.h"
 
 #include "../common/gmath/matrix.h"
 #include "../common/containers/list.h"
+#include "../common/containers/ring_buffer.h"
 
 #define R_MAX_WIDTH 1920
 #define R_MAX_HEIGHT 1080
@@ -219,6 +220,10 @@ struct renderer_t
     mat4_t projection_matrix;
     mat4_t view_matrix;
     mat4_t view_projection_matrix;
+
+    SDL_SpinLock stream_spinlock;
+    struct ring_buffer_t cmd_stream;
+    unsigned char *cmd_data_buffer;
 };
 
 

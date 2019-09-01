@@ -49,6 +49,11 @@ struct shader_t
     char *name;
 };
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 void r_InitShader();
 
 void r_ShutdownShader();
@@ -88,6 +93,10 @@ void r_Uniform1i(struct uniform_t *uniform, int value);
 unsigned int r_CreateAndCompileShader(char *shader_source, int shader_type);
 
 unsigned int r_CreateAndLinkProgram(unsigned int vertex_shader, unsigned int fragment_shader);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // R_SHADER_H
 

@@ -22,17 +22,25 @@ struct player_t
     vec3_t camera_position;
     float camera_bob;
     struct entity_handle_t entity;
+    int remote;
     char *name;
 };
 
 
+/* used to map the player_movement_buffer_t to the correct player... */
+struct player_handle_mapping_t
+{
+    struct player_handle_t client_player_handle;    /* player owned by the client */
+    struct player_handle_t server_player_handle;    /* player owned by the server */
+};
 
 struct player_movement_buffer_t
 {
-    struct player_handle_t dst_player;
+    struct player_handle_mapping_t player_mapping;
     vec3_t position;
     vec3_t velocity;
 };
+
 
 
 

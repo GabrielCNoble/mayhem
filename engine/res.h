@@ -12,6 +12,11 @@ enum RES_RESOURCE_CMD
     RES_RESOURCE_CMD_SHUTDOWN,
 };
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 void res_Init();
 
 void res_Shutdown();
@@ -23,6 +28,10 @@ void res_NextCmd(struct resource_cmd_t *cmd, void **param);
 void res_AdvanceQueue();
 
 int res_ResourceQueue(void *params);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif // RES_H

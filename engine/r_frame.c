@@ -2,8 +2,10 @@
 #include "r_verts.h"
 #include "r_shader.h"
 #include "r_surf.h"
+#include "r_main.h"
 #include "../common/gmath/matrix.h"
 #include "physics.h"
+//#include "be_backend.h"
 
 #include "../common/containers/stack_list.h"
 
@@ -56,6 +58,11 @@ void r_DrawDbvh(int node_index)
         r_DrawDbvh(node->children[1]);
     }
 }
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void r_InitFrame()
 {
@@ -345,11 +352,22 @@ void r_DrawRaytracedShadows(struct draw_command_buffer_t *cmd_buffer)
 
 void r_Clear(int mask)
 {
+    r_QueueCmd(R_CMD_CLEAR_BUFFER, &mask, sizeof(int));
+}
+
+void r_be_Clear(int mask)
+{
     glClear(mask);
     r_renderer.current_stencil = 0;
 }
 
 void r_SwapBuffers()
+{
+    r_QueueCmd(R_CMD_SWAP_BUFFERS, NULL, 0);
+    r_WaitEmptyQueue();
+}
+
+void r_i_SwapBuffers()
 {
 //    while(glGetError() != GL_NO_ERROR);
 
@@ -370,7 +388,9 @@ void r_SwapBuffers()
 //    printf("%x\n", glGetError());
 }
 
-
+#ifdef __cplusplus
+}
+#endif
 
 
 

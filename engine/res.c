@@ -15,6 +15,11 @@ SDL_SpinLock stream_spinlock;
 #define RES_RESOURCE_CMD_STREAM_BUFFER_SIZE 512
 #define RES_RESOURCE_CMD_DATA_SIZE 64
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 void res_Init()
 {
     res_cmd_stream.init(sizeof(struct resource_cmd_t), RES_RESOURCE_CMD_STREAM_BUFFER_SIZE);
@@ -89,7 +94,9 @@ int res_ResourceQueue(void *params)
     }
 }
 
-
+#ifdef __cplusplus
+}
+#endif
 
 
 

@@ -5,6 +5,11 @@
 
 extern struct renderer_t r_renderer;
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 void r_Perspective(float fov_y, float aspect, float znear, float zfar, mat4_t *mat, struct frustum_t *frustum)
 {
 	struct frustum_t f;
@@ -250,7 +255,9 @@ int r_BoxOnView(struct view_t *view, vec3_t &min, vec3_t &max)
     return area > 0.0 && positive_z < 8;
 }
 
-
+#ifdef __cplusplus
+}
+#endif
 
 
 

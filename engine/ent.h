@@ -11,6 +11,7 @@ enum ENT_COMPONENT_TYPE
     ENT_COMPONENT_TYPE_TRANSFORM = 0,
     ENT_COMPONENT_TYPE_MODEL,
     ENT_COMPONENT_TYPE_PHYSICS,
+    ENT_COMPONENT_TYPE_NET,
     ENT_COMPONENT_TYPE_NONE
 };
 
@@ -66,6 +67,11 @@ struct physics_component_t
     struct collider_handle_t collider;
 };
 
+struct net_component_t
+{
+    struct base_component_t base;
+};
+
 enum ENT_ENTITY_FLAGS
 {
     ENT_ENTITY_FLAG_INVALID = 1,
@@ -78,6 +84,10 @@ struct entity_t
     char *name;
 };
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void ent_Init();
 
@@ -93,10 +103,12 @@ void ent_DestroyEntity(struct entity_handle_t entity_handle);
 
 struct entity_t *ent_GetEntityPointer(struct entity_handle_t entity_handle);
 
+vec3_t ent_GetEntityPosition(struct entity_handle_t entity_handle);
 
 
 
-struct component_handle_t ent_AllocComponent(int type);
+
+struct component_handle_t ent_AllocComponent(int type, int def);
 
 void ent_DeallocComponent(struct component_handle_t component_handle);
 
@@ -110,6 +122,8 @@ void ent_AddPhysicsComponent(struct entity_handle_t entity_handle, int collider_
 
 void ent_AddModelComponent(struct entity_handle_t entity_handle, struct model_handle_t model_handle);
 
+void ent_AddNetComponent(struct entity_handle_t entity_handle);
+
 
 
 
@@ -117,10 +131,15 @@ void ent_UpdateTransformComponents();
 
 void ent_UpdatePhysicsComponents();
 
+void ent_UpdateNetComponents();
+
 
 
 void ent_GetEntityListPointer(struct entity_t **entities, int *count, int def);
 
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif // ENT_H

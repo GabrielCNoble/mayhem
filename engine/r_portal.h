@@ -21,6 +21,11 @@ struct portal_t
     int linked;
 };
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 int r_CreatePortal(vec3_t position, vec2_t size);
 
 void r_DestroyPortal(int portal_index);
@@ -31,5 +36,8 @@ struct portal_t *r_GetPortalPointer(int portal_index);
 
 void r_ComputePortalView(int portal_index, struct view_t *view);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif // R_PORTAL_H

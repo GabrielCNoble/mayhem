@@ -23,6 +23,10 @@ unsigned int r_buffers[2] = {0};
 struct stack_list_t r_allocs[2];
 struct list_t r_frees[2];
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void r_InitVerts()
 {
@@ -384,7 +388,9 @@ void r_DisableVertsReads()
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-
+#ifdef __cplusplus
+}
+#endif
 
 
 

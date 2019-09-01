@@ -5,6 +5,10 @@
 #include "r_common.h"
 #include "../common/gmath/matrix.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void r_Perspective(float fov_y, float aspect, float z_near, float z_far, mat4_t *mat, struct frustum_t *frustum);
 
@@ -24,6 +28,9 @@ struct view_t *r_GetActiveView();
 
 int r_BoxOnView(struct view_t *view, vec3_t &min, vec3_t &max);
 
+#ifdef __cplusplus
+}
+#endif
 
 
 

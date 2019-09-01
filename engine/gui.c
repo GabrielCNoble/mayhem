@@ -2,7 +2,8 @@
 #include "r_surf.h"
 #include "r_gui.h"
 #include "r_common.h"
-#include "be_backend.h"
+#include "r_main.h"
+//#include "be_backend.h"
 #include "input.h"
 
 #include <stdio.h>
@@ -11,7 +12,12 @@ struct texture_handle_t gui_texture_handle;
 
 extern struct renderer_t r_renderer;
 
-void gui_Init()
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+int32_t gui_Init()
 {
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
@@ -34,7 +40,7 @@ void gui_Init()
     params.texture_params.height = height;
 
     r_UploadTexturePixels(&params);
-    be_WaitEmptyQueue();
+    r_WaitEmptyQueue();
 
     texture = r_GetTexturePointer(gui_texture_handle);
     io.Fonts->TexID = (ImTextureID)texture->gl_handle;
@@ -60,6 +66,8 @@ void gui_Init()
     io.KeyMap[ImGuiKey_X] = SDL_SCANCODE_X;
     io.KeyMap[ImGuiKey_Y] = SDL_SCANCODE_Y;
     io.KeyMap[ImGuiKey_Z] = SDL_SCANCODE_Z;
+
+    return 0;
 }
 
 void gui_Shutdown()
@@ -87,7 +95,7 @@ void gui_BeginFrame()
     io.MouseDown[1] = (mouse_status & MOUSE_STATUS_RIGHT_BUTTON_PRESSED) && 1;
     io.MouseDown[2] = (mouse_status & MOUSE_STATUS_MIDDLE_BUTTON_PRESSED) && 1;
 
-    if(io.WantCaptureKeyboard)
+    if(io.WantTextInput)
     {
         in_TextInput(1);
 
@@ -123,6 +131,9 @@ void gui_EndFrame()
     r_DrawGui();
 }
 
+#ifdef __cplusplus
+}
+#endif
 
 
 

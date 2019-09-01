@@ -23,7 +23,10 @@ struct model_t
 
 
 
-
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 struct model_handle_t mdl_CreateEmptyModel();
 
@@ -33,6 +36,9 @@ struct model_t *mdl_GetModelPointer(struct model_handle_t model_handle);
 
 struct model_handle_t mdl_LoadModel(char *file_name);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif // MDL_H
 

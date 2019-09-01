@@ -81,8 +81,10 @@ struct material_t
 #define R_INVALID_MATERIAL_HANDLE -1
 #define R_DEFAULT_MATERIAL_HANDLE 0
 
-
-
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void r_SetMaterialColor(short material_handle, vec4_t color);
 
@@ -118,6 +120,9 @@ struct texture_t *r_GetTexturePointer(struct texture_handle_t texture_handle);
 
 struct texture_params_t *r_GetTextureParamsPointer(struct texture_handle_t texture_handle);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif // R_SURF_H
 

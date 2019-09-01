@@ -3,7 +3,7 @@
 #include "input.h"
 #include "r_view.h"
 #include "r_dbg.h"
-
+#include "console.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -13,10 +13,15 @@
 stack_list_t players;
 struct player_handle_t active_player = INVALID_PLAYER_HANDLE;
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-void player_Init()
+int32_t player_Init()
 {
     players.init(sizeof(struct player_t), 32);
+    return 0;
 }
 
 void player_Shutdown()
@@ -24,7 +29,7 @@ void player_Shutdown()
 
 }
 
-struct player_handle_t player_CreatePlayer(char *name, vec3_t position, vec3_t camera_position)
+__declspec(dllexport) __stdcall struct player_handle_t player_CreatePlayer(char *name, vec3_t position, vec3_t camera_position, int remote)
 {
 //    int player_index = -1;
 
@@ -47,6 +52,7 @@ struct player_handle_t player_CreatePlayer(char *name, vec3_t position, vec3_t c
         player->pitch = 0.0;
         player->yaw = 0.0;
         player->camera_bob = 0.0;
+        player->remote = remote;
 
 
         player->entity = ent_CreateEntityInstance();
@@ -54,6 +60,7 @@ struct player_handle_t player_CreatePlayer(char *name, vec3_t position, vec3_t c
 
         ent_AddComponent(player->entity, ENT_COMPONENT_TYPE_TRANSFORM);
         ent_AddPhysicsComponent(player->entity, PHY_COLLIDER_TYPE_PLAYER);
+        ent_AddNetComponent(player->entity);
 //        ent_AddComponent(player->entity, ENT_COMPONENT_TYPE_PHYSICS);
 
         transform_component = (struct transform_component_t *)ent_GetComponentPointer(player_entity->components[ENT_COMPONENT_TYPE_TRANSFORM]);
@@ -70,11 +77,49 @@ struct player_handle_t player_CreatePlayer(char *name, vec3_t position, vec3_t c
     return player_handle;
 }
 
-struct player_t *player_GetPlayerPointer(struct player_handle_t player_handle)
+__declspec(dllexport) __stdcall struct player_handle_t player_CreateRemotePlayer(char *name, vec3_t position)
+{
+    return player_CreatePlayer(name, position, vec3_t(0.0, 0.0, 0.0), 1);
+}
+
+__declspec(dllexport) __stdcall struct player_t *player_GetPlayerPointer(struct player_handle_t player_handle)
 {
     struct player_t *player;
     player = (struct player_t *)players.get(player_handle.player_index);
     return player;
+}
+
+__declspec(dllexport) __stdcall vec3_t player_GetPlayerPosition(struct player_handle_t player_handle)
+{
+    struct player_t *player;
+    player = player_GetPlayerPointer(player_handle);
+
+    if(player)
+    {
+        return ent_GetEntityPosition(player->entity);
+    }
+
+    return vec3_t(0.0, 0.0, 0.0);
+}
+
+__declspec(dllexport) __stdcall vec3_t player_GetPlayerLinearVelocity(struct player_handle_t player_handle)
+{
+    struct player_t *player;
+    struct entity_t *entity;
+    struct physics_component_t *physics_component;
+    struct player_collider_t *player_collider;
+
+    player = player_GetPlayerPointer(player_handle);
+
+    if(player)
+    {
+        entity = ent_GetEntityPointer(player->entity);
+        physics_component = (struct physics_component_t *)ent_GetComponentPointer(entity->components[ENT_COMPONENT_TYPE_PHYSICS]);
+        player_collider = phy_GetPlayerColliderPointer(physics_component->collider);
+        return player_collider->linear_velocity;
+    }
+
+    return vec3_t(0.0, 0.0, 0.0);
 }
 
 void player_UpdatePlayers()
@@ -263,6 +308,7 @@ void player_PostUpdateActivePlayer()
             physics_component = (struct physics_component_t *)ent_GetComponentPointer(player_entity->components[ENT_COMPONENT_TYPE_PHYSICS]);
             collider = (struct player_collider_t *)phy_GetColliderPointer(physics_component->collider);
 
+//            con_Printf("[%f %f %f]", transform_component->position[0], transform_component->position[1], transform_component->position[2]);
             #ifndef SPECTATE
                 view->position = transform_component->position + player->camera_position;
             #endif
@@ -271,10 +317,14 @@ void player_PostUpdateActivePlayer()
     }
 }
 
-void player_SetActivePlayer(struct player_handle_t player)
+__declspec(dllexport) __stdcall void player_SetActivePlayer(struct player_handle_t player)
 {
     active_player = player;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 
 

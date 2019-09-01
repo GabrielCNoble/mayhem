@@ -1,13 +1,19 @@
 #include "r_portal.h"
 #include "../common/containers/stack_list.h"
 #include "r_verts.h"
-#include "be_backend.h"
+#include "r_main.h"
+//#include "be_backend.h"
 
 #include <stdio.h>
 
 
 
 struct stack_list_t r_portals(sizeof(struct portal_t ), 32);
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 int r_CreatePortal(vec3_t position, vec2_t size)
 {
@@ -159,6 +165,10 @@ void r_ComputePortalView(int portal_index, struct view_t *view)
         portal->view->near_plane = vec4_t(near_normal.x, near_normal.y, near_normal.z, -dot(near_normal, portal_vec));
     }
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="editor" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="./editor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="./" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="mayhem" />
+					<Add directory="." />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="../../common/gmath/geometry.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../../common/gmath/geometry.h" />
+		<Unit filename="../../common/gmath/matrix.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../../common/gmath/matrix.h" />
+		<Unit filename="../../common/gmath/vector.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="../../common/gmath/vector.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="main.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

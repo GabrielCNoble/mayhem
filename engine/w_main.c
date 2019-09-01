@@ -7,15 +7,12 @@
 #include "../loaders/obj.h"
 #include "../loaders/gmy.h"
 #include "physics.h"
-#include "be_backend.h"
+#include "r_main.h"
+//#include "be_backend.h"
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
 
 struct verts_handle_t w_world_verts = R_INVALID_VERTS_HANDLE;
 struct verts_handle_t w_world_indices = R_INVALID_VERTS_HANDLE;
@@ -27,7 +24,10 @@ struct bvh_node_t *w_world_bvh = NULL;
 
 struct collider_handle_t w_world_collider;
 
-
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void w_Init()
 {
@@ -39,7 +39,7 @@ void w_Shutdown()
 
 }
 
-void w_LoadLevel(char *file_name)
+__declspec(dllexport) void w_LoadLevel(char *file_name)
 {
     struct geometry_data_t level_data;
     struct batch_data_t *batches;

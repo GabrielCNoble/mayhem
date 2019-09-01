@@ -10,6 +10,11 @@ extern struct renderer_t r_renderer;
 struct stack_list_t r_lights(sizeof(struct light_t), 32);
 //unsigned int r_light_uniform_buffer;
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 void r_InitLights()
 {
 //    glGenBuffers(1, &r_renderer.r_light_uniform_buffer);
@@ -22,7 +27,7 @@ void r_ShutdownLights()
 //    glDeleteBuffers(1, &r_renderer.r_light_uniform_buffer);
 }
 
-int r_CreateLight(vec3_t position, vec3_t color, float energy, float radius)
+__declspec(dllexport) int r_CreateLight(vec3_t position, vec3_t color, float energy, float radius)
 {
     int light_handle;
     struct light_t *light;
@@ -41,7 +46,7 @@ int r_CreateLight(vec3_t position, vec3_t color, float energy, float radius)
     return light_handle;
 }
 
-void r_DestroyLight(int light_handle)
+__declspec(dllexport) void r_DestroyLight(int light_handle)
 {
     struct light_t *light;
 
@@ -54,7 +59,7 @@ void r_DestroyLight(int light_handle)
     }
 }
 
-struct light_t *r_GetLightPointer(int light_handle)
+__declspec(dllexport) struct light_t *r_GetLightPointer(int light_handle)
 {
     struct light_t *light = NULL;
 
@@ -85,6 +90,10 @@ void r_UploadLights(struct light_buffer_t *light_buffer)
 
     light_buffer->used = 1;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 
 

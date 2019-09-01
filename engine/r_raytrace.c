@@ -10,6 +10,11 @@ extern struct renderer_t r_renderer;
 //unsigned int r_triangles_uniform_buffer;
 //unsigned int r_triangle_indices_uniform_buffer;
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 void r_InitRaytrace()
 {
 //    glGenBuffers(1, &r_renderer.r_triangles_uniform_buffer);
@@ -79,6 +84,9 @@ void r_UploadTriangeIndices(unsigned int *indices, int count)
     }
 }
 
+#ifdef __cplusplus
+}
+#endif
 
 
 

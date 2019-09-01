@@ -2,7 +2,8 @@
 #include "r_common.h"
 #include "r_shader.h"
 #include "r_verts.h"
-#include "be_backend.h"
+#include "r_main.h"
+//#include "be_backend.h"
 #include "GL/gl.h"
 #include "gui.h"
 
@@ -31,6 +32,11 @@ unsigned int r_gui_shader_projection_matrix = 0;
 unsigned int r_gui_shader_atlas = 0;
 
 extern struct renderer_t r_renderer;
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void r_InitGui()
 {
@@ -92,8 +98,8 @@ void r_ShutdownGui()
 
 void r_DrawGui()
 {
-    be_QueueCmd(BE_CMD_DRAW_GUI, NULL, 0);
-    be_WaitEmptyQueue();
+    r_QueueCmd(R_CMD_DRAW_GUI, NULL, 0);
+    r_WaitEmptyQueue();
 }
 
 
@@ -167,7 +173,7 @@ void r_be_DrawGui()
 
 //            printf("[%f %f %f %f]\n", clip_rect.x, clip_rect.y, clip_rect.z, clip_rect.w);
 //            glScissor(clip_rect.x, clip_rect.y, clip_rect.z, clip_rect.w);
-            glBindTexture(GL_TEXTURE_2D, (unsigned int)cmd->TextureId);
+            glBindTexture(GL_TEXTURE_2D, (unsigned long long )cmd->TextureId);
             glDrawElements(GL_TRIANGLES, cmd->ElemCount, GL_UNSIGNED_INT, (void *)((cmd->IdxOffset + r_gui_index_start) * sizeof(unsigned int )));
         }
     }
@@ -177,6 +183,10 @@ void r_be_DrawGui()
     glDisable(GL_BLEND);
     glDisable(GL_SCISSOR_TEST);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 
 

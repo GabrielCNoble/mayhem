@@ -1,7 +1,8 @@
 #include "mdl.h"
 #include "r_common.h"
 #include "r_surf.h"
-#include "be_backend.h"
+#include "r_main.h"
+//#include "be_backend.h"
 #include "../common/containers/stack_list.h"
 #include "../loaders/gmy.h"
 
@@ -10,9 +11,13 @@
 
 struct stack_list_t mdl_models(sizeof(struct model_t), 32);
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 
-struct model_handle_t mdl_CreateEmptyModel()
+__declspec(dllexport) struct model_handle_t mdl_CreateEmptyModel()
 {
     struct model_handle_t handle = INVALID_MODEL_HANDLE;
     struct model_t *model;
@@ -25,7 +30,7 @@ struct model_handle_t mdl_CreateEmptyModel()
     return handle;
 }
 
-void mdl_DestroyModel(struct model_handle_t model_handle)
+__declspec(dllexport) void mdl_DestroyModel(struct model_handle_t model_handle)
 {
     struct model_t *model;
 
@@ -43,7 +48,7 @@ void mdl_DestroyModel(struct model_handle_t model_handle)
     }
 }
 
-struct model_t *mdl_GetModelPointer(struct model_handle_t model_handle)
+__declspec(dllexport) struct model_t *mdl_GetModelPointer(struct model_handle_t model_handle)
 {
     struct model_t *model = NULL;
 
@@ -60,7 +65,7 @@ struct model_t *mdl_GetModelPointer(struct model_handle_t model_handle)
     return model;
 }
 
-struct model_handle_t mdl_LoadModel(char *file_name)
+__declspec(dllexport) struct model_handle_t mdl_LoadModel(char *file_name)
 {
     struct geometry_data_t geometry_data;
     struct model_handle_t model_handle;
@@ -115,7 +120,9 @@ struct model_handle_t mdl_LoadModel(char *file_name)
     return model_handle;
 }
 
-
+#ifdef __cplusplus
+}
+#endif
 
 
 

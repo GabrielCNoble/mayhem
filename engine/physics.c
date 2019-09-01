@@ -43,7 +43,7 @@ extern "C"
 #endif
 
 
-void phy_Init()
+int32_t phy_Init()
 {
     phy_dbvh_nodes.init(sizeof(struct dbvh_node_t), 512);
     phy_collision_pairs.init(sizeof(struct collision_pair_t), 512);
@@ -69,6 +69,8 @@ void phy_Init()
 
     phy_collision_matrix[PHY_COLLIDER_TYPE_PROJECTILE][PHY_COLLIDER_TYPE_STATIC] = phy_CollideProjectileStatic;
     phy_collision_matrix[PHY_COLLIDER_TYPE_STATIC][PHY_COLLIDER_TYPE_PROJECTILE] = phy_CollideProjectileStatic;
+
+    return 0;
 }
 
 void phy_Shutdown()

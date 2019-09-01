@@ -3,6 +3,10 @@
 
 #include "r_common.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void r_VisibleWorld();
 
@@ -27,5 +31,9 @@ struct light_buffer_t *r_AllocLightBuffer();
 void r_ReclaimCommandBuffers();
 
 void r_ReclaimLightBuffers();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // R_VIS_H

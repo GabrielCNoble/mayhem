@@ -1,6 +1,7 @@
 #include "r_surf.h"
 #include "r_shader.h"
-#include "be_backend.h"
+#include "r_main.h"
+//#include "be_backend.h"
 #include "res.h"
 #include "../common/containers/stack_list.h"
 #include "../common/containers/list.h"
@@ -19,6 +20,11 @@ struct stack_list_t r_textures(sizeof(struct texture_t), 32);
 struct stack_list_t r_texture_params(sizeof(struct texture_params_t), 32);
 
 extern struct renderer_t r_renderer;
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void r_SetMaterialColor(short material, vec4_t color)
 {
@@ -302,7 +308,7 @@ int r_LoadTexturePixels(void *params)
     upload_pixels_params.texture_handle = local_params.texture_handle;
     upload_pixels_params.file_name = local_params.file_name;
 
-    be_QueueCmd(BE_CMD_UPLOAD_TEXTURE, &upload_pixels_params, sizeof(struct upload_texture_pixels_params_t));
+    r_QueueCmd(R_CMD_UPLOAD_TEXTURE, &upload_pixels_params, sizeof(struct upload_texture_pixels_params_t));
 
 
     printf("texture [%s] decompressed!\n", local_params.file_name);
@@ -461,6 +467,10 @@ struct texture_params_t *r_GetTextureParamsPointer(struct texture_handle_t textu
 
     return texture_params;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 
 

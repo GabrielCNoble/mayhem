@@ -7,7 +7,10 @@
 
 #define R_MIN_LIGHT_RADIUS 0.01
 
-
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void r_InitLights();
 
@@ -20,6 +23,10 @@ void r_DestroyLight(int light_handle);
 struct light_t *r_GetLightPointer(int light_handle);
 
 void r_UploadLights(struct light_buffer_t *light_buffer);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif // R_LIGHT_H

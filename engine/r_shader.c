@@ -16,6 +16,11 @@ extern struct renderer_t r_renderer;
 
 char *r_default_uniform_names[r_LAST_UNIFORM];
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 void r_InitShader()
 {
     #define STRFY(x) #x
@@ -482,7 +487,9 @@ unsigned int r_CreateAndLinkProgram(unsigned int vertex_shader, unsigned int fra
     return program;
 }
 
-
+#ifdef __cplusplus
+}
+#endif
 
 
 

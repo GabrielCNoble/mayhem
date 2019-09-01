@@ -3,13 +3,14 @@
 
 
 #include "phy_common.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-void phy_Init();
+int32_t phy_Init();
 
 void phy_Shutdown();
 

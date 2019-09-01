@@ -22,6 +22,10 @@ struct vertex_t
     vec2_t tex_coord;
 };
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void r_InitVerts();
 
@@ -55,6 +59,9 @@ void r_EnableVertsReads();
 
 void r_DisableVertsReads();
 
+#ifdef __cplusplus
+}
+#endif
 
 
 

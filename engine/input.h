@@ -4,7 +4,6 @@
 
 #include "../common/gmath/vector.h"
 
-
 enum KEY_STATUS
 {
     KEY_STATUS_NONE = 0,
@@ -28,7 +27,14 @@ enum MOUSE_STATUS
     MOUSE_STATUS_RIGHT_BUTTON_JUST_RELEASED = 1 << 8,
 };
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 void in_UpdateInput();
+
+void in_be_UpdateInput();
 
 vec2_t in_GetMousePos();
 
@@ -51,5 +57,9 @@ void in_TextInput(int enable);
 unsigned char *in_GetTextInputBuffer();
 
 void in_ClearTextInputBuffer();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // INPUT_H

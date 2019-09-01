@@ -3,8 +3,9 @@
 #include "r_portal.h"
 #include "r_light.h"
 #include "r_dbg.h"
+#include "r_main.h"
 #include "../common/containers/list.h"
-#include "be_backend.h"
+//#include "be_backend.h"
 #include "../common/containers/stack_list.h"
 #include "ent.h"
 
@@ -21,6 +22,11 @@ extern struct stack_list_t r_portals;
 extern struct stack_list_t r_lights;
 extern struct verts_handle_t w_world_verts;
 extern struct renderer_t r_renderer;
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 void r_VisibleWorld()
 {
@@ -451,6 +457,9 @@ void r_ReclaimLightBuffers()
     }
 }
 
+#ifdef __cplusplus
+}
+#endif
 
 
 
