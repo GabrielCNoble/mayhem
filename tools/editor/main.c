@@ -30,6 +30,11 @@ void init_callback()
     w_LoadLevel("level0.gmy");
 }
 
+void game_main_callback()
+{
+
+}
+
 int main(int argc, char *argv[])
 {
 //    if(SDL_Init(SDL_INIT_EVERYTHING) < 0)

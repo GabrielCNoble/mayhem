@@ -2606,7 +2606,7 @@
 	"../common/gmath/matrix.h"
 	"../common/containers/list.h"
 
-1567370235 source:d:\files\gabriel noble\compiler\mayhem\engine\ent.c
+1567476102 source:d:\files\gabriel noble\compiler\mayhem\engine\ent.c
 	"ent.h"
 	"../common/containers/stack_list.h"
 	"physics.h"
@@ -3057,7 +3057,7 @@
 1567357770 d:\files\gabriel noble\compiler\mayhem\engine\net.h
 	<stdint.h>
 
-1567359366 source:d:\files\gabriel noble\compiler\mayhem\engine\net.c
+1567372148 source:d:\files\gabriel noble\compiler\mayhem\engine\net.c
 	"net.h"
 	"SDL2\SDL.h"
 	"Windows.h"
@@ -3065,11 +3065,12 @@
 	"../common/containers/ring_buffer.h"
 	<stdio.h>
 
-1567370018 source:d:\files\gabriel noble\compiler\mayhem\engine\sv.c
+1567475965 source:d:\files\gabriel noble\compiler\mayhem\engine\sv.c
 	"sv.h"
 	"sys.h"
+	"../common/utils/file.h"
 
-1567370242 d:\files\gabriel noble\compiler\mayhem\engine\sv.h
+1567475968 d:\files\gabriel noble\compiler\mayhem\engine\sv.h
 
 1567341264 source:d:\files\gabriel noble\compiler\mayhem\engine\r_main_old.c
 	"r_main.h"
@@ -3094,7 +3095,7 @@
 	"input.h"
 	"w_main.h"
 
-1567359820 source:d:\files\gabriel noble\compiler\mayhem\engine\sys.c
+1567888952 source:d:\files\gabriel noble\compiler\mayhem\engine\sys.c
 	"sys.h"
 	"r_common.h"
 	"r_vis.h"
@@ -3104,4 +3105,891 @@
 	<stdlib.h>
 	<math.h>
 	<stdint.h>
+
+1560156018 source:c:\users\gabri\documents\compiler\mayhem\common\containers\list.c
+	"list.h"
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+
+1560156128 c:\users\gabri\documents\compiler\mayhem\common\containers\list.h
+
+1552967136 c:\users\gabri\documents\compiler\mayhem\common\containers\stack_list.h
+
+1560754776 source:c:\users\gabri\documents\compiler\mayhem\common\containers\ring_buffer.c
+	"ring_buffer.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
+1560754782 c:\users\gabri\documents\compiler\mayhem\common\containers\ring_buffer.h
+
+1564364824 source:c:\users\gabri\documents\compiler\mayhem\common\containers\stack_list.c
+	"stack_list.h"
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+
+1566279774 source:c:\users\gabri\documents\compiler\mayhem\common\gmath\geometry.c
+	"geometry.h"
+	<math.h>
+	"../../engine/r_dbg.h"
+	<stdio.h>
+
+1564558616 c:\users\gabri\documents\compiler\mayhem\common\gmath\geometry.h
+	"vector.h"
+
+1563761458 c:\users\gabri\documents\compiler\mayhem\common\gmath\vector.h
+
+1567357758 c:\users\gabri\documents\compiler\mayhem\engine\r_dbg.h
+	"../common/gmath/vector.h"
+	"../common/gmath/matrix.h"
+
+1556946550 c:\users\gabri\documents\compiler\mayhem\common\gmath\matrix.h
+	"vector.h"
+
+1556947264 source:c:\users\gabri\documents\compiler\mayhem\common\gmath\matrix.c
+	"matrix.h"
+	<math.h>
+
+1563761476 source:c:\users\gabri\documents\compiler\mayhem\common\gmath\vector.c
+	"vector.h"
+	"matrix.h"
+	<math.h>
+
+1567302700 source:c:\users\gabri\documents\compiler\mayhem\common\utils\file.c
+	"file.h"
+	<limits.h>
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
+1567144540 c:\users\gabri\documents\compiler\mayhem\common\utils\file.h
+	<stdio.h>
+	<stdint.h>
+
+1563602762 source:c:\users\gabri\documents\compiler\mayhem\common\utils\geo.c
+	"geo.h"
+	<math.h>
+
+1565544838 c:\users\gabri\documents\compiler\mayhem\common\utils\geo.h
+	"../gmath/vector.h"
+
+1560831028 source:c:\users\gabri\documents\compiler\mayhem\common\utils\path.c
+	"path.h"
+	<string.h>
+	<limits.h>
+
+1560591234 c:\users\gabri\documents\compiler\mayhem\common\utils\path.h
+
+1565544872 source:c:\users\gabri\documents\compiler\mayhem\loaders\gmy.c
+	"gmy.h"
+	"../common/utils/file.h"
+	"../common/utils/path.h"
+	"../common/utils/geo.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1565544046 c:\users\gabri\documents\compiler\mayhem\loaders\gmy.h
+	"../common/exchange/xchg.h"
+	"../common/containers/list.h"
+	"../common/gmath/vector.h"
+
+1560138808 c:\users\gabri\documents\compiler\mayhem\common\exchange\xchg.h
+	"../containers/list.h"
+	"../gmath/vector.h"
+
+1565544882 source:c:\users\gabri\documents\compiler\mayhem\loaders\obj.c
+	"obj.h"
+	"../common/utils/file.h"
+	"../common/utils/path.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<limits.h>
+
+1565544090 c:\users\gabri\documents\compiler\mayhem\loaders\obj.h
+	"../common/exchange/xchg.h"
+
+1567368812 source:c:\users\gabri\documents\compiler\mayhem\engine\console.c
+	"console.h"
+	"r_common.h"
+	"input.h"
+	"gui.h"
+	"../common/containers/list.h"
+	"SDL2/SDL_atomic.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+
+1567368480 c:\users\gabri\documents\compiler\mayhem\engine\console.h
+	<stdint.h>
+
+1625659456 c:\users\gabri\documents\compiler\mayhem\engine\r_common.h
+	"libs/SDL/include/SDL2/SDL.h"
+	"libs/GLEW/include/GL/glew.h"
+	"../common/gmath/matrix.h"
+	"../common/containers/list.h"
+	"../common/containers/ring_buffer.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_assert.h"
+	"SDL_atomic.h"
+	"SDL_audio.h"
+	"SDL_clipboard.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_filesystem.h"
+	"SDL_gamecontroller.h"
+	"SDL_haptic.h"
+	"SDL_hints.h"
+	"SDL_joystick.h"
+	"SDL_loadso.h"
+	"SDL_log.h"
+	"SDL_messagebox.h"
+	"SDL_mutex.h"
+	"SDL_power.h"
+	"SDL_render.h"
+	"SDL_rwops.h"
+	"SDL_sensor.h"
+	"SDL_shape.h"
+	"SDL_system.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_version.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<wchar.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<math.h>
+	<float.h>
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	<sal.h>
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_config.h
+	"SDL_platform.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_platform.h
+	"AvailabilityMacros.h"
+	"TargetConditionals.h"
+	<winapifamily.h>
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\begin_code.h
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\close_code.h
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_assert.h
+	"SDL_config.h"
+	"begin_code.h"
+	<signal.h>
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_atomic.h
+	"SDL_stdinc.h"
+	"SDL_platform.h"
+	"begin_code.h"
+	<sys/cpuinline.h>
+	<mbarrier.h>
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_atomic.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	<process.h>
+	<stdlib.h>
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_clipboard.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	<intrin.h>
+	<intrin.h>
+	<altivec.h>
+	<arm_neon.h>
+	<armintr.h>
+	<arm_neon.h>
+	<armintr.h>
+	<arm_neon.h>
+	<mm3dnow.h>
+	<immintrin.h>
+	<mmintrin.h>
+	<xmmintrin.h>
+	<emmintrin.h>
+	<pmmintrin.h>
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_quit.h"
+	"SDL_gesture.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_pixels.h
+	"SDL_stdinc.h"
+	"SDL_endian.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_rect.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_pixels.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_surface.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_blendmode.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_blendmode.h
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keycode.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_keycode.h
+	"SDL_stdinc.h"
+	"SDL_scancode.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_scancode.h
+	"SDL_stdinc.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_gamecontroller.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_gesture.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_touch.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_filesystem.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_haptic.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_hints.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_log.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_messagebox.h
+	"SDL_stdinc.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_power.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_render.h
+	"SDL_stdinc.h"
+	"SDL_rect.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_sensor.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_shape.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_system.h
+	"SDL_stdinc.h"
+	"SDL_keyboard.h"
+	"SDL_render.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1564040184 c:\users\gabri\documents\compiler\mayhem\engine\libs\sdl\include\sdl2\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1501512380 c:\users\gabri\documents\compiler\mayhem\engine\libs\glew\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1567368520 c:\users\gabri\documents\compiler\mayhem\engine\input.h
+	"../common/gmath/vector.h"
+
+1567368492 c:\users\gabri\documents\compiler\mayhem\engine\gui.h
+	"libs/ImGui/include/imgui.h"
+	<stdint.h>
+
+1565545990 c:\users\gabri\documents\compiler\mayhem\engine\libs\imgui\include\imgui.h
+	"imconfig.h"
+	<float.h>
+	<stdarg.h>
+	<stddef.h>
+	<string.h>
+	<assert.h>
+	<stdint.h>
+	"imgui_user.h"
+
+1565545990 c:\users\gabri\documents\compiler\mayhem\engine\libs\imgui\include\imconfig.h
+
+1567486902 source:c:\users\gabri\documents\compiler\mayhem\engine\ent.c
+	"ent.h"
+	"../common/containers/stack_list.h"
+	"physics.h"
+	"net.h"
+	"console.h"
+	<stdio.h>
+
+1567381842 c:\users\gabri\documents\compiler\mayhem\engine\ent.h
+	"../common/gmath/vector.h"
+	"../common/gmath/matrix.h"
+	"phy_common.h"
+	"mdl.h"
+
+1565544180 c:\users\gabri\documents\compiler\mayhem\engine\phy_common.h
+	"../common/gmath/vector.h"
+	"../common/gmath/matrix.h"
+	"../common/containers/list.h"
+
+1567357692 c:\users\gabri\documents\compiler\mayhem\engine\mdl.h
+	"r_verts.h"
+	"r_common.h"
+
+1567357952 c:\users\gabri\documents\compiler\mayhem\engine\r_verts.h
+	"../common/gmath/vector.h"
+
+1567368588 c:\users\gabri\documents\compiler\mayhem\engine\physics.h
+	"phy_common.h"
+	<stdint.h>
+
+1567368570 c:\users\gabri\documents\compiler\mayhem\engine\net.h
+	<stdint.h>
+
+1567368502 source:c:\users\gabri\documents\compiler\mayhem\engine\gui.c
+	"gui.h"
+	"r_surf.h"
+	"r_gui.h"
+	"r_common.h"
+	"r_main.h"
+	"input.h"
+	<stdio.h>
+
+1567357930 c:\users\gabri\documents\compiler\mayhem\engine\r_surf.h
+	"../common/gmath/vector.h"
+
+1567357810 c:\users\gabri\documents\compiler\mayhem\engine\r_gui.h
+
+1567368426 c:\users\gabri\documents\compiler\mayhem\engine\r_main.h
+	<stdint.h>
+	"r_common.h"
+	"r_frame.h"
+	"r_shader.h"
+	"r_light.h"
+	"r_surf.h"
+	"r_gui.h"
+	"r_dbg.h"
+	"r_verts.h"
+
+1567358098 c:\users\gabri\documents\compiler\mayhem\engine\r_frame.h
+	"r_common.h"
+	"r_view.h"
+
+1567357970 c:\users\gabri\documents\compiler\mayhem\engine\r_view.h
+	"r_common.h"
+	"../common/gmath/matrix.h"
+
+1567357898 c:\users\gabri\documents\compiler\mayhem\engine\r_shader.h
+
+1567357826 c:\users\gabri\documents\compiler\mayhem\engine\r_light.h
+	"r_common.h"
+	"../common/gmath/vector.h"
+
+1567369098 source:c:\users\gabri\documents\compiler\mayhem\engine\input.c
+	"input.h"
+	"SDL2\SDL.h"
+	"SDL2\SDL_mouse.h"
+	"r_common.h"
+	"r_main.h"
+	<stdio.h>
+	"../common/containers/list.h"
+
+1501565526 source:c:\users\gabri\documents\compiler\mayhem\engine\libs\stb\stb_image_aug.c
+	"stb_image_aug.h"
+	<math.h>
+	<string.h>
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+	<assert.h>
+	<stdarg.h>
+	"stbi_DDS_aug.h"
+	"stbi_DDS_aug_c.h"
+
+1501565526 c:\users\gabri\documents\compiler\mayhem\engine\libs\stb\stb_image_aug.h
+	<stdio.h>
+
+1501565526 c:\users\gabri\documents\compiler\mayhem\engine\libs\stb\stbi_dds_aug.h
+
+1501565526 c:\users\gabri\documents\compiler\mayhem\engine\libs\stb\stbi_dds_aug_c.h
+
+1567360152 source:c:\users\gabri\documents\compiler\mayhem\engine\mdl.c
+	"mdl.h"
+	"r_common.h"
+	"r_surf.h"
+	"r_main.h"
+	"../common/containers/stack_list.h"
+	"../loaders/gmy.h"
+	<stdio.h>
+	<stdlib.h>
+
+1567382948 source:c:\users\gabri\documents\compiler\mayhem\engine\net.c
+	"net.h"
+	"SDL2\SDL.h"
+	"Windows.h"
+	"console.h"
+	"../common/containers/ring_buffer.h"
+	<stdio.h>
+
+1625658491 source:c:\users\gabri\documents\compiler\mayhem\engine\physics.c
+	"physics.h"
+	"../common/containers/stack_list.h"
+	"../common/gmath/geometry.h"
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<float.h>
+	"r_common.h"
+	"r_view.h"
+	"r_portal.h"
+	"r_dbg.h"
+	"player.h"
+	<stdio.h>
+
+1567357858 c:\users\gabri\documents\compiler\mayhem\engine\r_portal.h
+	"r_view.h"
+	"r_verts.h"
+	"../common/gmath/vector.h"
+	"../common/gmath/matrix.h"
+	"physics.h"
+
+1567381802 c:\users\gabri\documents\compiler\mayhem\engine\player.h
+	"../common/gmath/vector.h"
+	"physics.h"
+	"r_view.h"
+	"pla_common.h"
+	<stdint.h>
+
+1567372634 c:\users\gabri\documents\compiler\mayhem\engine\pla_common.h
+	"ent.h"
+
+1625654390 source:c:\users\gabri\documents\compiler\mayhem\engine\player.c
+	"player.h"
+	"../common/containers/stack_list.h"
+	"input.h"
+	"r_view.h"
+	"r_dbg.h"
+	"console.h"
+	<stdlib.h>
+	<string.h>
+	<math.h>
+
+1567360218 source:c:\users\gabri\documents\compiler\mayhem\engine\r_dbg.c
+	"r_dbg.h"
+	"r_verts.h"
+	"r_view.h"
+	"r_main.h"
+	"r_shader.h"
+	"phy_common.h"
+	"../common/containers/stack_list.h"
+	"../common/utils/geo.h"
+	"../common/gmath/geometry.h"
+	<math.h>
+
+1567357800 source:c:\users\gabri\documents\compiler\mayhem\engine\r_frame.c
+	"r_frame.h"
+	"r_verts.h"
+	"r_shader.h"
+	"r_surf.h"
+	"r_main.h"
+	"../common/gmath/matrix.h"
+	"physics.h"
+	"../common/containers/stack_list.h"
+	<stdlib.h>
+	<stdio.h>
+
+1567357818 source:c:\users\gabri\documents\compiler\mayhem\engine\r_gui.c
+	"r_gui.h"
+	"r_common.h"
+	"r_shader.h"
+	"r_verts.h"
+	"r_main.h"
+	"GL/gl.h"
+	"gui.h"
+	<stdlib.h>
+	<stdio.h>
+
+1567360684 source:c:\users\gabri\documents\compiler\mayhem\engine\r_light.c
+	"r_light.h"
+	"../common/containers/stack_list.h"
+	"GL/glew.h"
+	<stdio.h>
+
+1625659438 source:c:\users\gabri\documents\compiler\mayhem\engine\r_main.c
+	"r_common.h"
+	"r_frame.h"
+	"r_shader.h"
+	"r_light.h"
+	"r_surf.h"
+	"r_gui.h"
+	"input.h"
+	"r_main.h"
+	"r_dbg.h"
+	"SDL2/SDL_atomic.h"
+	"../common/containers/ring_buffer.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<stdarg.h>
+
+1567357870 source:c:\users\gabri\documents\compiler\mayhem\engine\r_portal.c
+	"r_portal.h"
+	"../common/containers/stack_list.h"
+	"r_verts.h"
+	"r_main.h"
+	<stdio.h>
+
+1567357888 source:c:\users\gabri\documents\compiler\mayhem\engine\r_raytrace.c
+	"r_raytrace.h"
+	"r_common.h"
+	"GL/glew.h"
+	<stdio.h>
+	<stdlib.h>
+
+1567357880 c:\users\gabri\documents\compiler\mayhem\engine\r_raytrace.h
+	"../common/gmath/vector.h"
+
+1567357916 source:c:\users\gabri\documents\compiler\mayhem\engine\r_shader.c
+	"r_shader.h"
+	"r_common.h"
+	"r_verts.h"
+	"../common/containers/stack_list.h"
+	"../common/utils/file.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
+1567357942 source:c:\users\gabri\documents\compiler\mayhem\engine\r_surf.c
+	"r_surf.h"
+	"r_shader.h"
+	"r_main.h"
+	"res.h"
+	"../common/containers/stack_list.h"
+	"../common/containers/list.h"
+	"../common/utils/file.h"
+	"stb_image_aug.h"
+	"r_common.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1567358010 c:\users\gabri\documents\compiler\mayhem\engine\res.h
+
+1567357962 source:c:\users\gabri\documents\compiler\mayhem\engine\r_verts.c
+	"r_verts.h"
+	"../common/containers/stack_list.h"
+	"../common/containers/list.h"
+	<string.h>
+	"r_common.h"
+
+1567357982 source:c:\users\gabri\documents\compiler\mayhem\engine\r_view.c
+	"r_view.h"
+	<math.h>
+	<stdlib.h>
+
+1625658763 source:c:\users\gabri\documents\compiler\mayhem\engine\r_vis.c
+	"r_vis.h"
+	"r_view.h"
+	"r_portal.h"
+	"r_light.h"
+	"r_dbg.h"
+	"r_main.h"
+	"../common/containers/list.h"
+	"../common/containers/stack_list.h"
+	"ent.h"
+	<stdio.h>
+
+1567357992 c:\users\gabri\documents\compiler\mayhem\engine\r_vis.h
+	"r_common.h"
+
+1567358020 source:c:\users\gabri\documents\compiler\mayhem\engine\res.c
+	"res.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"SDL2/SDL_atomic.h"
+	"SDL2/SDL.h"
+	"../common/containers/ring_buffer.h"
+
+1568002986 source:c:\users\gabri\documents\compiler\mayhem\engine\scr.c
+	"scr.h"
+	"angelscript.h"
+	"../common/containers/stack_list.h"
+
+1568002968 c:\users\gabri\documents\compiler\mayhem\engine\scr.h
+	<stdint.h>
+
+1545513098 c:\users\gabri\documents\compiler\mayhem\engine\libs\angelscript\include\angelscript.h
+	<stddef.h>
+	<stdint.h>
+	<type_traits>
+
+1567486764 source:c:\users\gabri\documents\compiler\mayhem\engine\sv.c
+	"sv.h"
+	"sys.h"
+	"../common/utils/file.h"
+
+1567486768 c:\users\gabri\documents\compiler\mayhem\engine\sv.h
+
+1567370622 c:\users\gabri\documents\compiler\mayhem\engine\sys.h
+	<stdint.h>
+	"r_main.h"
+	"net.h"
+	"ent.h"
+	"gui.h"
+	"console.h"
+	"res.h"
+	"player.h"
+	"physics.h"
+	"input.h"
+	"w_main.h"
+
+1565544254 c:\users\gabri\documents\compiler\mayhem\engine\w_main.h
+	"r_common.h"
+	"../common/gmath/vector.h"
+	"physics.h"
+
+1636680620 source:c:\users\gabri\documents\compiler\mayhem\engine\sys.c
+	"sys.h"
+	"r_common.h"
+	"r_vis.h"
+	"r_frame.h"
+	"../common/containers/ring_buffer.h"
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<stdint.h>
+
+1567360238 source:c:\users\gabri\documents\compiler\mayhem\engine\w_main.c
+	"w_main.h"
+	"r_common.h"
+	"r_verts.h"
+	"r_surf.h"
+	"../common/exchange/xchg.h"
+	"../loaders/obj.h"
+	"../loaders/gmy.h"
+	"physics.h"
+	"r_main.h"
+	<stdlib.h>
+	<math.h>
+	<float.h>
+
+1625659037 source:c:\users\gabri\documents\compiler\mayhem\engine\main.c
+	"main.h"
+	<stdio.h>
+	<math.h>
+	<stdarg.h>
+
+1625654549 c:\users\gabri\documents\compiler\mayhem\engine\main.h
+	"SDL2\SDL.h"
+	"../common/gmath/vector.h"
+	"../common/gmath/matrix.h"
+	"r_main.h"
+	"r_portal.h"
+	"w_main.h"
+	"input.h"
+	"player.h"
+	"physics.h"
+	"gui.h"
+	"res.h"
+	"ent.h"
+	"console.h"
+	"net.h"
+	"sys.h"
 

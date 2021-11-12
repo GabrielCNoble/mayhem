@@ -4,9 +4,11 @@
 *.obj
 *.mtl
 *.dll
+*.gmy
 
-common/common/
-common/gmath/
-common/containers/
-common/libs/
+*/common/
+*/gmath/
+*/containers/
+*/libs/
 models
+.obsidian

@@ -67,8 +67,8 @@ __declspec(dllexport) __stdcall int32_t sys_Init()
                        SYS_SUBSYSTEM_RESOURCE |
                        SYS_SUBSYSTEM_PLAYER);
 
-    r_SetWindowSize(800, 600);
-    r_SetRendererResolution(800, 600);
+//    r_SetWindowSize(800, 600);
+//    r_SetRendererResolution(800, 600);
 
     return 0;
 }
@@ -164,6 +164,11 @@ int sys_Main(void *data)
         in_UpdateInput();
         gui_BeginFrame();
         r_Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        if(sys_GameMainCallback)
+        {
+            sys_GameMainCallback();
+        }
 
         player_UpdatePlayers();
         phy_Step();

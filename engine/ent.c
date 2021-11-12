@@ -395,15 +395,6 @@ void ent_UpdateNetComponents()
         entity = ent_GetEntityPointer(net_component->base.owner_entity);
         physics_component = (struct physics_component_t *)ent_GetComponentPointer(entity->components[ENT_COMPONENT_TYPE_PHYSICS]);
         player_collider = phy_GetPlayerColliderPointer(physics_component->collider);
-//        transform_component = (struct transform_component_t *)ent_GetComponentPointer(entity->components[ENT_COMPONENT_TYPE_TRANSFORM]);
-
-//        sprintf(formatted, "pos: [%f %f %f] -- vel: [%f %f %f]", player_collider->base.position.x,
-//                                                                 player_collider->base.position.y,
-//                                                                 player_collider->base.position.z,
-//
-//                                                                 player_collider->linear_velocity.x,
-//                                                                 player_collider->linear_velocity.y,
-//                                                                 player_collider->linear_velocity.z);
 
         data[0] = player_collider->base.position.x;
         data[1] = player_collider->base.position.y;

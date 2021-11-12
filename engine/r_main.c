@@ -60,6 +60,9 @@ int32_t r_Init()
     r_renderer.renderer_height = R_MIN_HEIGHT;
 
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     r_renderer.window = SDL_CreateWindow("test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, r_renderer.window_width, r_renderer.window_height, SDL_WINDOW_OPENGL);
     r_renderer.context = SDL_GL_CreateContext(r_renderer.window);
@@ -94,7 +97,7 @@ int32_t r_Init()
     def->color[2] = 0xff;
     def->color[3] = 0xff;
 
-    r_renderer.max_recursion = 4;
+    r_renderer.max_recursion = 5;
 
     r_InitVerts();
     r_InitShader();
@@ -112,15 +115,18 @@ int32_t r_Init()
     glBufferData(GL_UNIFORM_BUFFER, uniform_buffer_size, NULL, GL_STREAM_DRAW);
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, r_renderer.uniform_buffer, 0, uniform_buffer_size);
 
+    while(glGetError() != GL_NO_ERROR);
     r_renderer.backbuffer = r_CreateFramebuffer();
     r_AddFramebufferAttachment(&r_renderer.backbuffer, GL_COLOR_ATTACHMENT0, GL_RGBA, GL_RGBA16F, GL_FLOAT);
-    r_AddFramebufferAttachment(&r_renderer.backbuffer, GL_DEPTH_ATTACHMENT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT);
+    r_AddFramebufferAttachment(&r_renderer.backbuffer, GL_DEPTH_STENCIL_ATTACHMENT, GL_DEPTH_STENCIL, GL_DEPTH24_STENCIL8, GL_UNSIGNED_INT_24_8);
 
 
 //    backend.cmd_stream = (struct backend_cmd_t *)calloc(sizeof(struct backend_cmd_t), BE_CMD_STREAM_BUFFER_SIZE);
     r_renderer.cmd_stream.init(sizeof(struct r_cmd_t), BE_CMD_STREAM_BUFFER_SIZE);
     r_renderer.cmd_data_buffer = (unsigned char *)calloc(BE_CMD_DATA_BUFFER_SIZE, BE_CMD_STREAM_BUFFER_SIZE);
     SDL_AtomicUnlock(&r_renderer.stream_spinlock);
+
+    glGenVertexArrays(1, &r_renderer.default_vao);
 
     return 0;
 //    cmd_stream.init(sizeof(struct backend_cmd_t), BE_CMD_STREAM_BUFFER_SIZE);
@@ -271,6 +277,7 @@ void r_AddFramebufferAttachment(struct framebuffer_t *framebuffer, int attachmen
                 break;
 
                 case GL_DEPTH_ATTACHMENT:
+                case GL_DEPTH_STENCIL_ATTACHMENT:
                     glGenTextures(1, &framebuffer->depth_attachment);
                     texture = framebuffer->depth_attachment;
                     min_mag_filter = GL_NEAREST;
@@ -281,6 +288,7 @@ void r_AddFramebufferAttachment(struct framebuffer_t *framebuffer, int attachmen
                 break;
             }
 
+            while(glGetError() != GL_NO_ERROR);
             glBindTexture(GL_TEXTURE_2D, texture);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_mag_filter);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, min_mag_filter);
@@ -322,7 +330,7 @@ void r_SetFramebufferResolution(struct framebuffer_t *framebuffer, int width, in
             if(framebuffer->depth_attachment)
             {
                 glBindTexture(GL_TEXTURE_2D, framebuffer->depth_attachment);
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, framebuffer->width, framebuffer->height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, framebuffer->width, framebuffer->height, 0, GL_DEPTH_STENCIL, GL_FLOAT, NULL);
             }
         }
     }
@@ -351,6 +359,7 @@ void r_Main()
 //    glEnable(GL_CLIP_DISTANCE0);
 //    glEnable(GL_CLIP_PLANE0);
 
+    glBindVertexArray(r_renderer.default_vao);
     r_renderer.current_stencil = 0;
 
     r_EnableVertsReads();

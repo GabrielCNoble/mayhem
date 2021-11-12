@@ -12,8 +12,8 @@
 #define R_MAX_WIDTH 1920
 #define R_MAX_HEIGHT 1080
 
-#define R_MIN_WIDTH 320
-#define R_MIN_HEIGHT 240
+#define R_MIN_WIDTH 1300
+#define R_MIN_HEIGHT 760
 
 
 #define R_MATRIX_STACK_DEPTH 255
@@ -207,6 +207,8 @@ struct renderer_t
     int debug_shader;
 
     int current_stencil;
+
+    unsigned int default_vao;
 
     int max_recursion;
 

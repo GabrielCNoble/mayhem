@@ -134,7 +134,7 @@ void player_PostUpdatePlayers()
 
 #define CAMERA_BOB_INCREMENT 0.25
 
-#define SPECTATE
+//#define SPECTATE
 
 void player_UpdateActivePlayer()
 {

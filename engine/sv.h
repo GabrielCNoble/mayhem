@@ -12,6 +12,10 @@ void sv_Shutdown();
 
 void sv_Step();
 
+void sv_ChangeLevel(char *level_name);
+
+void sv_LoadLevelCollision();
+
 #ifdef __cplusplus
 }
 #endif
