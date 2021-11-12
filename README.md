@@ -17,3 +17,13 @@ The renderer used in this project was also my first successful dual-threaded ren
 This project also has (at the time of writing) my best capsule/triangle mesh collision detection implementation. Collision detection happens by predicting the route the capsule will follow and using that to compute the closest point to a triangle. This removes all sorts of tunneling.
 
 The character controller code is not properly finishes, so there are some situations where the solver will push the collider through walls while it resolves a contact.
+
+This is one of the eariler tests of collision detection with portals
+![image5](images/g2.gif)
+
+Some more tests after fixing some rendering problems with the portals
+![image4](images/g1.gif)
+
+![image3](images/g0.gif)
+
+Collision detection with portals was sort of lacking. It worked right only for axis-aligned portals, although portals could be in any orientation, and would display things correctly.
